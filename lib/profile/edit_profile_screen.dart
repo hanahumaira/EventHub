@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key});
+  const EditProfileScreen({Key? key}): super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
