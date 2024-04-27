@@ -28,3 +28,5 @@ flutter:
   uses-material-design: true
   assets:
     - lib/profile/img/dp.png
+    - lib/images/
+
