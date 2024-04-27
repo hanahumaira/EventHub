@@ -130,6 +130,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'Hana Humaira Bt Burhanuddin',
                       hintStyle: TextStyle(color: const Color.fromARGB(163, 158, 158, 158)), 
+                      
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
