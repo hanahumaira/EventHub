@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eventhub/profile/edit_profile_screen.dart';
 import 'package:eventhub/profile/widget/profile_menu.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:get/get.dart';
+// import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+// import 'package:get/get.dart';
 
 
 
@@ -82,7 +82,10 @@ class _SignUpState extends State<SignUp> {
             MaterialPageRoute(builder: (context) => Login()), //go back to sign in
             );
           },
-          icon: const Icon(LineAwesomeIcons.angle_left),
+          icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
@@ -329,8 +332,10 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(LineAwesomeIcons.angle_left),
-          color: Colors.white,
+          icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
         ),
         title: Text(
           'Home Page',
