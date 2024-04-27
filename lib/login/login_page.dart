@@ -183,28 +183,38 @@ Container(
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.email});
+  const HomePage({Key? key, required this.email}) : super(key: key);
 
   final String email;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home Page'),
-        ),
-        body: Column(
-          children: [
-            Text(email),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("Go back!"),
-              ),
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: Column(
+        children: [
+          Text(email),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                _logoutAndNavigateToLogin(context);
+              },
+              child: const Text("Logout"),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    // After logout, navigate back to the login page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false, // Clear all previous routes
+    );
   }
 }
