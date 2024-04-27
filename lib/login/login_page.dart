@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -30,94 +30,95 @@ class LoginPage extends StatelessWidget {
                     'lib/images/mainpage.png',
                     height: 100,
                   ),
+
                   SizedBox(height: 20),
+
                   Text(
-                    'Welcome back to EventHub!',
+                    'Welcome to EventHub!',
                     style: TextStyle(
-                      color: Colors.grey[700],
+                      color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
                 ],
               ),
             ),
+
             SizedBox(height: 20),
+
             // Email, password, remember me, forgot password, login button
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  MyTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                  ),
-                  SizedBox(height: 10),
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: true, // Example value, change it as needed
-                        onChanged: (value) {
-                          // Handle checkbox state change
-                        },
-                      ),
-                      Text('Remember me'),
-                      Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to forgot password page
-                        },
-                        child: Text('Forgot Password?'),
-                      ),
-                    ],
-                  ),
-
-
-                  SizedBox(height: 10),
-
-                  //login button
-                  MyButton(
-                    onTap: loginUser,
-                  ),
-                  
-                ],
+           Container(
+  margin: EdgeInsets.symmetric(horizontal: 20), // Add margin for spacing from the screen edges
+  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20), // Adjust padding
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(20),
+  ),
+  child: Column(
+    mainAxisSize: MainAxisSize.min, // Use min size to allow the container to wrap its content
+    crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch children horizontally
+    children: [
+      MyTextField(
+        controller: emailController,
+        hintText: 'Email',
+        obscureText: false,
+      ),
+      SizedBox(height: 10),
+      MyTextField(
+        controller: passwordController,
+        hintText: 'Password',
+        obscureText: true,
+      ),
+      SizedBox(height: 10),
+      Row(
+        children: [
+          Checkbox(
+            value: true, // Example value, change it as needed
+            onChanged: (value) {
+              // Handle checkbox state change
+            },
+          ),
+          Text('Remember me'),
+          Spacer(),
+          TextButton(
+            onPressed: () {
+              // Navigate to forgot password page
+            },
+            child: Text('Forgot Password?'),
+          ),
+        ],
+      ),
+      SizedBox(height: 10),
+      // Login button
+      MyButton(
+        onTap: loginUser,
+      ),
+      SizedBox(height: 10),
+      // Don't have an account? Create one
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Don't have an account? ",
+            style: TextStyle(color: Colors.grey[700]),
+          ),
+          TextButton(
+            onPressed: () {
+              // Navigate to create account page
+            },
+            child: Text(
+              "Create an account",
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
-            // Don't have an account? Create one
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account? ",
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                TextButton(
-                  onPressed: () {
-
-
-                    // Navigate to create account page
-                  },
-                  child: Text(
-                    "Create an account",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
           ],
         ),
       ),
