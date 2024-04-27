@@ -12,8 +12,28 @@ class EditProfileScreen extends StatefulWidget {
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
+bool _isValidEmail(String email) {
+  // Simple email validation using a regular expression
+  return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+}
+
+bool _isValidPhoneNumber(String input) {
+  // Define a regex pattern for phone number formats
+  final RegExp phoneRegex = RegExp(
+    r'^(?:\+?1[-.●]?)?(?:\(\d{3}\)|\d{3})[-.●]?\d{3}[-.●]?\d{4}$',
+  );
+  
+  return phoneRegex.hasMatch(input);
+}
+
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _image;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneNumController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,9 +142,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             const SizedBox(height: 50),
             Form(
+              key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
+                    controller: nameController,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Full Name',
                       labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
@@ -136,15 +159,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your full name';
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
+                    controller: emailController,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
@@ -155,18 +180,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your email';
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
+                    controller: phoneNumController,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Phone No',
                       labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
@@ -177,16 +201,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      // Add additional phone number validation if needed
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your phone number';
+                    //   }
+                    //   if (!_isValidPhoneNumber(value)) {
+                    //   return 'Invalid Phone Number Format';
+                    // }                      
+                    // return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
+                    controller: passwordController,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -196,22 +224,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      // Add additional password validation if needed
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your password';
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Your save logic here
-                        // For now, just navigating to another screen
-                        Get.to(() => const ProfileScreen());
+                         String enteredEmail = emailController.text.trim();
+                        String enteredPassword = passwordController.text;
+
+                        // Validate email format
+                        if (!_isValidEmail(enteredEmail)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Invalid Email Format'),
+                            ),
+                          );
+                          return; // Exit the function if email is invalid
+                        }
+
+                        // Validate password criteria (e.g., minimum length)
+                        // if (enteredPassword.length < 6) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text('Password must be at least 6 characters'),
+                        //     ),
+                        //   );
+                        //   return; // Exit the function if password is invalid
+                        // }
+                         Get.to(() => const ProfileScreen());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
