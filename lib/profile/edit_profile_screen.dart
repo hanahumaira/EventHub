@@ -236,7 +236,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                          String enteredEmail = emailController.text.trim();
-                        String enteredPassword = passwordController.text;
+                        // String enteredPassword = passwordController.text;
 
                         // Validate email format
                         if (!_isValidEmail(enteredEmail)) {

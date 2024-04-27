@@ -3,8 +3,8 @@
 import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:eventhub/profile/edit_profile_screen.dart';
-import 'package:eventhub/profile/widget/profile_menu.dart';
+// import 'package:eventhub/profile/edit_profile_screen.dart';
+// import 'package:eventhub/profile/widget/profile_menu.dart';
 // import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 // import 'package:get/get.dart';
 
