@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:eventhub/forgot-password/forgot_password.dart';
-import 'package:eventhub/homepage/home_page.dart';
 import 'package:eventhub/signup/signup_screen.dart';
+import 'package:eventhub/homepage/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -107,17 +104,9 @@ class _LoginState extends State<Login> {
                     //checkbox and forget me
                     Row(
                       children: [
-                        Checkbox(
-                          value: true, // Example value, change it as needed
-                          onChanged: (value) {
-                            // Handle checkbox state change
-                          },
-                        ),
-                        Text('Remember me'),
-                        Spacer(),
                         TextButton(
                           onPressed: () {
-                             Get.to(() => ResetPasswordPage());
+                            // Navigate to forgot password page
                           },
                           child: Text('Forgot Password?'),
                         ),
@@ -134,7 +123,7 @@ class _LoginState extends State<Login> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => HomeScreen(
-                                  email: emailController.text,
+                                  // email: emailController.text,
                                 ),
                               ),
                             );

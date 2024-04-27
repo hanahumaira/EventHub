@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}): super(key: key);
+  const EditProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -22,7 +22,7 @@ bool _isValidPhoneNumber(String input) {
   final RegExp phoneRegex = RegExp(
     r'^(?:\+?1[-.●]?)?(?:\(\d{3}\)|\d{3})[-.●]?\d{3}[-.●]?\d{4}$',
   );
-  
+
   return phoneRegex.hasMatch(input);
 }
 
@@ -33,7 +33,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,19 +79,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     return Scaffold(
-    backgroundColor: Colors.black,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black, 
+        backgroundColor: Colors.black,
         leading: IconButton(
           onPressed: () {
             Get.back();
           },
           icon: const Icon(LineAwesomeIcons.angle_left),
-          color: Colors.white, 
+          color: Colors.white,
         ),
         title: Text(
           "Edit Profile",
-          style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white, fontSize: 24), // Set title color to white
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+              color: Colors.white, fontSize: 24), // Set title color to white
         ),
       ),
       body: SingleChildScrollView(
@@ -150,9 +150,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Full Name',
-                      labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'Hana Humaira Bt Burhanuddin',
-                      hintStyle: TextStyle(color: const Color.fromARGB(163, 158, 158, 158)), 
+                      hintStyle: TextStyle(
+                          color: const Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -171,9 +173,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'hana@yahoo.com',
-                      hintStyle: TextStyle(color: const Color.fromARGB(163, 158, 158, 158)),
+                      hintStyle: TextStyle(
+                          color: const Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -192,9 +196,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Phone No',
-                      labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: '0123456789',
-                      hintStyle: TextStyle(color: const Color.fromARGB(163, 158, 158, 158)),
+                      hintStyle: TextStyle(
+                          color: const Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.call),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -206,7 +212,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //   }
                     //   if (!_isValidPhoneNumber(value)) {
                     //   return 'Invalid Phone Number Format';
-                    // }                      
+                    // }
                     // return null;
                     // },
                   ),
@@ -217,7 +223,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       prefixIcon: const Icon(Icons.fingerprint),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -235,7 +242,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                         String enteredEmail = emailController.text.trim();
+                        String enteredEmail = emailController.text.trim();
                         // String enteredPassword = passwordController.text;
 
                         // Validate email format
@@ -257,7 +264,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         //   );
                         //   return; // Exit the function if password is invalid
                         // }
-                         Get.to(() => const ProfileScreen());
+                        Get.to(() => const ProfileScreen());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,

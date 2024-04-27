@@ -1,39 +1,29 @@
 import 'package:eventhub/profile/edit_profile_screen.dart';
-import 'package:eventhub/profile/widget/profile_menu.dart';
+import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:get/get.dart';
-
-// void main() {
-//   runApp(
-//     GetMaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: ProfileScreen(),
-//     ),
-//   );
-// }
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}): super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Set app bar background color to transparent
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context); // Navigate back to the previous screen
+          },
           icon: const Icon(LineAwesomeIcons.angle_left),
           color: Colors.white,
         ),
         title: Text(
           "Profile",
-          style: Theme.of(context)
-              .textTheme
-              .headline4!
-              .copyWith(color: Colors.white, fontSize: 24),
+          style: TextStyle(color: Colors.white, fontSize: 24),
         ),
       ),
       body: SingleChildScrollView(
@@ -58,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
                     right: 0,
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(() => const EditProfileScreen());
+                        Get.toNamed('/editProfile');
                       },
                       child: Container(
                         width: 35,
@@ -80,23 +70,19 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 "Nadiya",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4!
-                    .copyWith(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               Text(
                 "nadiya@gmail.com",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2!
-                    .copyWith(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               const SizedBox(height: 20),
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () => Get.to(() => const EditProfileScreen()),
+                  onPressed: () {
+                    Get.to(() => const EditProfileScreen());
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                     side: BorderSide.none,
@@ -133,13 +119,58 @@ class ProfileScreen extends StatelessWidget {
               ),
               ProfileMenuWidget(
                 title: "Logout",
+                onPress: () {
+                  _logoutAndNavigateToLogin(context);
+                },
                 icon: LineAwesomeIcons.alternate_sign_out,
                 textColor: Colors.red,
-                endIcon: false,
-                onPress: () {},
+                // endIcon: false,
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false,
+    );
+  }
+}
+
+class ProfileMenuWidget extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onPress;
+  final Color textColor;
+
+  const ProfileMenuWidget({
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.onPress,
+    this.textColor = Colors.black,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPress,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            Icon(icon, color: textColor),
+            SizedBox(width: 20),
+            Text(
+              title,
+              style: TextStyle(color: textColor),
+            ),
+          ],
         ),
       ),
     );

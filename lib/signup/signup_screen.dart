@@ -3,12 +3,8 @@
 import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:eventhub/profile/edit_profile_screen.dart';
-// import 'package:eventhub/profile/widget/profile_menu.dart';
 // import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 // import 'package:get/get.dart';
-
-
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -27,7 +23,6 @@ class UserSignUp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'EventHub',
       theme: ThemeData(
-        
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -38,8 +33,6 @@ class UserSignUp extends StatelessWidget {
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key, required this.title});
-
-  
 
   final String title;
 
@@ -57,11 +50,9 @@ bool _isValidPhoneNumber(String input) {
   final RegExp phoneRegex = RegExp(
     r'^(?:\+?1[-.●]?)?(?:\(\d{3}\)|\d{3})[-.●]?\d{3}[-.●]?\d{4}$',
   );
-  
+
   return phoneRegex.hasMatch(input);
 }
-
-
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
@@ -72,30 +63,29 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Login()), //go back to sign in
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Login()), //go back to sign in
             );
           },
           icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
         title: Text("Create Account",
-        style: TextStyle(
-          color: Colors.white, // set tet color
-          fontSize: 24,
-          fontWeight: FontWeight.bold
-        )),
-              
+            style: TextStyle(
+                color: Colors.white, // set tet color
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
       ),
       body: Form(
         key: _formKey,
@@ -105,25 +95,26 @@ class _SignUpState extends State<SignUp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10), // Round edge border
-                        borderSide: BorderSide(color: Colors.white), // Set border color
-                      ), 
-                      filled: true, // Enable filling
-                      fillColor: Colors.white, // Set fill color to white
-                      labelText: "Full Name",
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: Colors.black,
-                      ),
-                      ),
-                      
-                  style: TextStyle(color: Colors.black), // Set text color    
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Round edge border
+                      borderSide:
+                          BorderSide(color: Colors.white), // Set border color
+                    ),
+                    filled: true, // Enable filling
+                    fillColor: Colors.white, // Set fill color to white
+                    labelText: "Full Name",
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  style: TextStyle(color: Colors.black), // Set text color
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your full name';
@@ -133,24 +124,25 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10), // Round edge border
-                        borderSide: BorderSide(color: Colors.white), // Set border color
-                      ), 
-                      filled: true, // Enable filling
-                      fillColor: Colors.white, // Set fill color to white
-                      labelText: "Email",
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Colors.black,
-                      ),
-                      ),
-                  style: TextStyle(color: Colors.black), // Set text color   
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Round edge border
+                      borderSide:
+                          BorderSide(color: Colors.white), // Set border color
+                    ),
+                    filled: true, // Enable filling
+                    fillColor: Colors.white, // Set fill color to white
+                    labelText: "Email",
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Colors.black,
+                    ),
+                  ),
+                  style: TextStyle(color: Colors.black), // Set text color
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -165,18 +157,20 @@ class _SignUpState extends State<SignUp> {
                   controller: phoneNumController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10), // Round edge border
-                      borderSide: BorderSide(color: Colors.white), // Set border color
+                      borderRadius:
+                          BorderRadius.circular(10), // Round edge border
+                      borderSide:
+                          BorderSide(color: Colors.white), // Set border color
                     ),
                     filled: true, // Enable filling
                     fillColor: Colors.white, // Set fill color to white
                     labelText: "Phone Number",
                     prefixIcon: Icon(
-                        Icons.phone_android,
-                        color: Colors.black,
-                      ),
+                      Icons.phone_android,
+                      color: Colors.black,
+                    ),
                   ),
-                  style: TextStyle(color: Colors.black), // Set text color   
+                  style: TextStyle(color: Colors.black), // Set text color
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
@@ -189,25 +183,26 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10), // Round edge border
-                        borderSide: BorderSide(color: Colors.white), // Set border color
-                      ), 
-                      filled: true, // Enable filling
-                      fillColor: Colors.white, // Set fill color to white
-                      labelText: "Password",
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.black,
-                      ),
-                      ),
-                  style: TextStyle(color: Colors.black), // Set text color   
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Round edge border
+                      borderSide:
+                          BorderSide(color: Colors.white), // Set border color
+                    ),
+                    filled: true, // Enable filling
+                    fillColor: Colors.white, // Set fill color to white
+                    labelText: "Password",
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: Colors.black,
+                    ),
+                  ),
+                  style: TextStyle(color: Colors.black), // Set text color
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -217,11 +212,9 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: Center(
                   child: ElevatedButton(
-                    
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         String enteredEmail = emailController.text.trim();
@@ -241,14 +234,16 @@ class _SignUpState extends State<SignUp> {
                         if (enteredPassword.length < 6) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Password must be at least 6 characters'),
+                              content: Text(
+                                  'Password must be at least 6 characters'),
                             ),
                           );
                           return; // Exit the function if password is invalid
                         }
 
                         // Check if credentials are valid
-                        if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+                        if (emailController.text.isNotEmpty &&
+                            passwordController.text.isNotEmpty) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -256,7 +251,7 @@ class _SignUpState extends State<SignUp> {
                                 email: enteredEmail,
                                 name: nameController.text,
                                 phoneNumber: phoneNumController.text,
-                                ),
+                              ),
                             ),
                           );
                         } else {
@@ -266,8 +261,6 @@ class _SignUpState extends State<SignUp> {
                             ),
                           );
                         }
-
-                       
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -277,24 +270,24 @@ class _SignUpState extends State<SignUp> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 100, 8, 222), padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 100, 8, 222),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 9),
                       shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    
-                    
-                    
                     child: Text(
                       'CREATE MY ACCOUNT',
                       style: TextStyle(
                         fontSize: 14, // Adjust the font size as needed
-                        fontWeight: FontWeight.bold, // Optional: You can specify the font weight
+                        fontWeight: FontWeight
+                            .bold, // Optional: You can specify the font weight
                         // Other text styles can be added here (e.g., color, font family, etc.)
                       ),
                     ),
                   ),
-
                 ),
               ),
             ],
@@ -304,11 +297,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 }
-
-
-
-
-
 
 class HomePage extends StatelessWidget {
   final String email;
@@ -333,16 +321,17 @@ class HomePage extends StatelessWidget {
             Navigator.pop(context);
           },
           icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
         ),
         title: Text(
           'Home Page',
           style: Theme.of(context)
               .textTheme
-              .headline4!
-              .copyWith(color: Colors.white, fontSize: 24),),
+              .headlineMedium!
+              .copyWith(color: Colors.white, fontSize: 24),
+        ),
       ),
       body: Center(
         child: Container(
@@ -356,7 +345,7 @@ class HomePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min, // Use minimum height for the Column
             children: [
               // Display Email
-              _buildInfoRow('Email', email,Icons.email ),
+              _buildInfoRow('Email', email, Icons.email),
 
               // Display Name
               _buildInfoRow('Name', name, Icons.person),
@@ -369,47 +358,46 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-Widget _buildInfoRow(String label, String value, IconData iconData) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+
+  Widget _buildInfoRow(String label, String value, IconData iconData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-      ),
-      SizedBox(height: 4),
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.grey[800],
-        ),
-        child: Row(
-          children: [
-            Icon(
-              iconData, // Use the specified icon for this row
-              color: Colors.white,
-              size: 24,
-            ),
-            SizedBox(width: 8), // Add space between icon and text
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
+        SizedBox(height: 4),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey[800],
+          ),
+          child: Row(
+            children: [
+              Icon(
+                iconData, // Use the specified icon for this row
                 color: Colors.white,
+                size: 24,
               ),
-            ),
-          ],
+              SizedBox(width: 8), // Add space between icon and text
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      SizedBox(height: 8),
-    ],
-  );
+        SizedBox(height: 8),
+      ],
+    );
+  }
 }
-}
-
-
