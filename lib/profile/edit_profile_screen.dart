@@ -62,13 +62,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
     backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black, // Set app bar background color to black
+        backgroundColor: Colors.black, 
         leading: IconButton(
           onPressed: () {
             Get.back();
           },
           icon: const Icon(LineAwesomeIcons.angle_left),
-          color: Colors.white, // Set leading icon color to white
+          color: Colors.white, 
         ),
         title: Text(
           "Edit Profile",
