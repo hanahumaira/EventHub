@@ -1,53 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:eventhub/login/components/my_button.dart';
-import 'package:eventhub/login/components/my_textfield.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
-  // text editing controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  @override
+  _LoginState createState() => _LoginState();
 
-  // Login user method
-  void loginUser() {}
+
+}
+
+
+class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 50),
-            // Logo and welcome text
-            Container(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Image.asset(
-                    'lib/images/mainpage.png',
-                    height: 100,
-                  ),
+       backgroundColor: Colors.black,
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
 
-                  SizedBox(height: 20),
+              //logo and welcome
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+  child: Column(
+    children: [
+      Image.asset(
+        'images/mainpage.png',
+        height: 100,
+      ),
+      SizedBox(height: 20), // Add some spacing between the image and text
+      Text(
+        'Welcome to EventHub!',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
+    ],
+  ),
+),
 
-                  Text(
-                    'Welcome to EventHub!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            // Email, password, remember me, forgot password, login button
-           Container(
+// Email, password, and submit button container
+Container(
   margin: EdgeInsets.symmetric(horizontal: 20), // Add margin for spacing from the screen edges
   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20), // Adjust padding
   decoration: BoxDecoration(
@@ -55,21 +57,42 @@ class LoginPage extends StatelessWidget {
     borderRadius: BorderRadius.circular(20),
   ),
   child: Column(
-    mainAxisSize: MainAxisSize.min, // Use min size to allow the container to wrap its content
-    crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch children horizontally
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      MyTextField(
+      
+      // Email
+      TextFormField(
         controller: emailController,
-        hintText: 'Email',
-        obscureText: false,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Email",
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your email';
+          }
+          return null;
+        },
       ),
-      SizedBox(height: 10),
-      MyTextField(
+      SizedBox(height: 10), // Add some vertical spacing between the email and password fields
+      // Password
+      TextFormField(
         controller: passwordController,
-        hintText: 'Password',
         obscureText: true,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Password",
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your password';
+          }
+          return null;
+        },
       ),
-      SizedBox(height: 10),
+      SizedBox(height: 10), // Add some vertical spacing between the password field and the submit button
+      //checkbox and forget me
       Row(
         children: [
           Checkbox(
@@ -89,12 +112,36 @@ class LoginPage extends StatelessWidget {
         ],
       ),
       SizedBox(height: 10),
-      // Login button
-      MyButton(
-        onTap: loginUser,
+      // Submit button
+      ElevatedButton(
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            if (emailController.text == "nadiya@gmail.com" &&
+                passwordController.text == "12345") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(
+                    email: emailController.text,
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Invalid Credentials'),
+                ),
+              );
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please fill input')),
+            );
+          }
+        },
+        child: const Text('Submit'),
       ),
-      SizedBox(height: 10),
-      // Don't have an account? Create one
+       // Don't have an account? Create one
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -116,12 +163,42 @@ class LoginPage extends StatelessWidget {
           ),
         ],
       ),
+
     ],
   ),
 ),
-          ],
+
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, required this.email});
+
+  final String email;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Home Page'),
+        ),
+        body: Column(
+          children: [
+            Text(email),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Go back!"),
+              ),
+            ),
+          ],
+        ));
   }
 }
