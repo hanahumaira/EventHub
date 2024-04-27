@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:eventhub/signup/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -33,7 +36,7 @@ Padding(
   child: Column(
     children: [
       Image.asset(
-        'images/mainpage.png',
+        'lib/images/mainpage.png',
         height: 100,
       ),
       SizedBox(height: 20), // Add some spacing between the image and text
@@ -151,7 +154,10 @@ Container(
           ),
           TextButton(
             onPressed: () {
-              // Navigate to create account page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const UserSignUp()), //to go to sign up page
+              );
             },
             child: Text(
               "Create an account",
