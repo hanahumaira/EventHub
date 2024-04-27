@@ -86,7 +86,7 @@ class _SignUpState extends State<SignUp> {
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
-        title: Text("Create An Account",
+        title: Text("Create Account",
         style: TextStyle(
           color: Colors.white, // set tet color
           fontSize: 24,
