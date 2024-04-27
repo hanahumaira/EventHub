@@ -183,40 +183,28 @@ Container(
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key, required this.email}) : super(key: key);
+  const HomePage({super.key, required this.email});
 
   final String email;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: Column(
-        children: [
-          Text(email),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                _logoutAndNavigateToLogin(context);
-              },
-              child: const Text("Logout"),
+        appBar: AppBar(
+          title: const Text('Home Page'),
+        ),
+        body: Column(
+          children: [
+            Text(email),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Go back!"),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _logoutAndNavigateToLogin(BuildContext context) {
-    // Add your logout logic here
-    // For example, clearing any user session, tokens, or credentials
-    // After logout, navigate back to the login page
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-      (route) => false, // Clear all previous routes
-    );
+          ],
+        ));
   }
 }
