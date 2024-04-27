@@ -88,13 +88,13 @@ class _SignUpState extends State<SignUp> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
@@ -122,7 +122,7 @@ class _SignUpState extends State<SignUp> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -148,7 +148,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: phoneNumController,
                   decoration: InputDecoration(
@@ -178,7 +178,7 @@ class _SignUpState extends State<SignUp> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
                   controller: passwordController,
                   obscureText: true,
@@ -206,7 +206,7 @@ class _SignUpState extends State<SignUp> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: Center(
                   child: ElevatedButton(
                     
@@ -265,7 +265,7 @@ class _SignUpState extends State<SignUp> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 100, 8, 222), padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 100, 8, 222), padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
                       shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                       ),
@@ -273,7 +273,14 @@ class _SignUpState extends State<SignUp> {
                     
                     
                     
-                    child: const Text('Create my account'),
+                    child: Text(
+                      'CREATE MY ACCOUNT',
+                      style: TextStyle(
+                        fontSize: 14, // Adjust the font size as needed
+                        fontWeight: FontWeight.bold, // Optional: You can specify the font weight
+                        // Other text styles can be added here (e.g., color, font family, etc.)
+                      ),
+                    ),
                   ),
 
                 ),
