@@ -1,4 +1,6 @@
-import 'package:eventhub/forgot-password/forgot_password.dart';
+// ignore_for_file: prefer_const_constructors
+
+import 'package:eventhub/signup/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -33,7 +35,7 @@ class _LoginState extends State<Login> {
                 child: Column(
                   children: [
                     Image.asset(
-                      'images/mainpage.png',
+                      'lib/images/mainpage.png',
                       height: 100,
                     ),
                     SizedBox(
@@ -113,7 +115,7 @@ class _LoginState extends State<Login> {
                         Spacer(),
                         TextButton(
                           onPressed: () {
-                            Get.to(() => ResetPasswordPage());
+                            // Navigate to forgot password page
                           },
                           child: Text('Forgot Password?'),
                         ),
@@ -159,7 +161,12 @@ class _LoginState extends State<Login> {
                         ),
                         TextButton(
                           onPressed: () {
-                            // Navigate to create account page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const UserSignUp()), //to go to sign up page
+                            );
                           },
                           child: Text(
                             "Create an account",
@@ -183,28 +190,38 @@ class _LoginState extends State<Login> {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.email});
+  const HomePage({Key? key, required this.email}) : super(key: key);
 
   final String email;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home Page'),
-        ),
-        body: Column(
-          children: [
-            Text(email),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("Go back!"),
-              ),
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: Column(
+        children: [
+          Text(email),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                _logoutAndNavigateToLogin(context);
+              },
+              child: const Text("Logout"),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    // After logout, navigate back to the login page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false, // Clear all previous routes
+    );
   }
 }

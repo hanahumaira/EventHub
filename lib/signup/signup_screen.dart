@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eventhub/profile/edit_profile_screen.dart';
 import 'package:eventhub/profile/widget/profile_menu.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:get/get.dart';
+// import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+// import 'package:get/get.dart';
 
 
 
@@ -13,11 +14,11 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.black, // Set navigation bar color
   ));
-  runApp(const MyApp());
+  runApp(const UserSignUp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class UserSignUp extends StatelessWidget {
+  const UserSignUp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -75,9 +76,20 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Login()), //go back to sign in
+            );
+          },
+          icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          color: Colors.white,
+        ),
         backgroundColor: Colors.black,
-      
-        title: Text("Create An Account",
+        title: Text("Create Account",
         style: TextStyle(
           color: Colors.white, // set tet color
           fontSize: 24,
@@ -320,8 +332,10 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(LineAwesomeIcons.angle_left),
-          color: Colors.white,
+          icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
         ),
         title: Text(
           'Home Page',
