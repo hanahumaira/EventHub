@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eventhub/forgot-password/forgot_password.dart';
+import 'package:eventhub/homepage/home_page.dart';
 import 'package:eventhub/signup/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -115,7 +117,7 @@ class _LoginState extends State<Login> {
                         Spacer(),
                         TextButton(
                           onPressed: () {
-                            // Navigate to forgot password page
+                             Get.to(() => ResetPasswordPage());
                           },
                           child: Text('Forgot Password?'),
                         ),
@@ -131,7 +133,7 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage(
+                                builder: (context) => HomeScreen(
                                   email: emailController.text,
                                 ),
                               ),
