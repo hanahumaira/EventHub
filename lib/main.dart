@@ -12,7 +12,7 @@ void main() {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       getPages: [
-        GetPage(name: '/', page: () => HomeScreen()),
+        GetPage(name: '/', page: () => Login()),
         GetPage(name: '/editProfile', page: () => const EditProfileScreen()),
       ],
     ),

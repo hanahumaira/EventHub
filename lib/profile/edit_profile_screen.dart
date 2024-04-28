@@ -152,7 +152,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       labelText: 'Full Name',
                       labelStyle:
                           TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
-                      hintText: 'Hana Humaira Bt Burhanuddin',
+                      hintText: 'Nadiya Binti Ahmadi',
                       hintStyle: TextStyle(
                           color: const Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.person_outline_rounded),
@@ -175,7 +175,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       labelText: 'Email',
                       labelStyle:
                           TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
-                      hintText: 'hana@yahoo.com',
+                      hintText: 'nadiya@gmail.com',
                       hintStyle: TextStyle(
                           color: const Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.email_outlined),

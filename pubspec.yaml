@@ -13,24 +13,17 @@ dependencies:
     sdk: flutter
   get: ^4.6.1
   image_picker: ^0.8.4+1
-  
   cupertino_icons: ^1.0.2
   line_awesome_flutter: ^2.0.0
+  email_validator: ^2.0.1  # Add this line
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^2.0.0
-
-dependencies:
-  flutter:
-    sdk: flutter
-  email_validator: ^2.0.1  # Add this line
 
 flutter:
   uses-material-design: true
   assets:
     - lib/profile/img/dp.png
     - lib/images/
-
