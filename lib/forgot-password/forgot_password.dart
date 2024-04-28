@@ -20,9 +20,10 @@ class ForgotPasswordPage extends StatelessWidget {
         title: Text(
           'Forgot Password',
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20, // Increase font size
-              color: Colors.white),
+            fontWeight: FontWeight.bold,
+            fontSize: 20, // Increase font size
+            color: Colors.white, // Text color white
+          ),
         ),
         centerTitle: true,
       ),
@@ -43,9 +44,10 @@ class ForgotPasswordPage extends StatelessWidget {
                   Text(
                     'Forgot Password',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.white),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white, // Text color white
+                    ),
                   ),
                 ],
               ),
@@ -103,7 +105,11 @@ class ForgotPasswordPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
                       ),
-                      child: Text('Send'),
+                      child: Text(
+                        'Send',
+                        style:
+                            TextStyle(color: Colors.white), // Text color white
+                      ),
                     ),
                   ],
                 ),
@@ -127,7 +133,10 @@ class MockupGmailPage extends StatelessWidget {
         title: Text(
           'Gmail Inbox',
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white, // Text color white
+          ),
         ),
         centerTitle: true,
       ),
@@ -146,15 +155,17 @@ class MockupGmailPage extends StatelessWidget {
                 Text(
                   'Gmail Inbox',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.white, // Text color white
+                  ),
                 ),
               ],
             ),
             SizedBox(height: 20),
             Text(
               'Choose either to directly log in or to reset password.',
+              style: TextStyle(color: Colors.white), // Text color white
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -167,7 +178,10 @@ class MockupGmailPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
               ),
-              child: Text('Log In'),
+              child: Text(
+                'Log In',
+                style: TextStyle(color: Colors.white), // Text color white
+              ),
             ),
             SizedBox(height: 10),
             ElevatedButton(
@@ -180,7 +194,10 @@ class MockupGmailPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
               ),
-              child: Text('Reset Password'),
+              child: Text(
+                'Reset Password',
+                style: TextStyle(color: Colors.white), // Text color white
+              ),
             ),
           ],
         ),
@@ -205,7 +222,10 @@ class ResetPasswordPage extends StatelessWidget {
         title: Text(
           'Reset Password',
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white, // Text color white
+          ),
         ),
         centerTitle: true,
       ),
@@ -229,9 +249,10 @@ class ResetPasswordPage extends StatelessWidget {
                     Text(
                       'Reset Password',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.white, // Text color white
+                      ),
                     ),
                   ],
                 ),
@@ -280,7 +301,10 @@ class ResetPasswordPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                   ),
-                  child: Text('Reset'),
+                  child: Text(
+                    'Reset',
+                    style: TextStyle(color: Colors.white), // Text color white
+                  ),
                 ),
               ],
             ),
@@ -302,12 +326,18 @@ class LoginPage extends StatelessWidget {
         title: Text(
           'Login Page',
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white, // Text color white
+          ),
         ),
         centerTitle: true,
       ),
       body: Center(
-        child: Text('Login Page'),
+        child: Text(
+          'Login Page',
+          style: TextStyle(color: Colors.white), // Text color white
+        ),
       ),
     );
   }
@@ -324,12 +354,18 @@ class HomePage extends StatelessWidget {
         title: Text(
           'Home Page',
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white, // Text color white
+          ),
         ),
         centerTitle: true,
       ),
       body: Center(
-        child: Text('Home Page'),
+        child: Text(
+          'Home Page',
+          style: TextStyle(color: Colors.white), // Text color white
+        ),
       ),
     );
   }
