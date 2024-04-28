@@ -71,8 +71,13 @@ class _LoginState extends State<Login> {
                     // Email
                     TextFormField(
                       controller: emailController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Round edge border
+                      // borderSide:
+                      //     BorderSide(color: Colors.white), // Set border color
+                        ),
                         labelText: "Email",
                         prefixIcon: Icon(
                         Icons.email,
@@ -93,8 +98,11 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       controller: passwordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.circular(10),
+                        ),
                         labelText: "Password",
                         prefixIcon: Icon(
                         Icons.lock,
