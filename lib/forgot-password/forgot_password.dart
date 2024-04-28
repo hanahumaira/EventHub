@@ -20,9 +20,9 @@ class ForgotPasswordPage extends StatelessWidget {
         title: Text(
           'Forgot Password',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20, // Increase font size
-          ),
+              fontWeight: FontWeight.bold,
+              fontSize: 20, // Increase font size
+              color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -43,9 +43,9 @@ class ForgotPasswordPage extends StatelessWidget {
                   Text(
                     'Forgot Password',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.white),
                   ),
                 ],
               ),
@@ -127,9 +127,7 @@ class MockupGmailPage extends StatelessWidget {
         title: Text(
           'Gmail Inbox',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -148,9 +146,9 @@ class MockupGmailPage extends StatelessWidget {
                 Text(
                   'Gmail Inbox',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white),
                 ),
               ],
             ),
@@ -207,9 +205,7 @@ class ResetPasswordPage extends StatelessWidget {
         title: Text(
           'Reset Password',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -233,9 +229,9 @@ class ResetPasswordPage extends StatelessWidget {
                     Text(
                       'Reset Password',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -306,9 +302,7 @@ class LoginPage extends StatelessWidget {
         title: Text(
           'Login Page',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -330,9 +324,7 @@ class HomePage extends StatelessWidget {
         title: Text(
           'Home Page',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
         ),
         centerTitle: true,
       ),
