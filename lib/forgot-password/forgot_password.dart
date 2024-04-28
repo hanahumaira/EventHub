@@ -36,7 +36,7 @@ class ForgotPasswordPage extends StatelessWidget {
               Column(
                 children: [
                   Image.asset(
-                    'images/logo.png',
+                    'lib/images/logo.png',
                     width: 80,
                     height: 80,
                   ),
@@ -147,7 +147,7 @@ class MockupGmailPage extends StatelessWidget {
             Column(
               children: [
                 Image.asset(
-                  'images/gmail_logo.png',
+                  'lib/images/gmail_logo.png',
                   width: 80,
                   height: 80,
                 ),
@@ -241,7 +241,7 @@ class ResetPasswordPage extends StatelessWidget {
                 Column(
                   children: [
                     Image.asset(
-                      'images/logo.png',
+                      'lib/images/logo.png',
                       width: 80,
                       height: 80,
                     ),
