@@ -23,6 +23,10 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
 
+dependencies:
+  flutter:
+    sdk: flutter
+  email_validator: ^2.0.1  # Add this line
 
 flutter:
   uses-material-design: true
