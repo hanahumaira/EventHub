@@ -352,6 +352,36 @@ class HomePage extends StatelessWidget {
 
               // Display Phone Number
               _buildInfoRow('Phone Number', phoneNumber, Icons.phone_android),
+
+              SizedBox(height: 24), // Spacer for vertical spacing
+
+              // Button Widget
+              ElevatedButton(
+                onPressed: () {
+                  // Add functionality for button press
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Login()), //go back to sign in
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, // Button background color
+                  backgroundColor: Colors.white, // Text color
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Text(
+                  'Go Back To Login Page',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),
