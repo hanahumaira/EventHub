@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:eventhub/signup/signup_screen.dart';
+import 'package:eventhub/homepage/home_page.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -14,7 +15,6 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool _isChecked = false; // Variable to hold checkbox state
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +31,8 @@ class _LoginState extends State<Login> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                    
                 child: Column(
                   children: [
-                    
                     Image.asset(
                       'lib/images/mainpage.png',
                       height: 100,
@@ -71,18 +69,9 @@ class _LoginState extends State<Login> {
                     // Email
                     TextFormField(
                       controller: emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Round edge border
-                      // borderSide:
-                      //     BorderSide(color: Colors.white), // Set border color
-                        ),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: "Email",
-                        prefixIcon: Icon(
-                        Icons.email,
-                        color: Colors.black,
-                      ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -98,16 +87,9 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       controller: passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.circular(10),
-                        ),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: "Password",
-                        prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.black,
-                      ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -122,17 +104,6 @@ class _LoginState extends State<Login> {
                     //checkbox and forget me
                     Row(
                       children: [
-                        Checkbox(
-                          value: _isChecked, // Example value, change it as needed
-                          onChanged: (value) {
-                            // Update the state of the checkbox
-                            setState(() {
-                              _isChecked = value!;
-                            });
-                          },
-                        ),
-                        Text('Remember me'),
-                        Spacer(),
                         TextButton(
                           onPressed: () {
                             // Navigate to forgot password page
@@ -151,8 +122,8 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage(
-                                  email: emailController.text,
+                                builder: (context) => HomeScreen(
+                                  // email: emailController.text,
                                 ),
                               ),
                             );
@@ -169,13 +140,7 @@ class _LoginState extends State<Login> {
                           );
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 100, 8, 222), padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
-                      shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                      child: const Text('LOGIN'),
+                      child: const Text('Submit'),
                     ),
                     // Don't have an account? Create one
                     Row(
