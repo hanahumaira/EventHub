@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eventhub/forgot-password/forgot_password.dart';
 import 'package:eventhub/signup/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:eventhub/homepage/home_page.dart';
@@ -140,6 +141,12 @@ Widget build(BuildContext context) {
                         TextButton(
                           onPressed: () {
                             // Navigate to forgot password page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ForgotPasswordPage()), //to go to sign up page
+                            );
                           },
                           child: Text('Forgot Password?'),
                         ),
