@@ -26,33 +26,32 @@ class ForgotPasswordPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                Image.asset(
-                  'images/logo.png', // Change this to the path of your logo image
-                  width: 80, // Adjust width as needed
-                  height: 80, // Adjust height as needed
-                ),
-                SizedBox(height: 10), // Add space between logo and title
-                Text(
-                  'Forgot Password',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20, // Increase font size
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Image.asset(
+                    'images/logo.png',
+                    width: 80,
+                    height: 80,
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Form(
-              key: _formKey,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20.0), // Add horizontal padding
+                  SizedBox(height: 10),
+                  Text(
+                    'Forgot Password',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Form(
+                key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -65,7 +64,6 @@ class ForgotPasswordPage extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email address';
                         }
-                        // Regular expression for email validation
                         final emailRegExp =
                             RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                         if (!emailRegExp.hasMatch(value)) {
@@ -93,10 +91,8 @@ class ForgotPasswordPage extends StatelessWidget {
                                 child: Text(
                                   'Password reset email sent',
                                   style: TextStyle(
-                                    color: Colors
-                                        .blue, // Change text color to blue for indicating it's clickable
-                                    decoration: TextDecoration
-                                        .underline, // Add underline to indicate it's clickable
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),
@@ -112,8 +108,8 @@ class ForgotPasswordPage extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -132,7 +128,7 @@ class MockupGmailPage extends StatelessWidget {
           'Gmail Inbox',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Increase font size
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
@@ -144,16 +140,16 @@ class MockupGmailPage extends StatelessWidget {
             Column(
               children: [
                 Image.asset(
-                  'images/gmail_logo.png', // Change this to the path of your Gmail logo image
-                  width: 80, // Adjust width as needed
-                  height: 80, // Adjust height as needed
+                  'images/gmail_logo.png',
+                  width: 80,
+                  height: 80,
                 ),
-                SizedBox(height: 10), // Add space between logo and title
+                SizedBox(height: 10),
                 Text(
                   'Gmail Inbox',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20, // Increase font size
+                    fontSize: 20,
                   ),
                 ),
               ],
@@ -167,7 +163,7 @@ class MockupGmailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => HomePage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -195,64 +191,6 @@ class MockupGmailPage extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'Login',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20, // Increase font size
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: [
-                Image.asset(
-                  'images/logo.png', // Change this to the path of your logo image
-                  width: 80, // Adjust width as needed
-                  height: 80, // Adjust height as needed
-                ),
-                SizedBox(height: 10), // Add space between logo and title
-                Text(
-                  'Login',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20, // Increase font size
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-              ),
-              child: Text('Log In'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ResetPasswordPage extends StatelessWidget {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -270,82 +208,86 @@ class ResetPasswordPage extends StatelessWidget {
           'Reset Password',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Increase font size
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
       ),
-      body: Form(
-        key: _formKey,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                children: [
-                  Image.asset(
-                    'images/logo.png', // Change this to the path of your logo image
-                    width: 80, // Adjust width as needed
-                    height: 80, // Adjust height as needed
-                  ),
-                  SizedBox(height: 10), // Add space between logo and title
-                  Text(
-                    'Reset Password',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20, // Increase font size
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20.0), // Add horizontal padding
+        child: Form(
+          key: _formKey,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: [
+                    Image.asset(
+                      'images/logo.png',
+                      width: 80,
+                      height: 80,
                     ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Reset Password',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _newPasswordController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter new password',
                   ),
-                ],
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _newPasswordController,
-                decoration: InputDecoration(
-                  hintText: 'Enter new password',
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a new password';
+                    }
+                    return null;
+                  },
                 ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a new password';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _confirmPasswordController,
-                decoration: InputDecoration(
-                  hintText: 'Re-enter new password',
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(
+                    hintText: 'Re-enter new password',
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please re-enter your new password';
+                    }
+                    if (value != _newPasswordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
                 ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please re-enter your new password';
-                  }
-                  if (value != _newPasswordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState != null &&
-                      _formKey.currentState!.validate()) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState != null &&
+                        _formKey.currentState!.validate()) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                  ),
+                  child: Text('Reset'),
                 ),
-                child: Text('Submit'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -353,7 +295,31 @@ class ResetPasswordPage extends StatelessWidget {
   }
 }
 
-class MainPage extends StatelessWidget {
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Login Page',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text('Login Page'),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -365,13 +331,13 @@ class MainPage extends StatelessWidget {
           'Home Page',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Increase font size
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
       ),
       body: Center(
-        child: Text('Welcome to the home page!'),
+        child: Text('Home Page'),
       ),
     );
   }
