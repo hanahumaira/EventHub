@@ -21,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
           icon: const Icon(LineAwesomeIcons.angle_left),
           color: Colors.white,
         ),
-        title: Text(
+        title: const Text(
           "Profile",
           style: TextStyle(color: Colors.white, fontSize: 24),
         ),
@@ -68,11 +68,11 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              Text(
+              const Text(
                 "Nadiya",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              Text(
+              const Text(
                 "nadiya@gmail.com",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
@@ -136,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (route) => false,
     );
   }
@@ -165,7 +165,7 @@ class ProfileMenuWidget extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, color: textColor),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Text(
               title,
               style: TextStyle(color: textColor),

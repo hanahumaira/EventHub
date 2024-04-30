@@ -36,7 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _pickImage(ImageSource source) async {
+    Future<void> pickImage(ImageSource source) async {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: source);
 
@@ -47,7 +47,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
 
-    void _showImagePicker(BuildContext context) {
+    void showImagePicker(BuildContext context) {
       showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -59,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   leading: const Icon(Icons.photo_library),
                   title: const Text('Choose from gallery'),
                   onTap: () {
-                    _pickImage(ImageSource.gallery);
+                    pickImage(ImageSource.gallery);
                     Navigator.pop(context);
                   },
                 ),
@@ -67,7 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   leading: const Icon(Icons.photo_camera),
                   title: const Text('Take a photo'),
                   onTap: () {
-                    _pickImage(ImageSource.camera);
+                    pickImage(ImageSource.camera);
                     Navigator.pop(context);
                   },
                 ),
@@ -121,7 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   right: 0,
                   child: GestureDetector(
                     onTap: () {
-                      _showImagePicker(context);
+                      showImagePicker(context);
                     },
                     child: Container(
                       width: 35,
@@ -147,14 +147,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   TextFormField(
                     controller: nameController,
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Full Name',
                       labelStyle:
-                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'Nadiya Binti Ahmadi',
-                      hintStyle: TextStyle(
-                          color: const Color.fromARGB(163, 158, 158, 158)),
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -170,14 +170,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 30),
                   TextFormField(
                     controller: emailController,
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle:
-                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'nadiya@gmail.com',
-                      hintStyle: TextStyle(
-                          color: const Color.fromARGB(163, 158, 158, 158)),
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -193,14 +193,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 30),
                   TextFormField(
                     controller: phoneNumController,
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Phone No',
                       labelStyle:
-                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: '0123456789',
-                      hintStyle: TextStyle(
-                          color: const Color.fromARGB(163, 158, 158, 158)),
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.call),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -219,12 +219,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 30),
                   TextFormField(
                     controller: passwordController,
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle:
-                          TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       prefixIcon: const Icon(Icons.fingerprint),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -274,7 +274,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Save',
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),

@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 100, 8, 222),
+      backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -173,7 +173,7 @@ class HomeScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfileScreen(),
+                                builder: (context) => const ProfileScreen(),
                               ),
                             );
                           },
@@ -278,7 +278,7 @@ class FooterIconButton extends StatelessWidget {
 void _logoutAndNavigateToLogin(BuildContext context) {
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => Login()),
+    MaterialPageRoute(builder: (context) => const Login()),
     (route) => false,
   );
 }

@@ -1,4 +1,8 @@
+import 'package:eventhub/homepage/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:eventhub/login/login_page.dart';
+//import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -10,6 +14,8 @@ class ForgotPasswordPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ForgotPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +23,7 @@ class ForgotPasswordPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Forgot Password',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -36,12 +42,12 @@ class ForgotPasswordPage extends StatelessWidget {
               Column(
                 children: [
                   Image.asset(
-                    'images/logo.png',
+                    'lib/images/logo.png',
                     width: 80,
                     height: 80,
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     'Forgot Password',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -51,7 +57,7 @@ class ForgotPasswordPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Form(
                 key: _formKey,
                 child: Column(
@@ -59,8 +65,9 @@ class ForgotPasswordPage extends StatelessWidget {
                   children: <Widget>[
                     TextFormField(
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Enter your registered email',
+                        hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -74,7 +81,7 @@ class ForgotPasswordPage extends StatelessWidget {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState != null &&
@@ -87,10 +94,10 @@ class ForgotPasswordPage extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            MockupGmailPage()),
+                                            const MockupGmailPage()),
                                   );
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Password reset email sent',
                                   style: TextStyle(
                                     color: Colors.blue,
@@ -105,7 +112,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
                       ),
-                      child: Text(
+                      child: const Text(
                         'Send',
                         style:
                             TextStyle(color: Colors.white), // Text color white
@@ -123,6 +130,8 @@ class ForgotPasswordPage extends StatelessWidget {
 }
 
 class MockupGmailPage extends StatelessWidget {
+  const MockupGmailPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +139,7 @@ class MockupGmailPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Gmail Inbox',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -147,12 +156,12 @@ class MockupGmailPage extends StatelessWidget {
             Column(
               children: [
                 Image.asset(
-                  'images/gmail_logo.png',
+                  'lib/images/gmailLogo.png',
                   width: 80,
                   height: 80,
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   'Gmail Inbox',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -162,28 +171,28 @@ class MockupGmailPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Choose either to directly log in or to reset password.',
               style: TextStyle(color: Colors.white), // Text color white
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
               ),
-              child: Text(
+              child: const Text(
                 'Log In',
                 style: TextStyle(color: Colors.white), // Text color white
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -194,7 +203,7 @@ class MockupGmailPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
               ),
-              child: Text(
+              child: const Text(
                 'Reset Password',
                 style: TextStyle(color: Colors.white), // Text color white
               ),
@@ -212,6 +221,8 @@ class ResetPasswordPage extends StatelessWidget {
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ResetPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,7 +230,7 @@ class ResetPasswordPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Reset Password',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -241,12 +252,12 @@ class ResetPasswordPage extends StatelessWidget {
                 Column(
                   children: [
                     Image.asset(
-                      'images/logo.png',
+                      'lib/images/logo.png',
                       width: 80,
                       height: 80,
                     ),
-                    SizedBox(height: 10),
-                    Text(
+                    const SizedBox(height: 10),
+                    const Text(
                       'Reset Password',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -256,11 +267,12 @@ class ResetPasswordPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _newPasswordController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Enter new password',
+                    hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
                   ),
                   obscureText: true,
                   validator: (value) {
@@ -270,11 +282,12 @@ class ResetPasswordPage extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: _confirmPasswordController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Re-enter new password',
+                    hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
                   ),
                   obscureText: true,
                   validator: (value) {
@@ -287,21 +300,21 @@ class ResetPasswordPage extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState != null &&
                         _formKey.currentState!.validate()) {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                   ),
-                  child: Text(
+                  child: const Text(
                     'Reset',
                     style: TextStyle(color: Colors.white), // Text color white
                   ),
@@ -316,6 +329,8 @@ class ResetPasswordPage extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -323,7 +338,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Login Page',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -333,7 +348,7 @@ class LoginPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Login Page',
           style: TextStyle(color: Colors.white), // Text color white
@@ -344,6 +359,8 @@ class LoginPage extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -351,7 +368,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Home Page',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -361,7 +378,7 @@ class HomePage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Home Page',
           style: TextStyle(color: Colors.white), // Text color white
