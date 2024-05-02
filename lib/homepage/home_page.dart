@@ -6,8 +6,6 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
   // const HomeScreen({Key? key, required this.email}) : super(key: key);
   // final String email;
-  //Test test - LIYANA
-  //Testing 2.0
 
   @override
   Widget build(BuildContext context) {
