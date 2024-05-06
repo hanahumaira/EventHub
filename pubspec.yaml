@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.1
-  image_picker: ^0.8.4+1
+  image_picker: ^1.0.8
   cupertino_icons: ^1.0.2
   line_awesome_flutter: ^2.0.0
   email_validator: ^2.0.1  # Add this line
@@ -20,7 +20,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.2
 
 flutter:
   uses-material-design: true
