@@ -1,13 +1,11 @@
-import 'package:eventhub/profile/profile_screen.dart';
 import 'package:eventhub/login/login_page.dart';
+import 'package:eventhub/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-  // const HomeScreen({Key? key, required this.email}) : super(key: key);
-  // final String email;
-  // test 3.0
-  // test 4.0
+class UserHomePage extends StatelessWidget {
+  final String userEmail;
+
+  const UserHomePage({Key? key, required this.userEmail}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,10 +105,6 @@ class HomeScreen extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {},
                           child: const Text("Charity"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("Fundraiser"),
                         ),
                       ],
                     ),

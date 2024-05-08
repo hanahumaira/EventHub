@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:eventhub/forgot-password/forgot_password.dart';
+import 'package:eventhub/homepage/organiser/organiser_homepage.dart';
+import 'package:eventhub/homepage/user/user_homepage.dart';
 import 'package:eventhub/signup/signup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:eventhub/homepage/home_page.dart';
 
 
 class Login extends StatefulWidget {
@@ -154,40 +155,54 @@ Widget build(BuildContext context) {
                     ),
                     SizedBox(height: 10),
                     // Submit button
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (emailController.text == "nadiya@gmail.com" &&
-                              passwordController.text == "12345") {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(
-                                  // email: emailController.text,
-                                ),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Invalid Credentials'),
-                              ),
-                            );
-                          }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please fill input')),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color.fromARGB(255, 100, 8, 222), padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
-                      shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                      child: const Text('LOGIN'),
-                    ),
+ElevatedButton(
+  onPressed: () {
+    if (_formKey.currentState!.validate()) {
+      // Check the entered email and password
+      if (emailController.text == "nadiya@gmail.com" &&
+          passwordController.text == "12345") {
+        // Navigate to organiser homepage
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrganiserHomePage(userEmail: emailController.text),
+          ),
+        );
+      } else if (emailController.text == "hanim@gmail.com" &&
+          passwordController.text == "12345") {
+        // Navigate to user homepage
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserHomePage(userEmail: emailController.text),
+          ),
+        );
+      } else {
+        // Show error message for invalid credentials
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid Credentials'),
+          ),
+        );
+      }
+    } else {
+      // Show error message for empty fields
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill input')),
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white,
+    backgroundColor: Color.fromARGB(255, 100, 8, 222),
+    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+  child: const Text('LOGIN'),
+),
+
                     // Don't have an account? Create one
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
