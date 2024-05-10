@@ -1,7 +1,8 @@
-import 'package:eventhub/homepage/home_page.dart';
+import 'package:eventhub/homepage/organiser/organiser_homepage.dart';
+import 'package:eventhub/homepage/admin/admin_homepage.dart';
+import 'package:eventhub/homepage/user/user_homepage.dart';
 import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -66,7 +67,9 @@ class ForgotPasswordPage extends StatelessWidget {
                       controller: _emailController,
                       decoration: const InputDecoration(
                         hintText: 'Enter your registered email',
-                        hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                        hintStyle: TextStyle(
+                            color:
+                                Colors.white), // Set hint text color to white
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -180,7 +183,7 @@ class MockupGmailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => Login()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -271,7 +274,8 @@ class ResetPasswordPage extends StatelessWidget {
                   controller: _newPasswordController,
                   decoration: const InputDecoration(
                     hintText: 'Enter new password',
-                    hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                    hintStyle: TextStyle(
+                        color: Colors.white), // Set hint text color to white
                   ),
                   obscureText: true,
                   validator: (value) {
@@ -286,7 +290,8 @@ class ResetPasswordPage extends StatelessWidget {
                   controller: _confirmPasswordController,
                   decoration: const InputDecoration(
                     hintText: 'Re-enter new password',
-                    hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                    hintStyle: TextStyle(
+                        color: Colors.white), // Set hint text color to white
                   ),
                   obscureText: true,
                   validator: (value) {
@@ -306,7 +311,7 @@ class ResetPasswordPage extends StatelessWidget {
                         _formKey.currentState!.validate()) {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        MaterialPageRoute(builder: (context) => const Login()),
                       );
                     }
                   },

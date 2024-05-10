@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 class OrganiserHomePage extends StatelessWidget {
   final String userEmail;
 
-  const OrganiserHomePage({Key? key, required this.userEmail}) : super(key: key);
+  const OrganiserHomePage({Key? key, required this.userEmail})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class OrganiserHomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
@@ -135,72 +136,73 @@ class OrganiserHomePage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
-                   // Inside the build method of organiserHomePage
+                    // Inside the build method of organiserHomePage
 
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Text(
-      "Events",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreateEventPage(),
-              ),
-            );
-          },
-          child: Row(
-            children: [
-              Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              Text(
-                "Event",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventPage(),
-              ),
-            );
-          },
-          child: Text(
-            "See More",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        Icon(
-          Icons.arrow_forward,
-          color: Colors.white,
-        ),
-      ],
-    ),
-  ],
-),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Events",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateEventPage(),
+                                  ),
+                                );
+                              },
+                              child: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "Event",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const EventPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "See More",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
 
                     const SizedBox(height: 5),
                     Column(
@@ -211,8 +213,9 @@ Row(
                             scrollDirection: Axis.horizontal,
                             itemCount: 5, // 5 events in the first row
                             itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: 200, // Adjusted width to fit two cards in a row
+                              return const SizedBox(
+                                width:
+                                    200, // Adjusted width to fit two cards in a row
                                 child: EventCard(),
                               );
                             },
@@ -225,8 +228,9 @@ Row(
                             scrollDirection: Axis.horizontal,
                             itemCount: 5, // 5 events in the second row
                             itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: 200, // Adjusted width to fit two cards in a row
+                              return const SizedBox(
+                                width:
+                                    200, // Adjusted width to fit two cards in a row
                                 child: EventCard(),
                               );
                             },
@@ -248,9 +252,7 @@ Row(
                 FooterIconButton(
                     icon: Icons.home, label: "Home", onPressed: () {}),
                 FooterIconButton(
-                    icon: Icons.event,
-                    label: "My Event",
-                    onPressed: () {}),
+                    icon: Icons.event, label: "My Event", onPressed: () {}),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
@@ -323,9 +325,6 @@ class EventCard extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class FooterIconButton extends StatelessWidget {
   final IconData icon;

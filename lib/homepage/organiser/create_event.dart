@@ -30,7 +30,7 @@ class CreateEventPage extends StatelessWidget {
         ],
         title: Text(
           "Create Event",
-          style: Theme.of(context).textTheme.headline6!.copyWith(
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -45,118 +45,117 @@ class CreateEventPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-  // Upload photo
-  // TODO: Implement photo upload widget
+                  // Upload photo
+                  // TODO: Implement photo upload widget
 
-  // Event Name
-  TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Event Name *',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    style: TextStyle(color: Colors.white),
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please enter the event name';
-      }
-      return null;
-    },
-  ),
-  SizedBox(height: 20),
+                  // Event Name
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Event Name *',
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the event name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-  // Date and Time
-  // TODO: Implement date and time picker
-  // Example:
-  // DateTimeField(
-  //   decoration: InputDecoration(
-  //     labelText: 'Date and Time *',
-  //     labelStyle: TextStyle(color: Colors.white),
-  //     border: OutlineInputBorder(),
-  //   ),
-  //   format: DateFormat('dd/MM/yyyy hh:mm a'),
-  //   onShowPicker: (context, currentValue) async {
-  //     final date = await showDatePicker(...);
-  //     final time = await showTimePicker(...);
-  //     return DateTimeField.combine(date!, time);
-  // },
-  // validator: (value) {
-  //   if (value == null) {
-  //     return 'Please select the date and time';
-  //   }
-  //   return null;
-  // },
+                  // Date and Time
+                  // TODO: Implement date and time picker
+                  // Example:
+                  // DateTimeField(
+                  //   decoration: InputDecoration(
+                  //     labelText: 'Date and Time *',
+                  //     labelStyle: TextStyle(color: Colors.white),
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  //   format: DateFormat('dd/MM/yyyy hh:mm a'),
+                  //   onShowPicker: (context, currentValue) async {
+                  //     final date = await showDatePicker(...);
+                  //     final time = await showTimePicker(...);
+                  //     return DateTimeField.combine(date!, time);
+                  // },
+                  // validator: (value) {
+                  //   if (value == null) {
+                  //     return 'Please select the date and time';
+                  //   }
+                  //   return null;
+                  // },
 
-  // Location
-  TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Location *',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    style: TextStyle(color: Colors.white),
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please enter the location';
-      }
-      return null;
-    },
-  ),
-  SizedBox(height: 20),
+                  // Location
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Location *',
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the location';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-  // Fee
-  TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Fee *',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    style: TextStyle(color: Colors.white),
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please enter the fee';
-      }
-      return null;
-    },
-  ),
-  SizedBox(height: 20),
+                  // Fee
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Fee *',
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the fee';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-  // Organizer
-  TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Organizer *',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    style: TextStyle(color: Colors.white),
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please enter the organizer';
-      }
-      return null;
-    },
-  ),
-  SizedBox(height: 20),
+                  // Organizer
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Organizer *',
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the organizer';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-  // Details
-  TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Details *',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    style: TextStyle(color: Colors.white),
-    maxLines: null, // Allow multiple lines for details
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please enter the details';
-      }
-      return null;
-    },
-  ),
-  SizedBox(height: 20),
-],
-
+                  // Details
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Details *',
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    maxLines: null, // Allow multiple lines for details
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the details';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
             ),
           ),
@@ -172,14 +171,14 @@ class CreateEventPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 //create event button
                 ElevatedButton(
                   onPressed: () {
                     //functions & go to event page
                   },
-                  child: Text('Create Event'),
+                  child: const Text('Create Event'),
                 ),
               ],
             ),
@@ -193,9 +192,7 @@ class CreateEventPage extends StatelessWidget {
                 FooterIconButton(
                     icon: Icons.home, label: "Home", onPressed: () {}),
                 FooterIconButton(
-                    icon: Icons.event,
-                    label: "My Event",
-                    onPressed: () {}),
+                    icon: Icons.event, label: "My Event", onPressed: () {}),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",

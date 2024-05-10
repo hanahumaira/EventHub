@@ -16,6 +16,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   line_awesome_flutter: ^2.0.0
   email_validator: ^2.0.1  # Add this line
+  cloud_firestore: 4.15.8
+  firebase_core: ^2.10.0
+  firebase_auth: ^4.6.3
+  firebase_storage: ^11.2.4
 
 dev_dependencies:
   flutter_test:
