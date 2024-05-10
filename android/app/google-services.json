@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "408678428729",
+    "project_id": "eventhub-map4",
+    "storage_bucket": "eventhub-map4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408678428729:android:ba1815e89ea84e2468dde8",
+        "android_client_info": {
+          "package_name": "com.flutter.eventhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs1VzJ9Ps3tkry9plsTYgl_jO2wZkxSZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

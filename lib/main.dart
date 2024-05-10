@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login/login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:eventhub/profile/edit_profile_screen.dart';
 
 void main() {
