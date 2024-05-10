@@ -1,4 +1,5 @@
-import 'package:eventhub/homepage/home_page.dart';
+// import 'package:eventhub/homepage/home_page.dart';
+import 'package:eventhub/homepage/user/user_homepage.dart';
 import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -180,7 +181,7 @@ class MockupGmailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => UserHomePage(userEmail: '',)),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -306,7 +307,7 @@ class ResetPasswordPage extends StatelessWidget {
                         _formKey.currentState!.validate()) {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        MaterialPageRoute(builder: (context) => const UserHomePage(userEmail: '',)),
                       );
                     }
                   },

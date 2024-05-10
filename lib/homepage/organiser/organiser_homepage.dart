@@ -1,5 +1,6 @@
 import 'package:eventhub/homepage/organiser/create_event.dart';
 import 'package:eventhub/homepage/organiser/event_page.dart';
+import 'package:eventhub/homepage/organiser/myevent.dart';
 import 'package:eventhub/login/login_page.dart';
 import 'package:eventhub/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -250,7 +251,15 @@ Row(
                 FooterIconButton(
                     icon: Icons.event,
                     label: "My Event",
-                    onPressed: () {}),
+                    onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyEvent(),
+                      ),
+                    );
+                  },
+                  ),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
