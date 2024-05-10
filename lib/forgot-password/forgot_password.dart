@@ -185,7 +185,6 @@ class MockupGmailPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => UserHomePage(userEmail: '',)),
-                  MaterialPageRoute(builder: (context) => Login()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -312,7 +311,6 @@ class ResetPasswordPage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const UserHomePage(userEmail: '',)),
-                        MaterialPageRoute(builder: (context) => const Login()),
                       );
                     }
                   },
