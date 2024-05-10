@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -150,8 +150,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Full Name',
-                      labelStyle:
-                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'Nadiya Binti Ahmadi',
                       hintStyle: const TextStyle(
                           color: Color.fromARGB(163, 158, 158, 158)),
@@ -173,8 +173,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle:
-                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: 'nadiya@gmail.com',
                       hintStyle: const TextStyle(
                           color: Color.fromARGB(163, 158, 158, 158)),
@@ -196,8 +196,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Phone No',
-                      labelStyle:
-                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
                       hintText: '0123456789',
                       hintStyle: const TextStyle(
                           color: Color.fromARGB(163, 158, 158, 158)),
@@ -223,8 +223,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle:
-                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
                       prefixIcon: const Icon(Icons.fingerprint),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),

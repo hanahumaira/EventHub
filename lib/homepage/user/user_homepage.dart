@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class UserHomePage extends StatelessWidget {
   final String userEmail;
 
-  const UserHomePage({Key? key, required this.userEmail}) : super(key: key);
+  const UserHomePage({super.key, required this.userEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +189,7 @@ class UserHomePage extends StatelessWidget {
 }
 
 class EventCard extends StatelessWidget {
-  const EventCard({Key? key}) : super(key: key);
+  const EventCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -247,11 +247,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

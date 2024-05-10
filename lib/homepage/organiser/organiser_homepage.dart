@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 class OrganiserHomePage extends StatelessWidget {
   final String userEmail;
 
-  const OrganiserHomePage({Key? key, required this.userEmail})
-      : super(key: key);
+  const OrganiserHomePage({super.key, required this.userEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -253,9 +252,9 @@ class OrganiserHomePage extends StatelessWidget {
                 FooterIconButton(
                     icon: Icons.home, label: "Home", onPressed: () {}),
                 FooterIconButton(
-                    icon: Icons.event,
-                    label: "My Event",
-                    onPressed: () {
+                  icon: Icons.event,
+                  label: "My Event",
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -263,7 +262,7 @@ class OrganiserHomePage extends StatelessWidget {
                       ),
                     );
                   },
-                  ),
+                ),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
@@ -286,7 +285,7 @@ class OrganiserHomePage extends StatelessWidget {
 }
 
 class EventCard extends StatelessWidget {
-  const EventCard({Key? key}) : super(key: key);
+  const EventCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -343,11 +342,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

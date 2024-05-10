@@ -1,29 +1,29 @@
 import 'package:eventhub/homepage/organiser/create_event.dart';
-import 'package:eventhub/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 
 class MyEvent extends StatefulWidget {
-  const MyEvent({Key? key}) : super(key: key);
+  const MyEvent({super.key});
 
   @override
   _MyEventState createState() => _MyEventState();
 }
 
 class _MyEventState extends State<MyEvent> {
-  bool showFutureEvents = true; // Flag to determine whether to show future or past events
+  bool showFutureEvents =
+      true; // Flag to determine whether to show future or past events
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Events'),
+        title: const Text('My Events'),
       ),
       body: Container(
         color: Colors.black, // Set background color to purple
         child: Column(
-          children: [            
-            SizedBox(height: 20),
+          children: [
+            const SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -33,11 +33,11 @@ class _MyEventState extends State<MyEvent> {
                     // Text('These are all your events!', style: TextStyle(fontSize: 20, color: Colors.white)),
                     // SizedBox(height: 20),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Search your event',
-                          hintStyle: const TextStyle(color: Colors.white),
+                          hintStyle: TextStyle(color: Colors.white),
                           prefixIcon: Icon(Icons.search),
                         ),
                         onChanged: (value) {
@@ -45,56 +45,60 @@ class _MyEventState extends State<MyEvent> {
                         },
                       ),
                     ),
-                    SizedBox(height: 20),
-                   ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CreateEventPage()),
-    );
-  },
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Icon(
-        Icons.add,
-        color: Colors.purple, // Adjust color as needed
-        size: 30, // Adjust size as needed
-      ),
-      SizedBox(width: 10), // Adjust spacing between icon and text
-      Text(
-        'Create Event',
-      ),
-    ],
-  ),
-),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CreateEventPage()),
+                        );
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: Colors.purple, // Adjust color as needed
+                            size: 30, // Adjust size as needed
+                          ),
+                          SizedBox(
+                              width:
+                                  10), // Adjust spacing between icon and text
+                          Text(
+                            'Create Event',
+                          ),
+                        ],
+                      ),
+                    ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      showFutureEvents = true; // Show future events
-                    });
-                  },
-                  child: Text('Future Events'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      showFutureEvents = false; // Show past events
-                    });
-                  },
-                  child: Text('Past Events'),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-                    Divider(thickness: 2, color: Colors.white),
-                    SizedBox(height: 20),
-                    buildEventList(context), // Display events based on selected filter
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              showFutureEvents = true; // Show future events
+                            });
+                          },
+                          child: const Text('Future Events'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              showFutureEvents = false; // Show past events
+                            });
+                          },
+                          child: const Text('Past Events'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Divider(thickness: 2, color: Colors.white),
+                    const SizedBox(height: 20),
+                    buildEventList(
+                        context), // Display events based on selected filter
                   ],
                 ),
               ),
@@ -102,7 +106,6 @@ class _MyEventState extends State<MyEvent> {
           ],
         ),
       ),
-      
     );
   }
 
@@ -128,13 +131,21 @@ class _MyEventState extends State<MyEvent> {
 
     // Filter events based on past/future
     List<Map<String, dynamic>> filteredEvents = showFutureEvents
-        ? events.where((event) => DateFormat('MMM d, yyyy').parse(event['date']).isAfter(DateTime.now())).toList()
-        : events.where((event) => DateFormat('MMM d, yyyy').parse(event['date']).isBefore(DateTime.now())).toList();
+        ? events
+            .where((event) => DateFormat('MMM d, yyyy')
+                .parse(event['date'])
+                .isAfter(DateTime.now()))
+            .toList()
+        : events
+            .where((event) => DateFormat('MMM d, yyyy')
+                .parse(event['date'])
+                .isBefore(DateTime.now()))
+            .toList();
 
     return Column(
       children: filteredEvents.map((event) {
         return Card(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: ListTile(
             leading: Image.asset(
               event['picture'],
@@ -142,14 +153,17 @@ class _MyEventState extends State<MyEvent> {
               height: 60,
               fit: BoxFit.cover,
             ),
-            
-            title: Text(event['eventName'], style: TextStyle(color: Colors.black)),
+            title: Text(event['eventName'],
+                style: const TextStyle(color: Colors.black)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Date: ${event['date']}', style: TextStyle(color: Colors.black)),
-                Text('Time: ${event['time']}', style: TextStyle(color: Colors.black)),
-                Text('Location: ${event['location']}', style: TextStyle(color: Colors.black)),
+                Text('Date: ${event['date']}',
+                    style: const TextStyle(color: Colors.black)),
+                Text('Time: ${event['time']}',
+                    style: const TextStyle(color: Colors.black)),
+                Text('Location: ${event['location']}',
+                    style: const TextStyle(color: Colors.black)),
               ],
             ),
             onTap: () {
@@ -168,11 +182,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -184,4 +198,3 @@ class FooterIconButton extends StatelessWidget {
     );
   }
 }
-

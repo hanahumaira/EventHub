@@ -304,11 +304,11 @@ class HomePage extends StatelessWidget {
   final String phoneNumber;
 
   const HomePage({
-    Key? key,
+    super.key,
     required this.email,
     required this.name,
     required this.phoneNumber,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -381,7 +381,6 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-
             ],
           ),
         ),

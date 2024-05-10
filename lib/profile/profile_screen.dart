@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -149,12 +149,12 @@ class ProfileMenuWidget extends StatelessWidget {
   final Color textColor;
 
   const ProfileMenuWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onPress,
     this.textColor = Colors.black,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

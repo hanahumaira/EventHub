@@ -3,7 +3,7 @@ import 'package:eventhub/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class CreateEventPage extends StatelessWidget {
-  const CreateEventPage({Key? key}) : super(key: key);
+  const CreateEventPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +215,7 @@ class CreateEventPage extends StatelessWidget {
 }
 
 class EventCard extends StatelessWidget {
-  const EventCard({Key? key}) : super(key: key);
+  const EventCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -272,11 +272,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

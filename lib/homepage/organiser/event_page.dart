@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EventPage extends StatelessWidget {
-  const EventPage({Key? key}) : super(key: key);
+  const EventPage({super.key});
 
   @override
   Widget build(BuildContext context) {
