@@ -22,11 +22,11 @@ dependencies:
   firebase_auth: ^4.19.5
   firebase_storage: ^11.2.4
 
-  dependencies:
-  image_picker: ^1.1.1
+  # dependencies:
+  # image_picker: ^1.1.1
 
-  dependencies:
-  flutter_datetime_picker: ^2.0.0
+  # dependencies:
+  # flutter_datetime_picker: ^2.0.0
 
 dev_dependencies:
   flutter_test:
