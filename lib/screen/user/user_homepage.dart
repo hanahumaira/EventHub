@@ -40,7 +40,7 @@ class _AdminHomeState extends State<UserHomePage> {
           ),
         ],
         title: Text(
-          "Welcome to EventHub!",
+          "You are a Particpant!",
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 20,

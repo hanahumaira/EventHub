@@ -40,7 +40,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
           ),
         ],
         title: Text(
-          "Welcome to EventHub!",
+          "You are an Organiser!",
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 20,

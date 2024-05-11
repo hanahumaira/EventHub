@@ -194,7 +194,7 @@ class _LoginState extends State<Login> {
                                     );
                                   } //Organizer
                                   else if (userSnapshot['accountType'] ==
-                                          'ORGANIZER' &&
+                                          'Organizer' &&
                                       userSnapshot['password'] ==
                                           _password.text) {
                                     Navigator.pushReplacement(
@@ -212,7 +212,9 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     );
-                                  } else if (userSnapshot['password'] ==
+                                  } else if (userSnapshot['accountType'] ==
+                                          'Participant' &&
+                                           userSnapshot['password'] ==
                                       _password.text) {
                                     User passUser = User(
                                       name: userSnapshot['name'],
