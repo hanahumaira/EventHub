@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'eventhub-map4.appspot.com',
     measurementId: 'G-D7SEMV7M7N',
   );
+
 }

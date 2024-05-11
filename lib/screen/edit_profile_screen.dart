@@ -1,4 +1,4 @@
-import 'package:eventhub/profile/profile_screen.dart';
+import 'package:eventhub/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -112,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             fit: BoxFit.cover,
                           )
                         : const Image(
-                            image: AssetImage('lib/profile/img/dp.png'),
+                            image: AssetImage('lib/images/dp.png'),
                           ),
                   ),
                 ),

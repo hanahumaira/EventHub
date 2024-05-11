@@ -1,15 +1,21 @@
-import 'package:eventhub/homepage/organiser/create_event.dart';
-import 'package:eventhub/homepage/organiser/event_page.dart';
-import 'package:eventhub/homepage/organiser/myevent.dart';
-import 'package:eventhub/login/login_page.dart';
-import 'package:eventhub/profile/profile_screen.dart';
+import 'package:eventhub/screen/create_event.dart';
+import 'package:eventhub/screen/event_page.dart';
+import 'package:eventhub/screen/myevent.dart';
+import 'package:eventhub/screen/login_page.dart';
+import 'package:eventhub/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:eventhub/model/user.dart';
 
-class OrganiserHomePage extends StatelessWidget {
-  final String userEmail;
+class AdminHomePage extends StatefulWidget {
+  final User passUser;
 
-  const OrganiserHomePage({super.key, required this.userEmail});
+  const AdminHomePage({Key? key, required this.passUser}) : super(key: key);
 
+  @override
+  State<AdminHomePage> createState() => _AdminHomeState();
+}
+
+class _AdminHomeState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -284,58 +290,6 @@ class OrganiserHomePage extends StatelessWidget {
   }
 }
 
-class EventCard extends StatelessWidget {
-  const EventCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 80,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              color: Colors.grey,
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Event Title",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  "Date: DD/MM/YYYY",
-                  style: TextStyle(fontSize: 12),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  "Location: XXXXX",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class FooterIconButton extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -370,7 +324,7 @@ class FooterIconButton extends StatelessWidget {
 void _logoutAndNavigateToLogin(BuildContext context) {
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => const Login()),
+    MaterialPageRoute(builder: (context) => Login()),
     (route) => false,
   );
 }

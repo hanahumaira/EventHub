@@ -1,71 +1,72 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:eventhub/login/login_page.dart';
+import 'package:eventhub/screen/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/services.dart';
+
 // import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 // import 'package:get/get.dart';
 
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.black, // Set navigation bar color
-  ));
-  runApp(const UserSignUp());
-}
+// void main() {
+//   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+//     systemNavigationBarColor: Colors.black, // Set navigation bar color
+//   ));
+//   runApp(const UserSignUp());
+// }
 
-class UserSignUp extends StatelessWidget {
-  const UserSignUp({super.key});
+// class UserSignUp extends StatelessWidget {
+//   const UserSignUp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'EventHub',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const SignUp(title: 'Sign Up'),
-    );
-  }
-}
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'EventHub',
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: const SignUp(title: 'Sign Up'),
+//     );
+//   }
+// }
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key, required this.title});
+  final FirebaseFirestore firestore;
+  final String accountType;
 
-  final String title;
+  SignUp({Key? key, required this.accountType, required this.firestore})
+      : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
-bool _isValidEmail(String email) {
-  // Simple email validation using a regular expression
-  return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-}
-
-bool _isValidPhoneNumber(String input) {
-  // Define a regex pattern for phone number formats
-  final RegExp phoneRegex = RegExp(
-    r'^(?:\+?1[-.●]?)?(?:\(\d{3}\)|\d{3})[-.●]?\d{3}[-.●]?\d{4}$',
-  );
-
-  return phoneRegex.hasMatch(input);
-}
-
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneNumController = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _name = TextEditingController();
+  final _phoneNum = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _name.dispose();
+    _email.dispose();
+    _password.dispose();
+    _phoneNum.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        //Button to go back to Login
         leading: IconButton(
           onPressed: () {
             Navigator.push(
@@ -80,13 +81,15 @@ class _SignUpState extends State<SignUp> {
           ),
           color: Colors.white,
         ),
+        //Text at the top
         backgroundColor: Colors.black,
-        title: Text("Create Account",
+        title: Text("Create Account as ${widget.accountType}",
             style: TextStyle(
                 color: Colors.white, // set tet color
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
       ),
+      //Form to register
       body: Form(
         key: _formKey,
         child: Padding(
@@ -94,10 +97,11 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              //Full Name
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
-                  controller: nameController,
+                  controller: _name,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
@@ -123,10 +127,11 @@ class _SignUpState extends State<SignUp> {
                   },
                 ),
               ),
+              //Email
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
-                  controller: emailController,
+                  controller: _email,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
@@ -151,10 +156,11 @@ class _SignUpState extends State<SignUp> {
                   },
                 ),
               ),
+              //Phone Number
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
-                  controller: phoneNumController,
+                  controller: _phoneNum,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
@@ -182,11 +188,11 @@ class _SignUpState extends State<SignUp> {
                   },
                 ),
               ),
+              //Password
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
+                  controller: _password,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
@@ -201,66 +207,111 @@ class _SignUpState extends State<SignUp> {
                       Icons.lock,
                       color: Colors.black,
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
+                  obscureText: !_isPasswordVisible,
                   style: TextStyle(color: Colors.black), // Set text color
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
                     }
                     return null;
                   },
                 ),
               ),
+              //SignUp
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        String enteredEmail = emailController.text.trim();
-                        String enteredPassword = passwordController.text;
+                        Map<String, dynamic> userData = {
+                          'name': _name.text,
+                          'email': _email.text,
+                          'password': _password.text,
+                          'phoneNum': _phoneNum.text,
+                          'accountType': widget.accountType,
+                        };
 
-                        // Validate email format
-                        if (!_isValidEmail(enteredEmail)) {
+                        try {
+                          widget.firestore
+                              .collection('userData')
+                              .doc(_email.text)
+                              .set(userData);
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Invalid Email Format'),
+                            SnackBar(
+                              content: Text('Successfully Registered'),
+                              duration: Duration(seconds: 3),
                             ),
                           );
-                          return; // Exit the function if email is invalid
-                        }
 
-                        // Validate password criteria (e.g., minimum length)
-                        if (enteredPassword.length < 6) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Password must be at least 6 characters'),
-                            ),
-                          );
-                          return; // Exit the function if password is invalid
-                        }
-
-                        // Check if credentials are valid
-                        if (emailController.text.isNotEmpty &&
-                            passwordController.text.isNotEmpty) {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HomePage(
-                                email: enteredEmail,
-                                name: nameController.text,
-                                phoneNumber: phoneNumController.text,
-                              ),
+                              builder: (context) => Login(),
                             ),
                           );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Invalid Credentials'),
-                            ),
-                          );
+                        } catch (e) {
+                          print('Error adding user data to Firestore');
                         }
+
+                        // // Validate email format
+                        // if (!_isValidEmail(enteredEmail)) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text('Invalid Email Format'),
+                        //     ),
+                        //   );
+                        //   return; // Exit the function if email is invalid
+                        // }
+
+                        // // Validate password criteria (e.g., minimum length)
+                        // if (enteredPassword.length < 6) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text(
+                        //           'Password must be at least 6 characters'),
+                        //     ),
+                        //   );
+                        //   return; // Exit the function if password is invalid
+                        // }
+
+                        // // Check if credentials are valid
+                        // if (_email.text.isNotEmpty &&
+                        //     _password.text.isNotEmpty) {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => HomePage(
+                        //         email: enteredEmail,
+                        //         name: _name.text,
+                        //         phoneNumber: _phoneNum.text,
+                        //       ),
+                        //     ),
+                        //   );
+                        // } else {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text('Invalid Credentials'),
+                        //     ),
+                        //   );
+                        // }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -296,6 +347,20 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+}
+
+bool _isValidEmail(String email) {
+  // Simple email validation using a regular expression
+  return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+}
+
+bool _isValidPhoneNumber(String input) {
+  // Define a regex pattern for phone number formats
+  final RegExp phoneRegex = RegExp(
+    r'^(?:\+?1[-.●]?)?(?:\(\d{3}\)|\d{3})[-.●]?\d{3}[-.●]?\d{4}$',
+  );
+
+  return phoneRegex.hasMatch(input);
 }
 
 class HomePage extends StatelessWidget {

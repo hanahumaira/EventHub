@@ -1,5 +1,5 @@
-import 'package:eventhub/profile/edit_profile_screen.dart';
-import 'package:eventhub/login/login_page.dart';
+import 'package:eventhub/screen/edit_profile_screen.dart';
+import 'package:eventhub/screen/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -136,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const Login()),
+      MaterialPageRoute(builder: (context) => Login()),
       (route) => false,
     );
   }

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'login/login_page.dart';
-import 'package:eventhub/profile/edit_profile_screen.dart';
+import 'screen/login_page.dart';
+import 'package:eventhub/screen/edit_profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Login(),
+      home: Login(),
     );
   }
 }

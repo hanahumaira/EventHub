@@ -1,5 +1,5 @@
-import 'package:eventhub/login/login_page.dart';
-import 'package:eventhub/profile/profile_screen.dart';
+import 'package:eventhub/screen/login_page.dart';
+import 'package:eventhub/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class CreateEventPage extends StatelessWidget {
@@ -300,7 +300,7 @@ class FooterIconButton extends StatelessWidget {
 void _logoutAndNavigateToLogin(BuildContext context) {
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => const Login()),
+    MaterialPageRoute(builder: (context) => Login()),
     (route) => false,
   );
 }
