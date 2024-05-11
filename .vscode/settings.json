@@ -2,5 +2,7 @@
     "java.project.sourcePaths": [
         "lib/login-forgotPassword"
     ],
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cmake.configureOnOpen": true,
+    "cmake.sourceDirectory": "C:/Users/Atifah/Documents/GitHub/EventHub/windows/flutter"
 }
