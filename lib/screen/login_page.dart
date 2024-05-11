@@ -214,8 +214,8 @@ class _LoginState extends State<Login> {
                                     );
                                   } else if (userSnapshot['accountType'] ==
                                           'Participant' &&
-                                           userSnapshot['password'] ==
-                                      _password.text) {
+                                      userSnapshot['password'] ==
+                                          _password.text) {
                                     User passUser = User(
                                       name: userSnapshot['name'],
                                       email: userSnapshot['email'],

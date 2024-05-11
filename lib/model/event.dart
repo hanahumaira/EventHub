@@ -1,63 +1,53 @@
-class User {
-  String name;
-  String email;
-  String password;
-  String phoneNum;
-  String accountType;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  User({
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.phoneNum,
-    required this.accountType,
+class Event {
+  String? id; // Optional, as it might be assigned by Firestore
+  String event;
+  DateTime date;
+  String location;
+  int registration;
+  String organiser;
+  String details;
+  double fee;
+  String image;
+
+  Event({
+    this.id,
+    required this.event,
+    required this.date,
+    required this.location,
+    required this.registration,
+    required this.organiser,
+    required this.details,
+    required this.fee,
+    required this.image,
   });
 
-  String getName() => name;
-  String getEmail() => email;
-  String getPassword() => password;
-  String getPhone() => phoneNum;
-  String getAccountType() => accountType;
-
-  set setName(String name) => this.name = name;
-  set setEmail(String email) => this.email = email;
-  set setPassword(String password) => this.password = password;
-  set setPhone(String phoneNum) => this.phoneNum = phoneNum;
-  set setAccountType(String accountType) => this.accountType = accountType;
-
-  User copyWith({
-    String? name,
-    String? email,
-    String? password,
-    String? phoneNum,
-    String? accountType,
-  }) {
-    return User(
-      name: name ?? this.name,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      phoneNum: phoneNum ?? this.phoneNum,
-      accountType: accountType ?? this.accountType,
-    );
-  }
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-      phoneNum: json['phoneNum'],
-      accountType: json['accountType'],
+  factory Event.fromSnapshot(DocumentSnapshot snapshot) {
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    return Event(
+      id: snapshot.id,
+      event: data['event'],
+      date: (data['date'] as Timestamp).toDate(),
+      location: data['location'],
+      registration: data['registration'],
+      organiser: data['organiser'],
+      details: data['details'],
+      fee: data['fee'].toDouble(),
+      image: data['image'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'email': email,
-      'password': password,
-      'phoneNum': phoneNum,
-      'accountType': accountType
+      'event': event,
+      'date': date,
+      'location': location,
+      'registration': registration,
+      'organiser': organiser,
+      'details': details,
+      'fee': fee,
+      'image': image,
     };
   }
 }

@@ -40,7 +40,7 @@ class _AdminHomeState extends State<AdminHomePage> {
           ),
         ],
         title: Text(
-          "Welcome to EventHub!",
+          "You are an Admin!",
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 20,
@@ -162,33 +162,6 @@ class _AdminHomeState extends State<AdminHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateEventPage(),
-                                  ),
-                                );
-                              },
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Event",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
                                     builder: (context) => const EventPage(),
                                   ),
                                 );
@@ -258,8 +231,20 @@ class _AdminHomeState extends State<AdminHomePage> {
                 FooterIconButton(
                     icon: Icons.home, label: "Home", onPressed: () {}),
                 FooterIconButton(
-                  icon: Icons.event,
-                  label: "My Event",
+                  icon: Icons.bookmark,
+                  label: "Saved",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyEvent(),
+                      ),
+                    );
+                  },
+                ),
+                FooterIconButton(
+                  icon: Icons.how_to_reg,
+                  label: "Registered",
                   onPressed: () {
                     Navigator.push(
                       context,
