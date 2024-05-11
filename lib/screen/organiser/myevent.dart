@@ -3,106 +3,167 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 
 class MyEvent extends StatefulWidget {
-  const MyEvent({super.key});
+  const MyEvent({Key? key});
 
   @override
   _MyEventState createState() => _MyEventState();
 }
 
 class _MyEventState extends State<MyEvent> {
-  bool showFutureEvents =
-      true; // Flag to determine whether to show future or past events
+  bool showFutureEvents = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple,
         title: const Text('My Events'),
       ),
       body: Container(
-        color: Colors.black, // Set background color to purple
+        color: Colors.black,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
+            Container(
+              color: Colors.purple, // Background color for top section
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // SizedBox(height: 20),
-                    // Text('These are all your events!', style: TextStyle(fontSize: 20, color: Colors.white)),
-                    // SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Search your event',
-                          hintStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(Icons.search),
-                        ),
-                        onChanged: (value) {
-                          // Implement search functionality here
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CreateEventPage()),
-                        );
-                      },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: Colors.purple, // Adjust color as needed
-                            size: 30, // Adjust size as needed
-                          ),
-                          SizedBox(
-                              width:
-                                  10), // Adjust spacing between icon and text
-                          Text(
-                            'Create Event',
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    const SizedBox(height: 5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              showFutureEvents = true; // Show future events
-                            });
-                          },
-                          child: const Text('Future Events'),
+                        Text(
+                          'These are all your event!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              showFutureEvents = false; // Show past events
-                            });
-                          },
-                          child: const Text('Past Events'),
+                        SizedBox(height: 10), // Adjust spacing between text and search box
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[800],
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search your event',
+                              hintStyle: TextStyle(color: Colors.white),
+                              prefixIcon: Icon(Icons.search, color: Colors.white),
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              // Implement search functionality here
+                            },
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const Divider(thickness: 2, color: Colors.white),
-                    const SizedBox(height: 20),
-                    buildEventList(
-                        context), // Display events based on selected filter
                   ],
                 ),
               ),
             ),
+            const SizedBox(height: 30),
+            Row(
+              children: [
+                SizedBox(width: 20),
+                Text(
+                  'Event',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                  ),
+                ),SizedBox(width: 150),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CreateEventPage(),
+      ),
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color.fromARGB(255, 175, 81, 192),
+    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ),
+  ),
+  child: Row(
+    children: [
+      Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 20,
+      ),
+      SizedBox(width: 1), // Adjust spacing between icon and text
+      Text(
+        'Create Event',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
+      ),
+    ],
+  ),
+),
+
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+            Expanded(
+  child: Padding(
+    padding: const EdgeInsets.all(25.0), // Adjust padding as needed
+    child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FilterButton(
+                label: 'Future Events',
+                selected: showFutureEvents,
+                onPressed: () {
+                  setState(() {
+                    showFutureEvents = true;
+                  });
+                },
+              ),
+              FilterButton(
+                label: 'Past Events',
+                selected: !showFutureEvents,
+                onPressed: () {
+                  setState(() {
+                    showFutureEvents = false;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          buildEventList(context),
+        ],
+      ),
+    ),
+  ),
+),
+
           ],
         ),
       ),
@@ -145,7 +206,11 @@ class _MyEventState extends State<MyEvent> {
     return Column(
       children: filteredEvents.map((event) {
         return Card(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          elevation: 4,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: ListTile(
             leading: Image.asset(
               event['picture'],
@@ -153,17 +218,13 @@ class _MyEventState extends State<MyEvent> {
               height: 60,
               fit: BoxFit.cover,
             ),
-            title: Text(event['eventName'],
-                style: const TextStyle(color: Colors.black)),
+            title: Text(event['eventName']),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Date: ${event['date']}',
-                    style: const TextStyle(color: Colors.black)),
-                Text('Time: ${event['time']}',
-                    style: const TextStyle(color: Colors.black)),
-                Text('Location: ${event['location']}',
-                    style: const TextStyle(color: Colors.black)),
+                Text('Date: ${event['date']}'),
+                Text('Time: ${event['time']}'),
+                Text('Location: ${event['location']}'),
               ],
             ),
             onTap: () {
@@ -176,25 +237,36 @@ class _MyEventState extends State<MyEvent> {
   }
 }
 
-class FooterIconButton extends StatelessWidget {
-  final IconData icon;
+class FilterButton extends StatelessWidget {
   final String label;
+  final bool selected;
   final VoidCallback onPressed;
 
-  const FooterIconButton({
-    super.key,
-    required this.icon,
+  const FilterButton({
     required this.label,
+    required this.selected,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return ElevatedButton(
       onPressed: onPressed,
-      icon: Icon(icon),
-      color: Colors.white,
-      tooltip: label,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: selected ? Colors.purple : Colors.grey[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10), // Adjust padding here
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: selected ? Colors.white : Colors.grey[400],
+          fontSize: 16, // Adjust font size here
+        ),
+      ),
     );
   }
 }
+
