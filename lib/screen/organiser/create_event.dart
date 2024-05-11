@@ -2,14 +2,13 @@
 
 import 'dart:io';
 
-import 'package:eventhub/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 
 class CreateEventPage extends StatefulWidget {
@@ -21,15 +20,24 @@ class CreateEventPage extends StatefulWidget {
 
 class _CreateEventPageState extends State<CreateEventPage> {
   File? _selectedImage; // Declare _selectedImage as a File
+  DateTime? _selectedDateTime; // Declare _selectedDateTime as nullable DateTime
+final _dateTimeController = TextEditingController(); // Initialize _dateTimeController
   final  _eventNameController = TextEditingController();
   final  _locationController = TextEditingController();
   final  _feeController = TextEditingController();
   final  _organizerController = TextEditingController();
   final  _detailsController = TextEditingController();
 
-   Future<void> _createEvent() async {
+  Future<void> _createEvent() async {
   try {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseStorage _storage = FirebaseStorage.instance;
+
+    // Upload image to Firebase Storage
+    String imagePath = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    UploadTask uploadTask = _storage.ref().child(imagePath).putFile(_selectedImage!);
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+    String imageUrl = await taskSnapshot.ref.getDownloadURL();
 
     // Add event data to Firestore
     DocumentReference docRef = await _firestore.collection('event').add({
@@ -38,6 +46,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       'fee': _feeController.text,
       'organizer': _organizerController.text,
       'details': _detailsController.text,
+      'image_url': imageUrl, // Add image URL to Firestore
       'timestamp': Timestamp.now(),
     });
 
@@ -53,6 +62,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     // Handle error accordingly
   }
 }
+
 
 
   @override
@@ -95,137 +105,246 @@ class _CreateEventPageState extends State<CreateEventPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Upload photo
-                  MaterialButton(
-                    color: Colors.black,
-                    onPressed: () {
-                      _pickImageFromGallery();
-                    },
-                    child: const Text(
-                      "Upload a photo",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  _selectedImage != null
-                      ? Image.file(_selectedImage!) // Display selected image
-                      : const Text("Please select an image"),
+                // Upload photo
+// Upload photo
+Stack(
+  alignment: Alignment.center,
+  children: [
+    Container(
+      height: 200,
+      width: 300,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black, width: 2.0), // Adjust border outline size
+        color: Colors.grey,
+      ),
+      child: _selectedImage != null
+          ? Image.file(_selectedImage!, fit: BoxFit.cover) // Display selected image
+          : SizedBox(), // Placeholder when no image is selected
+    ),
+    Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20), // Add padding here
+      child: MaterialButton(
+        color: Colors.transparent,
+        onPressed: () {
+          _pickImageFromGallery();
+        },
+        child: const Text(
+          "Upload a photo",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    ),
+  ],
+),
+
+const SizedBox(height: 20),
 
 
                   // Event Name
-                  TextFormField(
-                    controller: _eventNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Event Name *',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the event name';
-                      }
-                      return null;
-                    },
-                  ),
+TextFormField(
+  controller: _eventNameController,
+  decoration: InputDecoration(
+    labelText: 'Event Name',
+    hintText: 'Enter the name of the event.',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the event name';
+    }
+    return null;
+  },
+),
+
                   const SizedBox(height: 20),
 
                   // Date and Time
-                  // TODO: Implement date and time picker
-                  // Example:
-                  // DateTimeField(
-                  //   decoration: InputDecoration(
-                  //     labelText: 'Date and Time *',
-                  //     labelStyle: TextStyle(color: Colors.white),
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  //   format: DateFormat('dd/MM/yyyy hh:mm a'),
-                  //   onShowPicker: (context, currentValue) async {
-                  //     final date = await showDatePicker(...);
-                  //     final time = await showTimePicker(...);
-                  //     return DateTimeField.combine(date!, time);
-                  // },
-                  // validator: (value) {
-                  //   if (value == null) {
-                  //     return 'Please select the date and time';
-                  //   }
-                  //   return null;
-                  // },
+                  // Date and Time
+TextFormField(
+  onTap: () async {
+    DateTime? pickedDateTime = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+
+    if (pickedDateTime != null) {
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+  _selectedDateTime = DateTime(
+    pickedDateTime.year,
+    pickedDateTime.month,
+    pickedDateTime.day,
+    pickedTime.hour,
+    pickedTime.minute,
+  );
+
+  // Update the text field with the selected date and time
+  _dateTimeController.text = DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!);
+});
+
+      }
+    }
+  },
+  controller: _dateTimeController,
+  decoration: InputDecoration(
+    labelText: 'Event Date and Time',
+    hintText: 'Select the date and time of the event.',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  readOnly: true, // Make the text field read-only
+  validator: (value) {
+    if (_selectedDateTime == null) {
+      return 'Please select the date and time';
+    }
+    return null;
+  },
+),
+
+const SizedBox(height: 20),
 
                   // Location
-                  TextFormField(
-                    controller: _locationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Location *',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the location';
-                      }
-                      return null;
-                    },
-                  ),
+                   TextFormField(
+ controller: _locationController,
+  decoration: InputDecoration(
+    labelText: 'Event Location',
+    hintText: 'Location Address',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the event location';
+    }
+    return null;
+  },
+),
                   const SizedBox(height: 20),
 
                   // Fee
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Fee *',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the fee';
-                      }
-                      return null;
-                    },
-                  ),
+             TextFormField(
+  controller: _feeController,
+  keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal input
+  decoration: InputDecoration(
+    labelText: 'Event Fee',
+    hintText: 'RM XX.XX',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the fee of the ticket';
+    }
+    // Validate if the entered value is a valid decimal number
+    if (double.tryParse(value) == null) {
+      return 'Please enter a valid fee amount';
+    }
+    return null;
+  },
+),
                   const SizedBox(height: 20),
 
                   // Organizer
                   TextFormField(
                     controller: _organizerController,
-                    decoration: const InputDecoration(
-                      labelText: 'Organizer *',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the organizer';
-                      }
-                      return null;
-                    },
-                  ),
+                    decoration: InputDecoration(
+    labelText: 'Event Organiser(s)',
+    hintText: 'Company Name(s)',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the organiser(s) name';
+    }
+    return null;
+  },
+),
                   const SizedBox(height: 20),
 
                   // Details
                   TextFormField(
                     controller: _detailsController,
-                    decoration: const InputDecoration(
-                      labelText: 'Details *',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    maxLines: null, // Allow multiple lines for details
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the details';
-                      }
-                      return null;
-                    },
-                  ),
+                    decoration: InputDecoration(
+    labelText: 'Event Details',
+    hintText: 'Write the event details information.',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please write the event details information';
+    }
+    return null;
+  },
+),
+      
                   const SizedBox(height: 20),
                 ],
               ),
