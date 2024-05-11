@@ -1,21 +1,21 @@
-import 'package:eventhub/screen/create_event.dart';
-import 'package:eventhub/screen/event_page.dart';
-import 'package:eventhub/screen/myevent.dart';
-import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/profile_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:eventhub/model/user.dart';
+import 'package:eventhub/screen/event_page.dart';
+import 'package:eventhub/screen/login_page.dart';
+import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/myevent.dart';
+import 'package:eventhub/screen/profile/profile_screen.dart';
+import 'package:flutter/material.dart';
 
-class UserHomePage extends StatefulWidget {
+class OrganiserHomePage extends StatefulWidget {
   final User passUser;
 
-  UserHomePage({Key? key, required this.passUser}) : super(key: key);
+  OrganiserHomePage({Key? key, required this.passUser}) : super(key: key);
 
   @override
-  State<UserHomePage> createState() => _AdminHomeState();
+  State<OrganiserHomePage> createState() => _OrganiserHomeState();
 }
 
-class _AdminHomeState extends State<UserHomePage> {
+class _OrganiserHomeState extends State<OrganiserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

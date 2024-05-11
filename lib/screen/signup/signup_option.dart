@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:eventhub/screen/signup_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/screen/signup/signup_screen.dart';
+import 'package:flutter/material.dart';
 
 class SignUpOption extends StatelessWidget {
   const SignUpOption({Key? key}) : super(key: key);

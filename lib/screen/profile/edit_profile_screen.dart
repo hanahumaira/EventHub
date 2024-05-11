@@ -1,9 +1,10 @@
-import 'package:eventhub/screen/profile_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'dart:io';
+
+import 'package:eventhub/screen/profile/profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

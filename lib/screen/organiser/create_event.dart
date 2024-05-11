@@ -1,5 +1,5 @@
 import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/profile_screen.dart';
+import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class CreateEventPage extends StatelessWidget {
