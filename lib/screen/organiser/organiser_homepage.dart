@@ -40,7 +40,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
           ),
         ],
         title: Text(
-          "You are an Organiser!",
+          "Welcome to EventHub!",
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 20,
@@ -215,31 +215,31 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                       children: [
                         SizedBox(
                           height: 180, // Adjusted height to fit two rows
-                          child: ListView.builder(
+                          child: ListView(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 5, // 5 events in the first row
-                            itemBuilder: (context, index) {
-                              return const SizedBox(
+                            children: List.generate(
+                              5,
+                              (index) => SizedBox(
                                 width:
                                     200, // Adjusted width to fit two cards in a row
                                 child: EventCard(),
-                              );
-                            },
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),
                         SizedBox(
                           height: 180, // Adjusted height to fit two rows
-                          child: ListView.builder(
+                          child: ListView(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 5, // 5 events in the second row
-                            itemBuilder: (context, index) {
-                              return const SizedBox(
+                            children: List.generate(
+                              5,
+                              (index) => SizedBox(
                                 width:
                                     200, // Adjusted width to fit two cards in a row
                                 child: EventCard(),
-                              );
-                            },
+                              ),
+                            ),
                           ),
                         ),
                       ],

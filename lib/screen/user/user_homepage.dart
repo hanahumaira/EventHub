@@ -12,10 +12,10 @@ class UserHomePage extends StatefulWidget {
   UserHomePage({Key? key, required this.passUser}) : super(key: key);
 
   @override
-  State<UserHomePage> createState() => _AdminHomeState();
+  State<UserHomePage> createState() => _UserHomeState();
 }
 
-class _AdminHomeState extends State<UserHomePage> {
+class _UserHomeState extends State<UserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,33 +162,6 @@ class _AdminHomeState extends State<UserHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateEventPage(),
-                                  ),
-                                );
-                              },
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Event",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
                                     builder: (context) => const EventPage(),
                                   ),
                                 );
@@ -258,8 +231,20 @@ class _AdminHomeState extends State<UserHomePage> {
                 FooterIconButton(
                     icon: Icons.home, label: "Home", onPressed: () {}),
                 FooterIconButton(
-                  icon: Icons.event,
-                  label: "My Event",
+                  icon: Icons.bookmark,
+                  label: "Saved",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyEvent(),
+                      ),
+                    );
+                  },
+                ),
+                FooterIconButton(
+                  icon: Icons.how_to_reg,
+                  label: "Registered",
                   onPressed: () {
                     Navigator.push(
                       context,
