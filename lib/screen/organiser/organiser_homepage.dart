@@ -1,13 +1,13 @@
 import 'package:eventhub/model/user.dart';
-import 'package:eventhub/screen/event_page.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/eventList.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class OrganiserHomePage extends StatefulWidget {
-  final User passUser;
+  final User? passUser;
 
   OrganiserHomePage({Key? key, required this.passUser}) : super(key: key);
 
@@ -189,7 +189,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const EventPage(),
+                                    builder: (context) => const EventList(),
                                   ),
                                 );
                               },
