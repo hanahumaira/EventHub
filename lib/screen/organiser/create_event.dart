@@ -17,7 +17,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   Future<void> _pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? imagePicked = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? imagePicked =
+        await picker.pickImage(source: ImageSource.gallery);
     if (imagePicked == null) return;
     setState(() {
       image = File(imagePicked.path);
@@ -63,7 +64,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-               children: [
+                children: [
                   image != null
                       ? Container(
                           height: 200,
@@ -254,8 +255,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
       ),
     );
   }
-  
-
 }
 
 class EventCard extends StatelessWidget {

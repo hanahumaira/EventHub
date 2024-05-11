@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.1
-  image_picker: ^1.0.8
+  image_picker: ^1.1.1
   cupertino_icons: ^1.0.2
   line_awesome_flutter: ^2.0.0
   email_validator: ^2.0.1  # Add this line
@@ -21,12 +21,9 @@ dependencies:
   cloud_firestore: 4.15.8
   firebase_auth: ^4.19.5
   firebase_storage: ^11.2.4
+  flutter_datetime_picker: ^1.5.1
 
-  dependencies:
-  image_picker: ^1.1.1
-
-  dependencies:
-  flutter_datetime_picker: ^2.0.0
+  
 
 dev_dependencies:
   flutter_test:
