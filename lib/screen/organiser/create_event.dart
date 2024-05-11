@@ -1,9 +1,19 @@
+import 'dart:io';
+
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class CreateEventPage extends StatelessWidget {
-  const CreateEventPage({super.key});
+class CreateEventPage extends StatefulWidget {
+  const CreateEventPage({Key? key}) : super(key: key);
+
+  @override
+  _CreateEventPageState createState() => _CreateEventPageState();
+}
+
+class _CreateEventPageState extends State<CreateEventPage> {
+File? _selectedImage; // Declare _selectedImage as a File
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +56,25 @@ class CreateEventPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Upload photo
-                  // TODO: Implement photo upload widget
+                  MaterialButton(
+                    color: Colors.black,
+                    onPressed: () {
+                      _pickImageFromGallery();
+                    },
+                    child: const Text(
+                      "Upload a photo",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _selectedImage != null
+                      ? Image.file(_selectedImage!) // Display selected image
+                      : const Text("Please select an image"),
+
 
                   // Event Name
                   TextFormField(
@@ -159,6 +187,7 @@ class CreateEventPage extends StatelessWidget {
               ),
             ),
           ),
+
           //buttons
           Container(
             color: const Color.fromARGB(255, 100, 8, 222),
@@ -183,6 +212,7 @@ class CreateEventPage extends StatelessWidget {
               ],
             ),
           ),
+
           //footer
           Container(
             color: const Color.fromARGB(255, 100, 8, 222),
@@ -211,6 +241,15 @@ class CreateEventPage extends StatelessWidget {
         ],
       ),
     );
+  }
+  
+ Future<void> _pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+    setState(() {
+      _selectedImage = File(pickedFile.path);
+    });
   }
 }
 
@@ -304,3 +343,4 @@ void _logoutAndNavigateToLogin(BuildContext context) {
     (route) => false,
   );
 }
+
