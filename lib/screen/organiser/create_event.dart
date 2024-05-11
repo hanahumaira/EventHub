@@ -13,7 +13,16 @@ class CreateEventPage extends StatefulWidget {
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-File? _selectedImage; // Declare _selectedImage as a File
+  File? image;
+
+  Future<void> _pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? imagePicked = await picker.pickImage(source: ImageSource.gallery);
+    if (imagePicked == null) return;
+    setState(() {
+      image = File(imagePicked.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +63,19 @@ File? _selectedImage; // Declare _selectedImage as a File
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+               children: [
+                  image != null
+                      ? Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.file(image!, fit: BoxFit.cover),
+                        )
+                      : Container(),
                   // Upload photo
                   MaterialButton(
                     color: Colors.black,
-                    onPressed: () {
-                      _pickImageFromGallery();
+                    onPressed: () async {
+                      await _pickImageFromGallery();
                     },
                     child: const Text(
                       "Upload a photo",
@@ -71,10 +87,6 @@ File? _selectedImage; // Declare _selectedImage as a File
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _selectedImage != null
-                      ? Image.file(_selectedImage!) // Display selected image
-                      : const Text("Please select an image"),
-
 
                   // Event Name
                   TextFormField(
@@ -243,18 +255,11 @@ File? _selectedImage; // Declare _selectedImage as a File
     );
   }
   
- Future<void> _pickImageFromGallery() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile == null) return;
-    setState(() {
-      _selectedImage = File(pickedFile.path);
-    });
-  }
+
 }
 
 class EventCard extends StatelessWidget {
-  const EventCard({super.key});
+  const EventCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -311,11 +316,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const FooterIconButton({
-    super.key,
+    Key? key,
     required this.icon,
     required this.label,
     this.onPressed,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -343,4 +348,3 @@ void _logoutAndNavigateToLogin(BuildContext context) {
     (route) => false,
   );
 }
-
