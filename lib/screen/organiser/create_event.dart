@@ -2,18 +2,13 @@
 
 import 'dart:io';
 
-<<<<<<< HEAD
-// import 'package:eventhub/main.dart';
-=======
 import 'package:eventhub/main.dart';
->>>>>>> ee4cb210521f57387c0e1de25c68bf0aec91b140
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateEventPage extends StatefulWidget {
@@ -25,8 +20,6 @@ class CreateEventPage extends StatefulWidget {
 
 class _CreateEventPageState extends State<CreateEventPage> {
   File? _selectedImage; // Declare _selectedImage as a File
-  DateTime? _selectedDateTime;
-  final _dateTimeController = TextEditingController();
   final _eventNameController = TextEditingController();
   final _locationController = TextEditingController();
   final _feeController = TextEditingController();
@@ -59,8 +52,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
       // Handle error accordingly
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -103,20 +94,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Upload photo
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: MaterialButton(
-                      color: Colors.transparent,
-                      onPressed: () {
-                        _pickImageFromGallery();
-                      },
-                      child: const Text(
-                        "Upload a photo",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                  MaterialButton(
+                    color: Colors.black,
+                    onPressed: () {
+                      _pickImageFromGallery();
+                    },
+                    child: const Text(
+                      "Upload a photo",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
                   ),
@@ -124,7 +112,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   _selectedImage != null
                       ? Image.file(_selectedImage!) // Display selected image
                       : const Text("Please select an image"),
-
 
                   // Event Name
                   TextFormField(
@@ -397,4 +384,3 @@ void _logoutAndNavigateToLogin(BuildContext context) {
     (route) => false,
   );
 }
-
