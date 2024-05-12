@@ -2,7 +2,11 @@
 
 import 'dart:io';
 
+<<<<<<< HEAD
 // import 'package:eventhub/main.dart';
+=======
+import 'package:eventhub/main.dart';
+>>>>>>> ee4cb210521f57387c0e1de25c68bf0aec91b140
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
@@ -55,6 +59,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
       // Handle error accordingly
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +121,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  _selectedImage != null
+                      ? Image.file(_selectedImage!) // Display selected image
+                      : const Text("Please select an image"),
+
 
                   // Event Name
                   TextFormField(
@@ -387,3 +397,4 @@ void _logoutAndNavigateToLogin(BuildContext context) {
     (route) => false,
   );
 }
+
