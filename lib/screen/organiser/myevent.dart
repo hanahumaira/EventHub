@@ -1,4 +1,5 @@
 import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 
@@ -67,6 +68,31 @@ class _MyEventState extends State<MyEvent> {
                                   10), // Adjust spacing between icon and text
                           Text(
                             'Create Event',
+                          ),
+                        ],
+                      ),
+                    ),
+                      ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EditEventPage(event: 'Merdeka'),),
+                        );
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Colors.purple, // Adjust color as needed
+                            size: 30, // Adjust size as needed
+                          ),
+                          SizedBox(
+                              width:
+                                  10), // Adjust spacing between icon and text
+                          Text(
+                            'Edit Event',
                           ),
                         ],
                       ),
