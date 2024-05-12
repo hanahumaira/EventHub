@@ -234,23 +234,6 @@ class _EventdetailsPageState extends State<EventdetailsPage> {
             ),
             SizedBox(height: 20),
             Text(
-              'Details:',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              widget.eventdetails,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
               'Fee: ${widget.fee}',
               style: TextStyle(
                 fontSize: 20,
@@ -260,6 +243,23 @@ class _EventdetailsPageState extends State<EventdetailsPage> {
             SizedBox(height: 20),
             Text(
               'Organizer: ${widget.organizer}',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Details:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              widget.eventdetails,
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.white,
