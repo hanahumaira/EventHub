@@ -1,4 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/screen/organiser/edit_event.dart';
+import 'package:eventhub/screen/organiser/delete_event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:flutter/material.dart';
 
@@ -165,8 +169,10 @@ class EveCard extends StatelessWidget {
                 color: Colors.white70,
               ),
             ),
+            
           ],
         ),
+       
       ),
     );
   }
@@ -265,6 +271,41 @@ class _EventdetailsPageState extends State<EventdetailsPage> {
                 color: Colors.white,
               ),
             ),
+
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                 Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditEventPage(event: widget.eventName,)
+                        )
+                        );
+              },
+                child: Text(
+                  'Edit Event',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+
+              SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyDeletePage(event: widget.eventName),
+                  ),
+                );
+              },
+                child: Text(
+                  'Delete Event',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+
+
+
           ],
         ),
       ),
