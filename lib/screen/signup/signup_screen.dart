@@ -37,8 +37,7 @@ class SignUp extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String accountType;
 
-  SignUp({Key? key, required this.accountType, required this.firestore})
-      : super(key: key);
+  const SignUp({super.key, required this.accountType, required this.firestore});
 
   @override
   State<SignUp> createState() => _SignUpState();

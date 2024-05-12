@@ -1,14 +1,6 @@
 // ignore_for_file: use_super_parameters, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
 
-import 'dart:io';
-
-import 'package:eventhub/main.dart';
-import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/organiser/myevent.dart';
-import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditEventPage extends StatefulWidget {
@@ -19,7 +11,6 @@ class EditEventPage extends StatefulWidget {
   @override
   _EditEventPageState createState() => _EditEventPageState();
 }
-
 
 class _EditEventPageState extends State<EditEventPage> {
   final TextEditingController _locationController = TextEditingController();
@@ -78,7 +69,7 @@ class _EditEventPageState extends State<EditEventPage> {
         });
         // Show a success message (e.g., snackbar) after updating event
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Event updated successfully')),
+          const SnackBar(content: Text('Event updated successfully')),
         );
       } else {
         print('Event not found with name: ${widget.event}');
@@ -99,7 +90,7 @@ class _EditEventPageState extends State<EditEventPage> {
         elevation: 0,
         title: Text(
           "Edit Event",
-          style: Theme.of(context).textTheme.headline6!.copyWith(
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),

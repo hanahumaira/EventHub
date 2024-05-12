@@ -1,9 +1,16 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, avoid_print, no_leading_underscores_for_local_identifiers
+
 import 'dart:io';
 
+// import 'package:eventhub/main.dart';
 import 'package:eventhub/screen/login_page.dart';
+import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -13,16 +20,40 @@ class CreateEventPage extends StatefulWidget {
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-  File? image;
+  File? _selectedImage; // Declare _selectedImage as a File
+  DateTime? _selectedDateTime;
+  final _dateTimeController = TextEditingController();
+  final _eventNameController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _feeController = TextEditingController();
+  final _organizerController = TextEditingController();
+  final _detailsController = TextEditingController();
 
-  Future<void> _pickImageFromGallery() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? imagePicked =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (imagePicked == null) return;
-    setState(() {
-      image = File(imagePicked.path);
-    });
+  Future<void> _createEvent() async {
+    try {
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+      // Add event data to Firestore
+      DocumentReference docRef = await _firestore.collection('event').add({
+        'event': _eventNameController.text,
+        'location': _locationController.text,
+        'fee': _feeController.text,
+        'organizer': _organizerController.text,
+        'details': _detailsController.text,
+        'timestamp': Timestamp.now(),
+      });
+
+      print('Event created with ID: ${docRef.id}');
+
+      // Navigate to EventPage after event creation
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyEvent()),
+      );
+    } catch (e) {
+      print('Error creating event: $e');
+      // Handle error accordingly
+    }
   }
 
   @override
@@ -65,25 +96,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  image != null
-                      ? Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.file(image!, fit: BoxFit.cover),
-                        )
-                      : Container(),
                   // Upload photo
-                  MaterialButton(
-                    color: Colors.black,
-                    onPressed: () async {
-                      await _pickImageFromGallery();
-                    },
-                    child: const Text(
-                      "Upload a photo",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: MaterialButton(
+                      color: Colors.transparent,
+                      onPressed: () {
+                        _pickImageFromGallery();
+                      },
+                      child: const Text(
+                        "Upload a photo",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
@@ -91,6 +118,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                   // Event Name
                   TextFormField(
+                    controller: _eventNameController,
                     decoration: const InputDecoration(
                       labelText: 'Event Name *',
                       labelStyle: TextStyle(color: Colors.white),
@@ -130,6 +158,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                   // Location
                   TextFormField(
+                    controller: _locationController,
                     decoration: const InputDecoration(
                       labelText: 'Location *',
                       labelStyle: TextStyle(color: Colors.white),
@@ -147,6 +176,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                   // Fee
                   TextFormField(
+                    controller: _feeController,
                     decoration: const InputDecoration(
                       labelText: 'Fee *',
                       labelStyle: TextStyle(color: Colors.white),
@@ -164,6 +194,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                   // Organizer
                   TextFormField(
+                    controller: _organizerController,
                     decoration: const InputDecoration(
                       labelText: 'Organizer *',
                       labelStyle: TextStyle(color: Colors.white),
@@ -181,6 +212,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                   // Details
                   TextFormField(
+                    controller: _detailsController,
                     decoration: const InputDecoration(
                       labelText: 'Details *',
                       labelStyle: TextStyle(color: Colors.white),
@@ -217,9 +249,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 ),
                 //create event button
                 ElevatedButton(
-                  onPressed: () {
-                    //functions & go to event page
-                  },
+                  onPressed: _createEvent,
                   child: const Text('Create Event'),
                 ),
               ],
@@ -255,10 +285,20 @@ class _CreateEventPageState extends State<CreateEventPage> {
       ),
     );
   }
+
+  Future<void> _pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+    setState(() {
+      _selectedImage = File(pickedFile.path);
+    });
+  }
 }
 
 class EventCard extends StatelessWidget {
-  const EventCard({Key? key}) : super(key: key);
+  const EventCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -315,11 +355,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

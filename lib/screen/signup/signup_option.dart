@@ -3,13 +3,13 @@ import 'package:eventhub/screen/signup/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignUpOption extends StatelessWidget {
-  const SignUpOption({Key? key}) : super(key: key);
+  const SignUpOption({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose Account Type'),
+        title: const Text('Choose Account Type'),
       ),
       body: Center(
         child: Column(
@@ -26,9 +26,9 @@ class SignUpOption extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Sign Up as Organizer'),
+              child: const Text('Sign Up as Organizer'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -40,7 +40,7 @@ class SignUpOption extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Sign Up as Participant'),
+              child: const Text('Sign Up as Participant'),
             ),
           ],
         ),

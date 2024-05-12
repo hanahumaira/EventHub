@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class AdminHomePage extends StatefulWidget {
   final User passUser;
 
-  const AdminHomePage({Key? key, required this.passUser}) : super(key: key);
+  const AdminHomePage({super.key, required this.passUser});
 
   @override
   State<AdminHomePage> createState() => _AdminHomeState();
