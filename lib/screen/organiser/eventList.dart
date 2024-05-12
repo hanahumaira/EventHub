@@ -1,8 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:flutter/material.dart';
 
-class EventList extends StatelessWidget {
+class EventList extends StatefulWidget {
   const EventList({Key? key}) : super(key: key);
+
+  @override
+  _EventListState createState() => _EventListState();
+}
+
+class _EventListState extends State<EventList> {
+  TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -11,80 +19,96 @@ class EventList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Events'),
         backgroundColor: Colors.purple, // Changing the AppBar color to purple
-         leading: IconButton(
+        leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrganiserHomePage(passUser: null,),
-                      ),
-                    );
-                  },
-        ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Search events',
-                hintStyle: TextStyle(color: Colors.white),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 15),
-              ),
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          SizedBox(height: 20), // Adding a gap between sections
-         Expanded(
-  child: ListView.builder(
-    itemCount: 5, // Replace with the actual number of events
-    itemBuilder: (context, index) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 5), // Adjust the bottom padding as needed
-        child: GestureDetector(
-          onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EventDetailPage(
-                  eventName: 'Event $index',
-                  imageUrl: 'https://via.placeholder.com/150', // Example image URL
-                  eventDate: 'May ${10 + index}, 2024',
-                  eventLocation: 'Location $index',
-                  eventFee: '\$10',
-                  numRegistered: 100,
-                  organizer: 'Organizer Name',
-                  details: 'Event Details...',
-                ),
+                builder: (context) => OrganiserHomePage(passUser: null,),
               ),
             );
           },
-          child: EveCard(
-            eventName: 'Event $index',
-            eventDate: 'May ${10 + index}, 2024',
-            eventLocation: 'Location $index',
-            imageUrl: 'https://via.placeholder.com/150', // Example image URL
-          ),
         ),
-      );
-    },
-  ),
-),
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("event").snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-        ],
+          // Filter events based on search query
+          List<QueryDocumentSnapshot> filteredEvents = snapshot.data!.docs.where((event) {
+            String eventName = event['event'].toString().toLowerCase();
+            String searchQuery = _searchController.text.toLowerCase();
+            return eventName.contains(searchQuery);
+          }).toList();
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search your event',
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Icon(Icons.search, color: Colors.white),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredEvents.length,
+                  itemBuilder: (context, index) {
+                    var eventData = filteredEvents[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventdetailsPage(
+                                eventName: eventData['event'],
+                                eventLocation: eventData['location'],
+                                eventdetails: eventData['details'],
+                                fee: eventData['fee'],
+                                organizer: eventData['organizer'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: EveCard(
+                          eventName: eventData['event'],
+                          eventLocation: eventData['location'],
+                          eventdetails: eventData['details'],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -92,15 +116,13 @@ class EventList extends StatelessWidget {
 
 class EveCard extends StatelessWidget {
   final String eventName;
-  final String eventDate;
   final String eventLocation;
-  final String imageUrl;
+  final String eventdetails;
 
   const EveCard({
     required this.eventName,
-    required this.eventDate,
     required this.eventLocation,
-    required this.imageUrl,
+    required this.eventdetails,
   });
 
   @override
@@ -112,171 +134,32 @@ class EveCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(height: 10), // Add gap above the image
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10), // Add padding around the image
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20), bottom: Radius.circular(20)),
-              child: Image.network(
-                imageUrl,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          SizedBox(height: 3), // Add gap below the image
-          Padding(
-            padding: EdgeInsets.all(13),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  eventName,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 7),
-                Text(
-                  'Date: $eventDate',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Location: $eventLocation',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-class EventDetailPage extends StatelessWidget {
-  final String eventName;
-  final String imageUrl;
-  final String eventDate;
-  final String eventLocation;
-  final String eventFee;
-  final int numRegistered;
-  final String organizer;
-  final String details;
-
-  const EventDetailPage({
-    required this.eventName,
-    required this.imageUrl,
-    required this.eventDate,
-    required this.eventLocation,
-    required this.eventFee,
-    required this.numRegistered,
-    required this.organizer,
-    required this.details,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text('Event Details'),
-        backgroundColor: Colors.purple, // Setting app bar color to purple
-      ),
-      body: SingleChildScrollView(
+      child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Event Image
-            SizedBox(
-              height: 150, // Set the height of the image container
-              width: double.infinity,
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
+            Text(
+              eventName,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            SizedBox(height: 16),
-            // Event Name
-            Container(
-              padding: EdgeInsets.all(10),
-              color: Colors.grey[900], // Box background color
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    eventName,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 12),
-                  // Event Details
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DetailItem(
-                        icon: Icons.calendar_today,
-                        label: 'Date',
-                        value: eventDate,
-                      ),
-                      DetailItem(
-                        icon: Icons.location_on,
-                        label: 'Location',
-                        value: eventLocation,
-                      ),
-                      DetailItem(
-                        icon: Icons.attach_money,
-                        label: 'Fee',
-                        value: eventFee,
-                      ),
-                      DetailItem(
-                        icon: Icons.people,
-                        label: 'Number Registered',
-                        value: numRegistered.toString(),
-                      ),
-                      DetailItem(
-                        icon: Icons.person,
-                        label: 'Organizer',
-                        value: organizer,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  // Event Description
-                  Text(
-                    'Details:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    details,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+            SizedBox(height: 8),
+            Text(
+              'Location: $eventLocation',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white70,
+              ),
+            ),
+            Text(
+              'Details: $eventdetails',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white70,
               ),
             ),
           ],
@@ -286,59 +169,102 @@ class EventDetailPage extends StatelessWidget {
   }
 }
 
-class DetailItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
+class EventdetailsPage extends StatefulWidget {
+  final String eventName;
+  final String eventLocation;
+  final String eventdetails;
+  final String fee;
+  final String organizer;
 
-  const DetailItem({
-    required this.icon,
-    required this.label,
-    required this.value,
+  const EventdetailsPage({
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventdetails,
+    required this.fee,
+    required this.organizer,
   });
 
   @override
+  _EventdetailsPageState createState() => _EventdetailsPageState();
+}
+
+class _EventdetailsPageState extends State<EventdetailsPage> {
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.white70,
-            size: 20,
-          ),
-          SizedBox(width: 8),
-          Text(
-            '$label: ',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text('Event details'),
+        backgroundColor: Colors.purple, // Setting app bar color to purple
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.event,
+                  size: 60,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 20),
+                Text(
+                  widget.eventName,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white70,
+            SizedBox(height: 20),
+            Text(
+              'Location: ${widget.eventLocation}',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            Text(
+              'Details:',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              widget.eventdetails,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Fee: ${widget.fee}',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Organizer: ${widget.organizer}',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
-// class OrganiserHomePage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Organiser Home'),
-//       ),
-//       body: Center(
-//         child: Text('Organiser Home Page'),
-//       ),
-//     );
-//   }
-// }

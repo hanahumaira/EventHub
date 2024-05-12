@@ -176,6 +176,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                   // Fee
                   TextFormField(
+                     controller: _feeController,
                     decoration: const InputDecoration(
                       labelText: 'Fee *',
                       labelStyle: TextStyle(color: Colors.white),
