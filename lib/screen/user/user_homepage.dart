@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/model/user.dart';
+import 'package:eventhub/model/event.dart';
 import 'package:eventhub/screen/event_page.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
@@ -16,6 +18,8 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomeState extends State<UserHomePage> {
+  final CollectionReference eventsCollection = FirebaseFirestore.instance.collection('event');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +29,7 @@ class _UserHomeState extends State<UserHomePage> {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {
-              // _logoutAndNavigateToLogin(context);
-            },
+            onPressed: () {},
             icon: const Icon(Icons.notifications),
             color: Colors.white,
           ),
@@ -40,7 +42,7 @@ class _UserHomeState extends State<UserHomePage> {
           ),
         ],
         title: Text(
-          "You are a Particpant!",
+          "You are a Participant!",
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 20,
@@ -142,8 +144,6 @@ class _UserHomeState extends State<UserHomePage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    // Inside the build method of organiserHomePage
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -182,40 +182,29 @@ class _UserHomeState extends State<UserHomePage> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 5),
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 180, // Adjusted height to fit two rows
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 5, // 5 events in the first row
-                            itemBuilder: (context, index) {
-                              return const SizedBox(
-                                width:
-                                    200, // Adjusted width to fit two cards in a row
-                                child: EventCard(),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 180, // Adjusted height to fit two rows
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 5, // 5 events in the second row
-                            itemBuilder: (context, index) {
-                              return const SizedBox(
-                                width:
-                                    200, // Adjusted width to fit two cards in a row
-                                child: EventCard(),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                    StreamBuilder<QuerySnapshot>(
+                      stream: eventsCollection.snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.active) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                var event = snapshot.data!.docs[index];
+                                return EventCard(
+                                  event: Event.fromSnapshot(event),
+                                );
+                              },
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text(snapshot.error.toString()));
+                          }
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      },
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -275,32 +264,85 @@ class _UserHomeState extends State<UserHomePage> {
   }
 }
 
+class EventCard extends StatelessWidget {
+  final Event event;
+
+  const EventCard({super.key, required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      color: Colors.grey[800],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.network(event.image, fit: BoxFit.cover),
+            const SizedBox(height: 8),
+            Text(
+              event.event,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${event.date.toLocal()}".split(' ')[0], // Formatting the date
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                Text(
+                  "${event.date.hour}:${event.date.minute}", // Displaying time
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              event.location,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class FooterIconButton extends StatelessWidget {
   final IconData icon;
   final String label;
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
 
   const FooterIconButton({
     super.key,
     required this.icon,
     required this.label,
-    this.onPressed,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
           onPressed: onPressed,
           icon: Icon(icon, color: Colors.white),
-          iconSize: 30,
         ),
         Text(
           label,
           style: const TextStyle(color: Colors.white),
         ),
-        const SizedBox(height: 10),
       ],
     );
   }

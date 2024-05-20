@@ -1,13 +1,10 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/admin/admin_homepage.dart';
 import 'package:eventhub/screen/forgot_password.dart';
 import 'package:eventhub/screen/organiser/fetchdata.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
-import 'package:eventhub/screen/signup/signup_option.dart';
-// import 'package:eventhub/screen/signup/signup_option.dart';
+import 'package:eventhub/screen/signup/signup_screen.dart';
 import 'package:eventhub/screen/user/user_homepage.dart';
 import 'package:flutter/material.dart';
 
@@ -62,12 +59,11 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-
                 // Email, password, and submit button container
                 Container(
                   margin: EdgeInsets.symmetric(
                       horizontal:
-                          20), // Add margin for spacing from the screen edges
+                          15), // Add margin for spacing from the screen edges
                   padding: EdgeInsets.symmetric(
                       horizontal: 30, vertical: 20), // Adjust padding
                   decoration: BoxDecoration(
@@ -85,8 +81,6 @@ class _LoginState extends State<Login> {
                           border: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.circular(10), // Round edge border
-                            // borderSide:
-                            //     BorderSide(color: Colors.white), // Set border color
                           ),
                           labelText: "Email",
                           prefixIcon: Icon(
@@ -117,7 +111,7 @@ class _LoginState extends State<Login> {
                               _isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Theme.of(context).primaryColorDark,
+                              color: Colors.blueGrey,
                             ),
                             onPressed: () {
                               setState(() {
@@ -130,37 +124,8 @@ class _LoginState extends State<Login> {
                       ),
                       SizedBox(
                           height:
-                              10), // Add some vertical spacing between the password field and the submit button
-                      //checkbox and forget me
-                      Row(
-                        children: [
-                          Checkbox(
-                            value:
-                                _isChecked, // Example value, change it as needed
-                            onChanged: (value) {
-                              // Update the state of the checkbox
-                              setState(() {
-                                _isChecked = value!;
-                              });
-                            },
-                          ),
-                          Text('Remember me'),
-                          Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              // Navigate to forgot password page
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ForgotPasswordPage()), //to go to sign up page
-                              );
-                            },
-                            child: Text('Forgot Password?'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
+                              30), // Add some vertical spacing between the password field and the submit button
+
                       // Submit button
                       ElevatedButton(
                         onPressed: () async {
@@ -256,14 +221,6 @@ class _LoginState extends State<Login> {
                               });
                             }
                           }
-
-                          // } else {
-                          //   // Show error message for empty fields
-                          //   ScaffoldMessenger.of(context).showSnackBar(
-                          //     const SnackBar(
-                          //         content: Text('Please fill input')),
-                          //   );
-                          // }
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -276,6 +233,22 @@ class _LoginState extends State<Login> {
                         ),
                         child: const Text('LOGIN'),
                       ),
+                      // SizedBox(height: 10),
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            // Navigate to forgot password page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ForgotPasswordPage()), //to go to sign up page
+                            );
+                          },
+                          child: Text('Forgot Password?'),
+                        ),
+                      ),
+                      SizedBox(height: 10),
 
                       // Don't have an account? Create one
                       Row(
@@ -292,7 +265,10 @@ class _LoginState extends State<Login> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignUpOption()),
+                                  builder: (context) => SignUp(
+                                    firestore: FirebaseFirestore.instance,
+                                  ),
+                                ),
                               );
                             },
                             child: Text(

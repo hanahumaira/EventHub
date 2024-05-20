@@ -1,11 +1,9 @@
-// import 'package:eventhub/homepage/organiser/organiser_homepage.dart';
-// import 'package:eventhub/homepage/admin/admin_homepage.dart';
-// import 'package:eventhub/login/login_page.dart';
+import 'package:eventhub/screen/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -21,23 +19,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  Future passwordReset() async {
+  Future<void> passwordReset() async {
     try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: _email.text.trim());
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
 
       showDialog(
         context: context,
         builder: (context) {
           return const AlertDialog(
             content: Text(
-                'Password reset link sent! Please check your email to reset your password.'),
+              'Password reset link sent! Please check your email to reset your password.',
+            ),
           );
         },
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
-
       showDialog(
         context: context,
         builder: (context) {
@@ -47,14 +43,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         },
       );
     } catch (e) {
-      print('Error: $e');
-
       showDialog(
         context: context,
         builder: (context) {
           return const AlertDialog(
-            content:
-                Text('An unexpected error occurred. Please try again later.'),
+            content: Text('An unexpected error occurred. Please try again later.'),
           );
         },
       );
@@ -68,12 +61,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Login()),
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         title: const Text(
           'Forgot Password',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Increase font size
-            color: Colors.white, // Text color white
+            fontSize: 20,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
@@ -81,74 +86,60 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Image.asset(
-                    'lib/images/logo.png',
-                    width: 80,
-                    height: 80,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Forgot Password',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white, // Text color white
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _email,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'Email',
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Colors.black,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _email,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your registered email',
-                        hintStyle: TextStyle(
-                            color:
-                                Colors.white), // Set hint text color to white
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email address';
-                        }
-                        final emailRegExp =
-                            RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                        if (!emailRegExp.hasMatch(value)) {
-                          return 'Please enter a valid email address';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState != null &&
-                            _formKey.currentState!.validate()) {
-                          passwordReset();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
-                      ),
-                      child: const Text(
-                        'Resent Password',
-                        style:
-                            TextStyle(color: Colors.white), // Text color white
-                      ),
-                    ),
-                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email address';
+                    }
+                    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                    if (!emailRegExp.hasMatch(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      passwordReset(); // Call passwordReset only when the form is valid
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color.fromARGB(255, 100, 8, 222),
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
