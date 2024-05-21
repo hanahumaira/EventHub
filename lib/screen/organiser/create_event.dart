@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
@@ -11,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateEventPage extends StatefulWidget {
-  const CreateEventPage({Key? key}) : super(key: key);
+  const CreateEventPage({Key? key, User? user}) : super(key: key);
 
   @override
   _CreateEventPageState createState() => _CreateEventPageState();

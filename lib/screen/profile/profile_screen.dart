@@ -1,3 +1,4 @@
+import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/profile/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, User? user});
 
   @override
   Widget build(BuildContext context) {
