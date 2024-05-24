@@ -226,7 +226,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                           child: TextFormField(
                             onChanged: _onSearchChanged,
                             decoration: InputDecoration(
-                              hintText: 'Search event/organiser',
+                              hintText: 'Search event..',
                               hintStyle: const TextStyle(color: Colors.white),
                               filled: true,
                               fillColor: Colors.grey[800],
@@ -370,7 +370,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                   },
                 ),
                 FooterIconButton(
-                  icon: Icons.create,
+                  icon: Icons.add,
                   label: "Create Event",
                   onPressed: () {
                     Navigator.push(

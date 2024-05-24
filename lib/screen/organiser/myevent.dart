@@ -2,16 +2,16 @@ import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/event_details.dart';
 
-
 class MyEvent extends StatefulWidget {
-  
   final User? passUser;
+
   const MyEvent({Key? key, required this.passUser}) : super(key: key);
 
   @override
@@ -19,47 +19,45 @@ class MyEvent extends StatefulWidget {
 }
 
 class _MyEventState extends State<MyEvent> {
-  
-List<Event> dummyEvents = [
-  Event(
-    event: "Proposal MAP",
-    date: DateTime.now().add(Duration(days: 1)),
-    location: "N28",
-    organiser: "MobileCraft",
-    details: "Presentation for MAP project from every group in section 3.",
-    fee: 00.0,
-    image: "lib/images/mainpage.png",
-    category: "Education",
-  ),
-  Event(
-    event: "AI Talk",
-    date: DateTime.now().add(Duration(days: 2)),
-    location: "N28",
-    organiser: "MobileCraft",
-    details: "A talk about AI and its future's pros and cons",
-    fee: 00.0,
-    image: "lib/images/mainpage.png",
-    category: "Exhibition",
-  ),
-  Event(
-    event: "Program Kerjaya",
-    date: DateTime.now().add(Duration(days: 5)),
-    location: "N28",
-    organiser: "MobileCraft",
-    details: "Program for computer science students to find their networks and job opportunities.",
-    fee: 00.0,
-    image: "lib/images/mainpage.png",
-    category: "Talk",
-  ),
-  // Add more dummy events here
-];
-
+  List<Event> dummyEvents = [
+    Event(
+      event: "Proposal MAP",
+      date: DateTime.now().add(Duration(days: 1)),
+      location: "N28",
+      organiser: "MobileCraft",
+      details: "Presentation for MAP project from every group in section 3.",
+      fee: 00.0,
+      image: "lib/images/mainpage.png",
+      category: "Education",
+    ),
+    Event(
+      event: "AI Talk",
+      date: DateTime.now().add(Duration(days: 2)),
+      location: "N28",
+      organiser: "MobileCraft",
+      details: "A talk about AI and its future's pros and cons",
+      fee: 00.0,
+      image: "lib/images/mainpage.png",
+      category: "Exhibition",
+    ),
+    Event(
+      event: "Program Kerjaya",
+      date: DateTime.now().add(Duration(days: 5)),
+      location: "N28",
+      organiser: "MobileCraft",
+      details:
+          "Program for computer science students to find their networks and job opportunities.",
+      fee: 00.0,
+      image: "lib/images/mainpage.png",
+      category: "Talk",
+    ),
+    // Add more dummy events here
+  ];
 
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
   String _filter = "All";
-
 
   @override
   void initState() {
@@ -67,32 +65,36 @@ List<Event> dummyEvents = [
     _filterEvents();
   }
 
-void _filterEvents() {
-  final now = DateTime.now();
-  setState(() {
-    _filteredEvents = dummyEvents.where((event) {
-      final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesCategory = _selectedCategory == "All" || event.category == _selectedCategory;
-      final matchesOrganiser = event.organiser == "MobileCraft"; // Filter events by organizer
-      if (_filter == "All") {
-        return matchesSearch && matchesCategory && matchesOrganiser;
-      } else if (_filter == "Past") {
-        return event.date.isBefore(now) && matchesCategory && matchesOrganiser;
-      } else if (_filter == "Today") {
-        return event.date.year == now.year &&
-            event.date.month == now.month &&
-            event.date.day == now.day &&
-            matchesCategory &&
-            matchesOrganiser;
-      } else if (_filter == "Future") {
-        return event.date.isAfter(now) && matchesCategory && matchesOrganiser;
-      }
-      return false;
-    }).toList();
-  });
-}
-
-
+  void _filterEvents() {
+    final now = DateTime.now();
+    setState(() {
+      _filteredEvents = dummyEvents.where((event) {
+        final matchesSearch =
+            event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+        final matchesCategory =
+            _selectedCategory == "All" || event.category == _selectedCategory;
+        final matchesOrganiser = event.organiser == "MobileCraft";
+        if (_filter == "All") {
+          return matchesSearch && matchesCategory && matchesOrganiser;
+        } else if (_filter == "Past") {
+          return event.date.isBefore(now) &&
+              matchesCategory &&
+              matchesOrganiser;
+        } else if (_filter == "Today") {
+          return event.date.year == now.year &&
+              event.date.month == now.month &&
+              event.date.day == now.day &&
+              matchesCategory &&
+              matchesOrganiser;
+        } else if (_filter == "Future") {
+          return event.date.isAfter(now) &&
+              matchesCategory &&
+              matchesOrganiser;
+        }
+        return false;
+      }).toList();
+    });
+  }
 
   void _onSearchChanged(String query) {
     setState(() {
@@ -113,6 +115,33 @@ void _filterEvents() {
       _selectedCategory = category ?? 'All';
       _filterEvents();
     });
+  }
+
+  void _confirmDelete(Event event) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Event"),
+          content: Text("Do you want to delete the event: ${event.event}?"),
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                _deleteEvent(event); // Call the _deleteEvent method to delete the event
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -249,7 +278,8 @@ void _filterEvents() {
                                 color: Colors.white,
                               ),
                               onChanged: _onFilterChanged,
-                              items: <String>['All', 'Past', 'Today', 'Future'].map<DropdownMenuItem<String>>((String value) {
+                              items: <String>['All', 'Past', 'Today', 'Future']
+                                  .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -285,7 +315,7 @@ void _filterEvents() {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OrganiserHomePage(passUser: widget.passUser,),
+                        builder: (context) => OrganiserHomePage(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -297,13 +327,13 @@ void _filterEvents() {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyEvent(passUser: widget.passUser,),
+                        builder: (context) => MyEvent(passUser: widget.passUser),
                       ),
                     );
                   },
                 ),
                 FooterIconButton(
-                  icon: Icons.create,
+                  icon: Icons.add,
                   label: "Create Event",
                   onPressed: () {
                     Navigator.push(
@@ -349,6 +379,39 @@ void _filterEvents() {
     );
   }
 
+  void _deleteEvent(Event event) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Event"),
+          content: Text("Do you want to delete the event: ${event.event}?"),
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog without deleting
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog first
+
+                setState(() {
+                  dummyEvents.remove(event);
+                  _filterEvents(); // Refresh the event list
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event deleted successfully")));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
@@ -378,10 +441,23 @@ void _filterEvents() {
             '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
             style: const TextStyle(color: Colors.white70),
           ),
-          // trailing: Text(
-          //   'Registration: ${event.registration}',
-          //   style: const TextStyle(color: Colors.white70),
-          // ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(Icons.edit, color: Colors.green),
+                onPressed: () {
+                  _navigateToEditEvent(event); // Navigate to the edit event page
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () {
+                  _confirmDelete(event);
+                },
+              ),
+            ],
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -394,8 +470,18 @@ void _filterEvents() {
       );
     }).toList();
   }
-}
 
+  void _navigateToEditEvent(Event event) {
+    // Navigate to the EditEventPage, passing the event object
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const EditEventPage(event: '',),
+      ),
+    );
+  }
+
+}
 
 class FooterIconButton extends StatelessWidget {
   final IconData icon;

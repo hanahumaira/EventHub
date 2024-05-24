@@ -43,6 +43,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final _organizerController = TextEditingController();
   final _detailsController = TextEditingController();
   final _categoryController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
   
 
   Future<void> _createEvent() async {
@@ -475,10 +476,18 @@ const SizedBox(height: 20),
                   child: const Text('Cancel'),
                 ),
                 //create event button
-                ElevatedButton(
-                  onPressed: _createEvent,
-                  child: const Text('Create Event'),
-                ),
+              ElevatedButton(
+          onPressed: () {
+            // Navigate to the CreateEventPage with the User object
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyEvent(passUser: null,),
+              ),
+            );
+          },
+          child: Text('Create'),
+        ),
               ],
             ),
           ),
@@ -518,7 +527,7 @@ const SizedBox(height: 20),
             },
           ),
           FooterIconButton(
-            icon: Icons.create,
+            icon: Icons.add,
             label: "Create Event",
             onPressed: () {
               Navigator.push(

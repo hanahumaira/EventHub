@@ -73,6 +73,7 @@ class EventDetailsPage extends StatelessWidget {
               'Fee: ${event.fee.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
             ),
+            
             SizedBox(height: 8.0),
             Text(
               'Organiser: ${event.organiser}',
@@ -123,7 +124,7 @@ class EventDetailsPage extends StatelessWidget {
               },
             ),
             FooterIconButton(
-              icon: Icons.create,
+              icon: Icons.add,
               label: "Create Event",
               onPressed: () {
                 Navigator.push(
