@@ -99,6 +99,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
   ];
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
+  String _selectedCategory = "All"; // Added selected category
   String _filter = "All";
 
   @override
@@ -112,16 +113,15 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
     setState(() {
       _filteredEvents = dummyEvents.where((event) {
         final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+        final matchesCategory = _selectedCategory == "All" || event.category == _selectedCategory; // Check if event matches selected category
         if (_filter == "All") {
-          return matchesSearch;
+          return matchesSearch && matchesCategory;
         } else if (_filter == "Past") {
-          return event.date.isBefore(now);
+          return event.date.isBefore(now) && matchesCategory;
         } else if (_filter == "Today") {
-          return event.date.year == now.year &&
-              event.date.month == now.month &&
-              event.date.day == now.day;
+          return event.date.year == now.year && event.date.month == now.month && event.date.day == now.day && matchesCategory;
         } else if (_filter == "Future") {
-          return event.date.isAfter(now);
+          return event.date.isAfter(now) && matchesCategory;
         }
         return false;
       }).toList();
@@ -138,6 +138,13 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
   void _onFilterChanged(String? filter) {
     setState(() {
       _filter = filter ?? 'All';
+      _filterEvents();
+    });
+  }
+
+  void _onCategoryChanged(String? category) {
+    setState(() {
+      _selectedCategory = category ?? 'All';
       _filterEvents();
     });
   }
@@ -216,6 +223,8 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 22,
+
+
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -229,106 +238,16 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                             spacing: 5,
                             runSpacing: 2,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Sport",
-                                                                    style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Education",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Charity",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Festival",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Entertainment",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Workshop",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Talk",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                          
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Conference",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Exhibition",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
+                              _buildCategoryButton('All'), // Added category buttons
+                              _buildCategoryButton('Education'),
+                              _buildCategoryButton('Sport'),
+                              _buildCategoryButton('Charity'),
+                              _buildCategoryButton('Festival'),
+                              _buildCategoryButton('Entertainment'),
+                              _buildCategoryButton('Workshop'),
+                              _buildCategoryButton('Talk'),
+                              _buildCategoryButton('Conference'),
+                              _buildCategoryButton('Exhibition'),
                             ],
                           ),
                         ),
@@ -366,7 +285,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                                 color: Colors.white,
                               ),
                               onChanged: _onFilterChanged,
-                              items: <String>['All', 'Past', 'Today','Future'].map<DropdownMenuItem<String>>((String value) {
+                              items: <String>['All', 'Past', 'Today', 'Future'].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -440,6 +359,21 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(String category) {
+    return ElevatedButton(
+      onPressed: () => _onCategoryChanged(category),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        minimumSize: const Size(0, 30),
+        backgroundColor: _selectedCategory == category ? Colors.blueAccent : Colors.white, // Use backgroundColor instead of primary
+      ),
+      child: Text(
+        category,
+        style: TextStyle(fontSize: 10),
       ),
     );
   }
