@@ -28,6 +28,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "Presentation for MAP project from every groups in section 3.",
       fee: 00.0,
       image: "lib/images/mainpage.png",
+      category: "Education",
     ),
     Event(
       event: "Football Match",
@@ -38,6 +39,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "Exciting football match between top teams.",
       fee: 20.0,
       image: "lib/images/mainpage.png",
+      category: "Entertainment",
     ),
     Event(
       event: "Tech Conference",
@@ -48,6 +50,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "Latest trends in technology.",
       fee: 50.0,
       image: "lib/images/mainpage.png",
+      category: "Conference",
     ),
     Event(
       event: "Art Exhibition",
@@ -58,6 +61,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "Showcasing contemporary art pieces.",
       fee: 10.0,
       image: "lib/images/mainpage.png",
+      category: "Exhibition",
     ),
     Event(
       event: "Music Concert",
@@ -68,6 +72,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "Live performances by famous artists.",
       fee: 40.0,
       image: "lib/images/mainpage.png",
+      category: "Entertainment",
     ),
     Event(
       event: "Food Festival",
@@ -78,6 +83,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "A variety of cuisines from around the world.",
       fee: 15.0,
       image: "lib/images/mainpage.png",
+      category: "Festival",
     ),
     Event(
       event: "Book Fair",
@@ -88,6 +94,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       details: "Discover the latest books and authors.",
       fee: 25.0,
       image: "lib/images/mainpage.png",
+      category: "Festival",
     ),
   ];
   List<Event> _filteredEvents = [];
@@ -299,17 +306,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                                   style: TextStyle(fontSize: 10),
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  minimumSize: const Size(0, 30),
-                                ),
-                                child: const Text(
-                                  "Technology",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ),
+                          
                               ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(

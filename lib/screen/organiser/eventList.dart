@@ -99,6 +99,7 @@ class _EventListState extends State<EventList> {
                                 eventdetails: eventData['details'],
                                 fee: eventData['fee'],
                                 organizer: eventData['organizer'],
+                                category: eventData['category'],
                               ),
                             ),
                           );
@@ -184,6 +185,7 @@ class EventdetailsPage extends StatefulWidget {
   final String eventdetails;
   final String fee;
   final String organizer;
+  final String category;
 
   const EventdetailsPage({
     required this.eventName,
@@ -191,6 +193,7 @@ class EventdetailsPage extends StatefulWidget {
     required this.eventdetails,
     required this.fee,
     required this.organizer,
+    required this.category,
   });
 
   @override

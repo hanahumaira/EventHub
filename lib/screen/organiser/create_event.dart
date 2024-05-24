@@ -10,6 +10,7 @@ import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key, User? user}) : super(key: key);
@@ -19,14 +20,30 @@ class CreateEventPage extends StatefulWidget {
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
+    final List<String> categories = [
+    'Education',
+    'Sport',
+    'Charity',
+    'Festival',
+    'Entertainment',
+    'Workshop',
+    'Talk',
+    'Conference',
+    'Exhibition'
+  ];
+  String? _selectedCategory;
   File? _selectedImage;
   DateTime? _selectedDateTime;
   final _dateTimeController = TextEditingController();
   final _eventNameController = TextEditingController();
   final _locationController = TextEditingController();
   final _feeController = TextEditingController();
+    bool _isFreeEvent = true;
+   final _feeLinkController = TextEditingController();
   final _organizerController = TextEditingController();
   final _detailsController = TextEditingController();
+  final _categoryController = TextEditingController();
+  
 
   Future<void> _createEvent() async {
     try {
@@ -245,62 +262,160 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   const SizedBox(height: 20),
 
                   // Fee
-                  TextFormField(
-                    controller: _feeController,
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: 'Event Fee',
-                      hintText: 'RM XX.XX',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+         Container(
+  padding: const EdgeInsets.all(10),
+  margin: const EdgeInsets.symmetric(vertical: 5),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(10),
+    border: Border.all(color: Colors.white),
+  ),
+  child: SwitchListTile(
+    title: Text(
+      'Is this event free?',
+      style: TextStyle(
+        color: Colors.white,
+      ),
+    ),
+    value: _isFreeEvent,
+    onChanged: (value) {
+      setState(() {
+        _isFreeEvent = value;
+      });
+    },
+  ),
+),
+const SizedBox(height: 20),
+                  if (!_isFreeEvent) ...[
+                    // Fee fields
+                    TextFormField(
+                      controller: _feeController,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        labelText: 'Event Fee',
+                        hintText: 'RM XX.XX',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
+                      style: TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the fee of the ticket';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Please enter a valid fee amount';
+                        }
+                        return null;
+                      },
                     ),
-                    style: TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the fee of the ticket';
-                      }
-                      if (double.tryParse(value) == null) {
-                        return 'Please enter a valid fee amount';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _feeLinkController,
+                      decoration: InputDecoration(
+                        labelText: 'Fee Link',
+                        hintText: 'https://www.utm.my/',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        ),
+                      ),
+                      style: TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a fee link';
+                        }
+                        if (!Uri.parse(value).isAbsolute) {
+                          return 'Please enter a valid URL';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                  // TextFormField(
+                  //   controller: _feeController,
+                  //   keyboardType:
+                  //       TextInputType.numberWithOptions(decimal: true),
+                  //   decoration: InputDecoration(
+                  //     labelText: 'Event Fee',
+                  //     hintText: 'RM XX.XX',
+                  //     labelStyle: TextStyle(color: Colors.white),
+                  //     border: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                  //     ),
+                  //   ),
+                  //   style: TextStyle(color: Colors.white),
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Please enter the fee of the ticket';
+                  //     }
+                  //     if (double.tryParse(value) == null) {
+                  //       return 'Please enter a valid fee amount';
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
 
-                  // Organizer
-                  TextFormField(
-                    controller: _organizerController,
-                    decoration: InputDecoration(
-                      labelText: 'Event Organiser(s)',
-                      hintText: 'Company Name(s)',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                    ),
-                    style: TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the organiser(s) name';
-                      }
-                      return null;
-                    },
-                  ),
+                 
+                  // Category
+                 DropdownButtonFormField<String>(
+  decoration: InputDecoration(
+    labelText: 'Event Category',
+    labelStyle: TextStyle(color: Colors.white),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+  ),
+  style: TextStyle(color: Colors.white),
+  value: _selectedCategory,
+  onChanged: (String? newValue) {
+    setState(() {
+      _selectedCategory = newValue;
+    });
+  },
+  items: categories.map((String category) {
+    return DropdownMenuItem<String>(
+      value: category,
+      child: Text(
+        category,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }).toList(),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please select the event category';
+    }
+    return null;
+  },
+   dropdownColor: Colors.deepPurple,
+
+),
                   const SizedBox(height: 20),
 
                   // Details

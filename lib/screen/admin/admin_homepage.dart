@@ -38,6 +38,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "Presentation for MAP project from every groups in section 3.",
       fee: 00.0,
       image: "lib/images/mainpage.png",
+      category: "Education",
     ),
     Event(
       event: "Football Match",
@@ -48,6 +49,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "Exciting football match between top teams.",
       fee: 20.0,
       image: "lib/images/mainpage.png",
+      category: "Entertainment",
     ),
     Event(
       event: "Tech Conference",
@@ -58,6 +60,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "Latest trends in technology.",
       fee: 50.0,
       image: "lib/images/mainpage.png",
+      category: "Technology",
     ),
     Event(
       event: "Art Exhibition",
@@ -68,6 +71,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "Showcasing contemporary art pieces.",
       fee: 10.0,
       image: "lib/images/mainpage.png",
+      category: "Exhibition",
     ),
     Event(
       event: "Music Concert",
@@ -78,6 +82,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "Live performances by famous artists.",
       fee: 40.0,
       image: "lib/images/mainpage.png",
+      category: "Entertainment",
     ),
     Event(
       event: "Food Festival",
@@ -88,6 +93,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "A variety of cuisines from around the world.",
       fee: 15.0,
       image: "lib/images/mainpage.png",
+      category: "Festival",
     ),
     Event(
       event: "Book Fair",
@@ -98,6 +104,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       details: "Discover the latest books and authors.",
       fee: 25.0,
       image: "lib/images/mainpage.png",
+      category: "Festival",
     ),
   ];
 

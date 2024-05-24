@@ -17,6 +17,7 @@ class _EditEventPageState extends State<EditEventPage> {
   final TextEditingController _feeController = TextEditingController();
   final TextEditingController _organizerController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
+   final TextEditingController _categoryController = TextEditingController();
 
   @override
   void initState() {

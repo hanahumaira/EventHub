@@ -10,6 +10,7 @@ class Event {
   String details;
   double fee;
   String image;
+  String category;
 
   Event({
     this.id,
@@ -21,6 +22,7 @@ class Event {
     required this.details,
     required this.fee,
     required this.image,
+    required this.category,
   });
 
   factory Event.fromSnapshot(DocumentSnapshot snapshot) {
@@ -35,6 +37,7 @@ class Event {
       details: data['details'],
       fee: data['fee'].toDouble(),
       image: data['image'],
+      category: data['category'],
     );
   }
 
@@ -48,6 +51,7 @@ class Event {
       'details': details,
       'fee': fee,
       'image': image,
+      'category':category,
     };
   }
 }
