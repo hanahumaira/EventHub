@@ -19,7 +19,7 @@ class OrganiserHomePage extends StatefulWidget {
 
 class _OrganiserHomeState extends State<OrganiserHomePage> {
   final List<Event> dummyEvents = [
-        Event(
+    Event(
       event: "Sprint 2 MAP",
       date: DateTime.now().add(Duration(days: 2)),
       location: "N28",
@@ -49,7 +49,6 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       fee: 50.0,
       image: "lib/images/mainpage.png",
     ),
-    
     Event(
       event: "Art Exhibition",
       date: DateTime.now().add(Duration(days: 2)),
@@ -101,26 +100,26 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
     _filteredEvents = dummyEvents;
   }
 
-void _filterEvents() {
-  final now = DateTime.now();
-  setState(() {
-    _filteredEvents = dummyEvents.where((event) {
-      final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
-      if (_filter == "All") {
-        return matchesSearch;
-      } else if (_filter == "Past") {
-        return event.date.isBefore(now);
-      } else if (_filter == "Today") {
-        return event.date.year == now.year &&
-            event.date.month == now.month &&
-            event.date.day == now.day;
-      } else if (_filter == "Future") {
-        return event.date.isAfter(now);
-      }
-      return false;
-    }).toList();
-  });
-}
+  void _filterEvents() {
+    final now = DateTime.now();
+    setState(() {
+      _filteredEvents = dummyEvents.where((event) {
+        final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+        if (_filter == "All") {
+          return matchesSearch;
+        } else if (_filter == "Past") {
+          return event.date.isBefore(now);
+        } else if (_filter == "Today") {
+          return event.date.year == now.year &&
+              event.date.month == now.month &&
+              event.date.day == now.day;
+        } else if (_filter == "Future") {
+          return event.date.isAfter(now);
+        }
+        return false;
+      }).toList();
+    });
+  }
 
   void _onSearchChanged(String query) {
     setState(() {
@@ -217,121 +216,124 @@ void _filterEvents() {
                           ],
                         ),
                         const SizedBox(height: 1),
-                        Wrap(
-                          spacing: 5,
-                          runSpacing: 2,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal, // Scroll horizontally
+                          child: Wrap(
+                            spacing: 5,
+                            runSpacing: 2,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Sport",
+                                                                    style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                              child: const Text(
-                                "Sport",
-                                style: TextStyle(fontSize: 10),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Education",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Charity",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                              child: const Text(
-                                "Education",
-                                style: TextStyle(fontSize: 10),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Festival",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Entertainment",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                              child: const Text(
-                                "Charity",
-                                style: TextStyle(fontSize: 10),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Workshop",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Talk",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                              child: const Text(
-                                "Festival",
-                                style: TextStyle(fontSize: 10),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Technology",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Conference",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                              child: const Text(
-                                "Entertainment",
-                                style: TextStyle(fontSize: 10),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  minimumSize: const Size(0, 30),
+                                ),
+                                child: const Text(
+                                  "Exhibition",
+                                  style: TextStyle(fontSize: 10),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Workshop",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Talk",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Technology",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                             onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Conference",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Exhibition",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -357,28 +359,27 @@ void _filterEvents() {
                               ),
                             ),
                             DropdownButton<String>(
-  value: _filter,
-  icon: Icon(Icons.arrow_downward, color: Colors.white),
-  iconSize: 24,
-  elevation: 16,
-  style: TextStyle(color: Colors.white),
-  underline: Container(
-    height: 2,
-    color: Colors.white,
-  ),
-  onChanged: _onFilterChanged,
-  items: <String>['All', 'Past', 'Today','Future'].map<DropdownMenuItem<String>>((String value) {
-    return DropdownMenuItem<String>(
-      value: value,
-      child: Text(
-        value,
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }).toList(),
-  dropdownColor: Colors.grey[800], // Set dropdown box color to grey
-),
-
+                              value: _filter,
+                              icon: Icon(Icons.arrow_downward, color: Colors.white),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: TextStyle(color: Colors.white),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.white,
+                              ),
+                              onChanged: _onFilterChanged,
+                              items: <String>['All', 'Past', 'Today','Future'].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                              dropdownColor: Colors.grey[800], // Set dropdown box color to grey
+                            ),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -454,43 +455,43 @@ void _filterEvents() {
     );
   }
 
-List<Widget> buildEventCards() {
-  return _filteredEvents.map((event) {
-    return Card(
-      elevation: 4,
-      color: Colors.grey[900],
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        leading: Image.asset(
-          event.image,
-          fit: BoxFit.cover,
-          width: 80,
+  List<Widget> buildEventCards() {
+    return _filteredEvents.map((event) {
+      return Card(
+        elevation: 4,
+        color: Colors.grey[900],
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          leading: Image.asset(
+            event.image,
+            fit: BoxFit.cover,
+            width: 80,
+          ),
+          title: Text(
+            event.event,
+            style: const TextStyle(color: Colors.white),
+          ),
+          subtitle: Text(
+            '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
+            style: const TextStyle(color: Colors.white70),
+          ),
+          trailing: Text(
+            'Registration: ${event.registration}',
+            style: const TextStyle(color: Colors.white70),
+          ),
+          onTap: () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => EventPage(event: event),
+            //   ),
+            // );
+          },
         ),
-        title: Text(
-          event.event,
-          style: const TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
-          '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
-          style: const TextStyle(color: Colors.white70),
-        ),
-        trailing: Text(
-          'Registration: ${event.registration}',
-          style: const TextStyle(color: Colors.white70),
-        ),
-        onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => EventPage(event: event),
-          //   ),
-          // );
-        },
-      ),
-    );
-  }).toList();
-}
+      );
+    }).toList();
+  }
 }
 
 class FooterIconButton extends StatelessWidget {
@@ -519,4 +520,3 @@ class FooterIconButton extends StatelessWidget {
     );
   }
 }
-
