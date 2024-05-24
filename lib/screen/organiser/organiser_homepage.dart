@@ -19,6 +19,16 @@ class OrganiserHomePage extends StatefulWidget {
 
 class _OrganiserHomeState extends State<OrganiserHomePage> {
   final List<Event> dummyEvents = [
+        Event(
+      event: "Sprint 2 MAP",
+      date: DateTime.now().add(Duration(days: 2)),
+      location: "N28",
+      registration: 40,
+      organiser: "UTM",
+      details: "Presentation for MAP project from every groups in section 3.",
+      fee: 00.0,
+      image: "lib/images/mainpage.png",
+    ),
     Event(
       event: "Football Match",
       date: DateTime.now(),
@@ -39,6 +49,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       fee: 50.0,
       image: "lib/images/mainpage.png",
     ),
+    
     Event(
       event: "Art Exhibition",
       date: DateTime.now().add(Duration(days: 2)),
@@ -80,6 +91,50 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       image: "lib/images/mainpage.png",
     ),
   ];
+  List<Event> _filteredEvents = [];
+  String _searchQuery = "";
+  String _filter = "All";
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredEvents = dummyEvents;
+  }
+
+void _filterEvents() {
+  final now = DateTime.now();
+  setState(() {
+    _filteredEvents = dummyEvents.where((event) {
+      final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+      if (_filter == "All") {
+        return matchesSearch;
+      } else if (_filter == "Past") {
+        return event.date.isBefore(now);
+      } else if (_filter == "Today") {
+        return event.date.year == now.year &&
+            event.date.month == now.month &&
+            event.date.day == now.day;
+      } else if (_filter == "Future") {
+        return event.date.isAfter(now);
+      }
+      return false;
+    }).toList();
+  });
+}
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filterEvents();
+    });
+  }
+
+  void _onFilterChanged(String? filter) {
+    setState(() {
+      _filter = filter ?? 'All';
+      _filterEvents();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,10 +159,10 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
         ],
         title: Text(
           "Welcome Organiser!",
-          style: Theme.of(context).textTheme.headline6!.copyWith(
-            color: Colors.white,
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),
@@ -125,8 +180,9 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: TextFormField(
+                            onChanged: _onSearchChanged,
                             decoration: InputDecoration(
-                              hintText: 'Search event/category/organiser',
+                              hintText: 'Search event/organiser',
                               hintStyle: const TextStyle(color: Colors.white),
                               filled: true,
                               fillColor: Colors.grey[800],
@@ -254,7 +310,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                             onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                 minimumSize: const Size(0, 30),
@@ -286,48 +342,45 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     child: Column(
                       children: [
                         const SizedBox(height: 10),
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0), // Add horizontal padding
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0), // Add horizontal padding
+                              child: Text(
+                                "Events",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DropdownButton<String>(
+  value: _filter,
+  icon: Icon(Icons.arrow_downward, color: Colors.white),
+  iconSize: 24,
+  elevation: 16,
+  style: TextStyle(color: Colors.white),
+  underline: Container(
+    height: 2,
+    color: Colors.white,
+  ),
+  onChanged: _onFilterChanged,
+  items: <String>['All', 'Past', 'Today','Future'].map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
       child: Text(
-        "Events",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
+        value,
+        style: TextStyle(color: Colors.white),
       ),
-    ),
-    GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EventList(),
-          ),
-        );
-      },
-      child: Row(
-        children: [
-          Text(
-            "See More",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-            ),
-          ),
-          Icon(
-            Icons.arrow_forward,
-            color: Colors.white,
-          ),
-        ],
-      ),
-    ),
-  ],
+    );
+  }).toList(),
+  dropdownColor: Colors.grey[800], // Set dropdown box color to grey
 ),
 
+                          ],
+                        ),
                         const SizedBox(height: 10),
                         Column(
                           children: buildEventCards(),
@@ -349,7 +402,7 @@ Row(
                   label: "Home",
                   onPressed: () {},
                 ),
-                 FooterIconButton(
+                FooterIconButton(
                   icon: Icons.event,
                   label: "My Event",
                   onPressed: () {
@@ -361,16 +414,16 @@ Row(
                     );
                   },
                 ),
-                 FooterIconButton(
+                FooterIconButton(
                   icon: Icons.create,
                   label: "Create Event",
                   onPressed: () {
                     Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateEventPage(user: widget.passUser),
-                  ),
-                );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateEventPage(user: widget.passUser),
+                      ),
+                    );
                   },
                 ),
                 FooterIconButton(
@@ -390,79 +443,6 @@ Row(
           ),
         ],
       ),
-      // drawer: Drawer(
-      //   child: ListView(
-      //     padding: EdgeInsets.zero,
-      //     children: <Widget>[
-      //       UserAccountsDrawerHeader(
-      //         accountName: Text(widget.passUser?.name ?? 'Guest'),
-      //         accountEmail: Text(widget.passUser?.email ?? 'guest@example.com'),
-      //         currentAccountPicture: CircleAvatar(
-      //           backgroundColor: Colors.white,
-      //           child: Text(
-      //             widget.passUser?.name?.substring(0, 1) ?? '?',
-      //             style: const TextStyle(fontSize: 40.0),
-      //           ),
-      //         ),
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(Icons.account_circle),
-      //         title: const Text('Profile'),
-      //         onTap: () {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => ProfileScreen(user: widget.passUser),
-      //             ),
-      //           );
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(Icons.event),
-      //         title: const Text('My Events'),
-      //         onTap: () {
-      //           // Navigator.push(
-      //           //   context,
-      //           //   MaterialPageRoute(
-      //           //     builder: (context) => MyEventPage(user: widget.passUser),
-      //           //   ),
-      //           // );
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(Icons.create),
-      //         title: const Text('Create Event'),
-      //         onTap: () {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => CreateEventPage(user: widget.passUser),
-      //             ),
-      //           );
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(Icons.event_available),
-      //         title: const Text('Event List'),
-      //         onTap: () {
-      //           // Navigator.push(
-      //           //   context,
-      //           //   MaterialPageRoute(
-      //           //     builder: (context) => EventListPage(user: widget.passUser),
-      //           //   ),
-      //           // );
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(Icons.logout),
-      //         title: const Text('Logout'),
-      //         onTap: () {
-      //           _logoutAndNavigateToLogin(context);
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
@@ -474,39 +454,43 @@ Row(
     );
   }
 
-  List<Widget> buildEventCards() {
-    return dummyEvents.map((event) {
-      return Card(
-        elevation: 4,
-         color: Colors.grey[900],
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          leading: Image.asset(
-            event.image,
-            fit: BoxFit.cover,
-            width: 80,
-          ),
-          title: Text(
-                event.event,
-                style: const TextStyle(color: Colors.white),
-              ),
-          subtitle: Text('${DateFormat.yMMMMd().format(event.date)} at ${event.location}', 
-          style: const TextStyle(color: Colors.white70),),
-          trailing: Text('Registration: ${event.registration}',
-          style: const TextStyle(color: Colors.white70),),
-          onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => EventPage(event: event),
-            //   ),
-            // );
-          },
+List<Widget> buildEventCards() {
+  return _filteredEvents.map((event) {
+    return Card(
+      elevation: 4,
+      color: Colors.grey[900],
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        leading: Image.asset(
+          event.image,
+          fit: BoxFit.cover,
+          width: 80,
         ),
-      );
-    }).toList();
-  }
+        title: Text(
+          event.event,
+          style: const TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+          '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        trailing: Text(
+          'Registration: ${event.registration}',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        onTap: () {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => EventPage(event: event),
+          //   ),
+          // );
+        },
+      ),
+    );
+  }).toList();
+}
 }
 
 class FooterIconButton extends StatelessWidget {
