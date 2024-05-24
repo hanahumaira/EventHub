@@ -97,6 +97,36 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       image: "lib/images/mainpage.png",
       category: "Festival",
     ),
+      Event(
+    event: "Proposal MAP",
+    date: DateTime.now().add(Duration(days: 1)),
+    location: "N28",
+    organiser: "MobileCraft",
+    details: "Presentation for MAP project from every group in section 3.",
+    fee: 00.0,
+    image: "lib/images/mainpage.png",
+    category: "Education",
+  ),
+  Event(
+    event: "AI Talk",
+    date: DateTime.now().add(Duration(days: 2)),
+    location: "N28",
+    organiser: "MobileCraft",
+    details: "A talk about AI and its future's pros and cons",
+    fee: 00.0,
+    image: "lib/images/mainpage.png",
+    category: "Exhibition",
+  ),
+  Event(
+    event: "Program Kerjaya",
+    date: DateTime.now().add(Duration(days: 5)),
+    location: "N28",
+    organiser: "MobileCraft",
+    details: "Program for computer science students to find their networks and job opportunities.",
+    fee: 00.0,
+    image: "lib/images/mainpage.png",
+    category: "Talk",
+  ),
   ];
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
@@ -172,7 +202,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
           ),
         ],
         title: Text(
-          "Welcome Organiser!",
+          "Home",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -318,7 +348,14 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
-                  onPressed: () {},
+                     onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrganiserHomePage(passUser: null,),
+                ),
+              );
+            },
                 ),
                 FooterIconButton(
                   icon: Icons.event,
@@ -351,7 +388,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfileScreen(),
+                        builder: (context) => ProfileScreen(user: widget.passUser),
                       ),
                     );
                   },

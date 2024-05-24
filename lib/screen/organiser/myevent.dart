@@ -10,8 +10,8 @@ import 'package:eventhub/screen/organiser/event_details.dart';
 
 
 class MyEvent extends StatefulWidget {
+  
   final User? passUser;
-
   const MyEvent({Key? key, required this.passUser}) : super(key: key);
 
   @override
@@ -19,12 +19,47 @@ class MyEvent extends StatefulWidget {
 }
 
 class _MyEventState extends State<MyEvent> {
+  
+List<Event> dummyEvents = [
+  Event(
+    event: "Proposal MAP",
+    date: DateTime.now().add(Duration(days: 1)),
+    location: "N28",
+    organiser: "MobileCraft",
+    details: "Presentation for MAP project from every group in section 3.",
+    fee: 00.0,
+    image: "lib/images/mainpage.png",
+    category: "Education",
+  ),
+  Event(
+    event: "AI Talk",
+    date: DateTime.now().add(Duration(days: 2)),
+    location: "N28",
+    organiser: "MobileCraft",
+    details: "A talk about AI and its future's pros and cons",
+    fee: 00.0,
+    image: "lib/images/mainpage.png",
+    category: "Exhibition",
+  ),
+  Event(
+    event: "Program Kerjaya",
+    date: DateTime.now().add(Duration(days: 5)),
+    location: "N28",
+    organiser: "MobileCraft",
+    details: "Program for computer science students to find their networks and job opportunities.",
+    fee: 00.0,
+    image: "lib/images/mainpage.png",
+    category: "Talk",
+  ),
+  // Add more dummy events here
+];
+
+
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
   String _filter = "All";
-  
-  get dummyEvents => null;
+
 
   @override
   void initState() {
@@ -32,30 +67,32 @@ class _MyEventState extends State<MyEvent> {
     _filterEvents();
   }
 
-  void _filterEvents() {
-    final now = DateTime.now();
-    setState(() {
-      _filteredEvents = dummyEvents.where((event) {
-        final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
-        final matchesCategory = _selectedCategory == "All" || event.category == _selectedCategory;
-        final matchesOrganiser = event.organiser == widget.passUser?.name; // Check if the event's organizer matches the current user
-        if (_filter == "All") {
-          return matchesSearch && matchesCategory && matchesOrganiser;
-        } else if (_filter == "Past") {
-          return event.date.isBefore(now) && matchesCategory && matchesOrganiser;
-        } else if (_filter == "Today") {
-          return event.date.year == now.year &&
-              event.date.month == now.month &&
-              event.date.day == now.day &&
-              matchesCategory &&
-              matchesOrganiser;
-        } else if (_filter == "Future") {
-          return event.date.isAfter(now) && matchesCategory && matchesOrganiser;
-        }
-        return false;
-      }).toList();
-    });
-  }
+void _filterEvents() {
+  final now = DateTime.now();
+  setState(() {
+    _filteredEvents = dummyEvents.where((event) {
+      final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesCategory = _selectedCategory == "All" || event.category == _selectedCategory;
+      final matchesOrganiser = event.organiser == "MobileCraft"; // Filter events by organizer
+      if (_filter == "All") {
+        return matchesSearch && matchesCategory && matchesOrganiser;
+      } else if (_filter == "Past") {
+        return event.date.isBefore(now) && matchesCategory && matchesOrganiser;
+      } else if (_filter == "Today") {
+        return event.date.year == now.year &&
+            event.date.month == now.month &&
+            event.date.day == now.day &&
+            matchesCategory &&
+            matchesOrganiser;
+      } else if (_filter == "Future") {
+        return event.date.isAfter(now) && matchesCategory && matchesOrganiser;
+      }
+      return false;
+    }).toList();
+  });
+}
+
+
 
   void _onSearchChanged(String query) {
     setState(() {
@@ -100,7 +137,7 @@ class _MyEventState extends State<MyEvent> {
           ),
         ],
         title: Text(
-          "My Events",
+          "My Event",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -124,7 +161,7 @@ class _MyEventState extends State<MyEvent> {
                           child: TextFormField(
                             onChanged: _onSearchChanged,
                             decoration: InputDecoration(
-                              hintText: 'Search event/organiser',
+                              hintText: 'Search event..',
                               hintStyle: const TextStyle(color: Colors.white),
                               filled: true,
                               fillColor: Colors.grey[800],

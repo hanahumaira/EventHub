@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, avoid_print, no_leading_underscores_for_local_identifiers
 
 import 'dart:io';
 
@@ -6,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
+import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,7 +65,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       // Navigate to EventPage after event creation
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyEvent()),
+        MaterialPageRoute(builder: (context) => MyEvent(passUser: null,)),
       );
     } catch (e) {
       print('Error creating event: $e');
@@ -73,42 +73,48 @@ class _CreateEventPageState extends State<CreateEventPage> {
     }
   }
 
+  void _pickImageFromGallery() async {
+  final ImagePicker picker = ImagePicker();
+  final XFile? pickedFile =
+      await picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile == null) return;
+  setState(() {
+    _selectedImage = File(pickedFile.path);
+  });
+}
+
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.black, // Set background color to black
+    appBar: AppBar(
       backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              // _logoutAndNavigateToLogin(context);
-            },
-            icon: const Icon(Icons.notifications),
-            color: Colors.white,
-          ),
-          IconButton(
-            onPressed: () {
-              _logoutAndNavigateToLogin(context);
-            },
-            icon: const Icon(Icons.logout),
-            color: Colors.white,
-          ),
-        ],
-        title: Text(
-          "Create Event",
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+      elevation: 0,
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.notifications),
+          color: Colors.white,
+        ),
+        IconButton(
+          onPressed: () {
+            _logoutAndNavigateToLogin(context);
+          },
+          icon: const Icon(Icons.logout),
+          color: Colors.white,
+        ),
+      ],
+      title: Text(
+        "Create Event",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white, // Set app bar text color to white
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
+    ),
+    body:SingleChildScrollView(
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -121,30 +127,40 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         height: 200,
                         width: 300,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 2.0),
-                          color: Colors.grey,
+                          border: Border.all(color: Colors.white, width: 2.0),
+                          color: Colors.transparent,
                         ),
                         child: _selectedImage != null
                             ? Image.file(_selectedImage!, fit: BoxFit.cover)
                             : SizedBox(),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: MaterialButton(
-                          color: Colors.transparent,
-                          onPressed: () {
-                            _pickImageFromGallery();
-                          },
-                          child: const Text(
-                            "Upload a photo",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
+                    Padding(
+  padding: const EdgeInsets.symmetric(vertical: 20),
+  child: Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey),
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.grey[200], // Grey background color
+    ),
+    child: MaterialButton(
+      onPressed: () {
+        _pickImageFromGallery();
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          "Upload a photo",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    ),
+  ),
+)
+
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -444,14 +460,9 @@ const SizedBox(height: 20),
                     },
                   ),
                   const SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ),
-
-          //buttons
+                    //buttons
           Container(
-            color: const Color.fromARGB(255, 100, 8, 222),
+           
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -472,95 +483,76 @@ const SizedBox(height: 20),
             ),
           ),
 
-          //footer
-          Container(
-            color: const Color.fromARGB(255, 100, 8, 222),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FooterIconButton(
-                    icon: Icons.home, label: "Home", onPressed: () {}),
-                FooterIconButton(
-                    icon: Icons.event, label: "My Event", onPressed: () {}),
-                FooterIconButton(
-                  icon: Icons.person,
-                  label: "Profile",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    );
-                  },
+                ],
+              ),
+    ),
+    //bottom navigation
+    bottomNavigationBar: Container(
+      color: const Color.fromARGB(255, 100, 8, 222),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FooterIconButton(
+            icon: Icons.home,
+            label: "Home",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrganiserHomePage(passUser: null,),
                 ),
-              ],
-            ),
+              );
+            },
+          ),
+          FooterIconButton(
+            icon: Icons.event,
+            label: "My Event",
+            onPressed: () {
+              var widget;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrganiserHomePage(passUser: null,),
+                ),
+              );
+            },
+          ),
+          FooterIconButton(
+            icon: Icons.create,
+            label: "Create Event",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateEventPage(),
+                ),
+              );
+            },
+          ),
+          FooterIconButton(
+            icon: Icons.person,
+            label: "Profile",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),
-    );
-  }
-
-  Future<void> _pickImageFromGallery() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile == null) return;
-    setState(() {
-      _selectedImage = File(pickedFile.path);
-    });
-  }
+    ),
+  );
 }
 
-class EventCard extends StatelessWidget {
-  const EventCard({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 80,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              color: Colors.grey,
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Event Title",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  "Date: DD/MM/YYYY",
-                  style: TextStyle(fontSize: 12),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  "Location: XXXXX",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+      (Route<dynamic> route) => false,
     );
   }
 }
@@ -568,38 +560,26 @@ class EventCard extends StatelessWidget {
 class FooterIconButton extends StatelessWidget {
   final IconData icon;
   final String label;
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
 
   const FooterIconButton({
-    super.key,
+    Key? key,
     required this.icon,
     required this.label,
-    this.onPressed,
-  });
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-          onPressed: onPressed,
-          icon: Icon(icon, color: Colors.white),
-          iconSize: 30,
-        ),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white),
-        ),
-        const SizedBox(height: 10),
-      ],
+    return IconButton(
+      onPressed: onPressed,
+      icon: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white),
+          Text(label, style: TextStyle(color: Colors.white)),
+        ],
+      ),
     );
   }
-}
-
-void _logoutAndNavigateToLogin(BuildContext context) {
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(builder: (context) => Login()),
-    (route) => false,
-  );
 }
