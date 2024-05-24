@@ -107,10 +107,11 @@ Widget build(BuildContext context) {
             icon: Icons.event,
             label: "My Event",
             onPressed: () {
+              var widget;
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyEvent(),
+                  builder: (context) => MyEvent(passUser: widget.passUser,),
                 ),
               );
             },

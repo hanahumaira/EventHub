@@ -8,6 +8,9 @@ import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:eventhub/screen/user/myevent_saved.dart';
+import 'package:eventhub/screen/user/myevent_reg.dart';
+
 
 class UserHomePage extends StatefulWidget {
   final User passUser;
@@ -24,7 +27,7 @@ class _UserHomeState extends State<UserHomePage> {
       event: "Sprint 2 MAP",
       date: DateTime.now().add(Duration(days: 2)),
       location: "N28",
-      registration: 40,
+      // registration: 40,
       organiser: "UTM",
       details: "Presentation for MAP project from every groups in section 3.",
       fee: 00.0,
@@ -35,7 +38,7 @@ class _UserHomeState extends State<UserHomePage> {
     event: "Football Match",
     date: DateTime.now(),
     location: "Stadium A",
-    registration: 150,
+    // registration: 150,
     organiser: "Sports Club",
     details: "Exciting football match between top teams.",
     fee: 20.0,
@@ -46,7 +49,7 @@ class _UserHomeState extends State<UserHomePage> {
     event: "Tech Conference",
     date: DateTime.now().add(Duration(days: 1)),
     location: "Convention Center",
-    registration: 200,
+    // registration: 200,
     organiser: "Tech Corp",
     details: "Latest trends in technology.",
     fee: 50.0,
@@ -58,7 +61,7 @@ category: "Conference",
     event: "Art Exhibition",
     date: DateTime.now().add(Duration(days: 2)),
     location: "Art Gallery",
-    registration: 80,
+    // registration: 80,
     organiser: "Art Society",
     details: "Showcasing contemporary art pieces.",
     fee: 10.0,
@@ -69,7 +72,7 @@ category: "Exhibition",
     event: "Music Concert",
     date: DateTime.now().add(Duration(days: 3)),
     location: "Outdoor Arena",
-    registration: 300,
+    // registration: 300,
     organiser: "Music Productions",
     details: "Live performances by famous artists.",
     fee: 40.0,
@@ -80,7 +83,7 @@ category: "Entertainment",
     event: "Food Festival",
     date: DateTime.now().add(Duration(days: 4)),
     location: "City Park",
-    registration: 100,
+    // registration: 100,
     organiser: "Culinary Society",
     details: "A variety of cuisines from around the world.",
     fee: 15.0,
@@ -90,7 +93,7 @@ category: "Festival", ),
     event: "Book Fair",
     date: DateTime.now().add(Duration(days: 5)),
     location: "Exhibition Hall",
-    registration: 120,
+    // registration: 120,
     organiser: "Publishing House",
     details: "Discover the latest books and authors.",
     fee: 25.0,
@@ -373,7 +376,7 @@ category: "Festival",
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MyEvent(),
+                        builder: (context) => MyEventSaved(),
                       ),
                     );
                   },
@@ -385,7 +388,7 @@ category: "Festival",
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MyEvent(),
+                        builder: (context) => MyEventReg(),
                       ),
                     );
                   },

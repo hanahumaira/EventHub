@@ -24,7 +24,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Sprint 2 MAP",
       date: DateTime.now().add(Duration(days: 2)),
       location: "N28",
-      registration: 40,
+      // registration: 40,
       organiser: "UTM",
       details: "Presentation for MAP project from every groups in section 3.",
       fee: 00.0,
@@ -35,7 +35,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Football Match",
       date: DateTime.now(),
       location: "Stadium A",
-      registration: 150,
+      // registration: 150,
       organiser: "Sports Club",
       details: "Exciting football match between top teams.",
       fee: 20.0,
@@ -46,7 +46,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Tech Conference",
       date: DateTime.now().add(Duration(days: 1)),
       location: "Convention Center",
-      registration: 200,
+      // registration: 200,
       organiser: "Tech Corp",
       details: "Latest trends in technology.",
       fee: 50.0,
@@ -57,7 +57,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Art Exhibition",
       date: DateTime.now().add(Duration(days: 2)),
       location: "Art Gallery",
-      registration: 80,
+      // registration: 80,
       organiser: "Art Society",
       details: "Showcasing contemporary art pieces.",
       fee: 10.0,
@@ -68,7 +68,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Music Concert",
       date: DateTime.now().add(Duration(days: 3)),
       location: "Outdoor Arena",
-      registration: 300,
+      // registration: 300,
       organiser: "Music Productions",
       details: "Live performances by famous artists.",
       fee: 40.0,
@@ -79,7 +79,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Food Festival",
       date: DateTime.now().add(Duration(days: 4)),
       location: "City Park",
-      registration: 100,
+      // registration: 100,
       organiser: "Culinary Society",
       details: "A variety of cuisines from around the world.",
       fee: 15.0,
@@ -90,7 +90,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       event: "Book Fair",
       date: DateTime.now().add(Duration(days: 5)),
       location: "Exhibition Hall",
-      registration: 120,
+      // registration: 120,
       organiser: "Publishing House",
       details: "Discover the latest books and authors.",
       fee: 25.0,
@@ -318,15 +318,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
-                   onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OrganiserHomePage(passUser: null,),
-                ),
-              );
-            },
-                  
+                  onPressed: () {},
                 ),
                 FooterIconButton(
                   icon: Icons.event,
@@ -335,7 +327,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyEvent(),
+                        builder: (context) => MyEvent(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -416,10 +408,10 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
             style: const TextStyle(color: Colors.white70),
           ),
-          trailing: Text(
-            'Registration: ${event.registration}',
-            style: const TextStyle(color: Colors.white70),
-          ),
+          // trailing: Text(
+          //   'Registration: ${event.registration}',
+          //   style: const TextStyle(color: Colors.white70),
+          // ),
          onTap: () {
   Navigator.push(
     context,
