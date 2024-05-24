@@ -2,11 +2,12 @@ import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
-import 'package:eventhub/screen/organiser/eventList.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:eventhub/screen/organiser/event_details.dart';
+
 
 class OrganiserHomePage extends StatefulWidget {
   final User? passUser;
@@ -317,7 +318,15 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
-                  onPressed: () {},
+                   onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrganiserHomePage(passUser: null,),
+                ),
+              );
+            },
+                  
                 ),
                 FooterIconButton(
                   icon: Icons.event,
@@ -411,14 +420,15 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             'Registration: ${event.registration}',
             style: const TextStyle(color: Colors.white70),
           ),
-          onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => EventPage(event: event),
-            //   ),
-            // );
-          },
+         onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EventDetailsPage(event: event),
+    ),
+  );
+},
+
         ),
       );
     }).toList();
