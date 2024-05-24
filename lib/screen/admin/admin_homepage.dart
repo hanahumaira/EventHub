@@ -29,6 +29,16 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHomePage> {
   final List<Event> dummyEvents = [
+      Event(
+      event: "Sprint 2 MAP",
+      date: DateTime.now().add(Duration(days: 2)),
+      location: "N28",
+      registration: 40,
+      organiser: "UTM",
+      details: "Presentation for MAP project from every groups in section 3.",
+      fee: 00.0,
+      image: "lib/images/mainpage.png",
+    ),
     Event(
       event: "Football Match",
       date: DateTime.now(),
