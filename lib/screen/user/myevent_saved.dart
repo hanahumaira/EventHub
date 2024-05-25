@@ -47,7 +47,7 @@ class EventCard extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         leading: Image.asset(
-          event.image,
+          event.imageURL,
           fit: BoxFit.cover,
           width: 80,
         ),
@@ -56,7 +56,7 @@ class EventCard extends StatelessWidget {
           style: const TextStyle(color: Colors.white),
         ),
         subtitle: Text(
-          '${event.date}',
+          '${event.dateTime}',
           style: const TextStyle(color: Colors.white70),
         ),
         // trailing: IconButton(
@@ -93,7 +93,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.image),
+            Image.asset(event.imageURL),
             const SizedBox(height: 16),
             Text(
               event.event,
@@ -101,7 +101,7 @@ class EventDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(
-              '${event.date}',
+              '${event.dateTime}',
               style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             const SizedBox(height: 8.0),

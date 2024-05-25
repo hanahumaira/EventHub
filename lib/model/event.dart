@@ -2,66 +2,70 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
   String? id; // Optional, as it might be assigned by Firestore
+  String imageURL;
   String event;
-  DateTime date;
+  DateTime dateTime;
   String location;
-  String organiser;
-  String details;
   double fee;
-  String image;
   String category;
+  String details;
+  String organiser;
+  Timestamp? timestamp;
 
   Event({
     this.id,
+    required this.imageURL,
     required this.event,
-    required this.date,
+    required this.dateTime,
     required this.location,
-    required this.organiser,
-    required this.details,
     required this.fee,
-    required this.image,
     required this.category,
+    required this.details,
+    required this.organiser,
+    required this.timestamp,
   });
 
   factory Event.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     return Event(
       id: snapshot.id,
+      imageURL: data['imageURL'],
       event: data['event'],
-      date: (data['date'] as Timestamp).toDate(),
+      dateTime: data['dateTime'].toDate(),
       location: data['location'],
-      organiser: data['organiser'],
-      details: data['details'],
       fee: data['fee'].toDouble(),
-      image: data['image'],
       category: data['category'],
+      details: data['details'],
+      organiser: data['organiser'],
+      timestamp: data['timestamp'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'imageURL': imageURL,
       'event': event,
-      'date': date,
+      'dateTime': dateTime,
       'location': location,
-      'organiser': organiser,
-      'details': details,
       'fee': fee,
-      'image': image,
       'category': category,
+      'details': details,
+      'organiser': organiser,
+      'timestamp': timestamp,
     };
   }
 
   Map<String, dynamic> toMap() {
-  return {
-    'event': event,
-    'date': date,
-    'location': location,
-    'organiser': organiser,
-    'details': details,
-    'fee': fee,
-    'image': image,
-    'category': category,
-  };
-}
-
+    return {
+      'imageURL': imageURL,
+      'event': event,
+      'dateTime': dateTime,
+      'location': location,
+      'fee': fee,
+      'category': category,
+      'details': details,
+      'organiser': organiser,
+      'timestamp': timestamp,
+    };
+  }
 }

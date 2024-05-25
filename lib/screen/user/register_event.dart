@@ -20,7 +20,7 @@ class RegisterEventPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.image),
+            // Image.asset(event.imageURL),
             const SizedBox(height: 16),
             Text(
               event.event,
@@ -36,7 +36,7 @@ class RegisterEventPage extends StatelessWidget {
                 Icon(Icons.date_range, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat.yMMMMd().format(event.date),
+                  DateFormat.yMMMMd().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -47,7 +47,7 @@ class RegisterEventPage extends StatelessWidget {
                 Icon(Icons.access_time, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat.jm().format(event.date),
+                  DateFormat.jm().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -156,7 +156,6 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
             },
           ),
           const SizedBox(height: 16),
-          
           _buildTextField(
             controller: _ageController,
             label: 'Age',
@@ -198,7 +197,6 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
               return null;
             },
           ),
-          
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: _registerEvent,
@@ -211,7 +209,8 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
               children: [
                 Icon(Icons.event_available, color: Colors.white),
                 const SizedBox(width: 8),
-                const Text('Register Event', style: TextStyle(color: Colors.white)),
+                const Text('Register Event',
+                    style: TextStyle(color: Colors.white)),
               ],
             ),
           ),
@@ -256,7 +255,8 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
           children: [
             Expanded(
               child: ListTile(
-                title: const Text('Male', style: TextStyle(color: Colors.white)),
+                title:
+                    const Text('Male', style: TextStyle(color: Colors.white)),
                 leading: Radio<String>(
                   value: 'Male',
                   groupValue: _selectedGender,
@@ -271,7 +271,8 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
             ),
             Expanded(
               child: ListTile(
-                title: const Text('Female', style: TextStyle(color: Colors.white)),
+                title:
+                    const Text('Female', style: TextStyle(color: Colors.white)),
                 leading: Radio<String>(
                   value: 'Female',
                   groupValue: _selectedGender,
@@ -334,9 +335,11 @@ class EventWebsitePage extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 140, 40, 222),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Text('Go to Event Website', style: TextStyle(color: Colors.white)),
+              child: const Text('Go to Event Website',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

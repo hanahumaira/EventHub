@@ -1,12 +1,12 @@
 import 'package:eventhub/screen/admin/organiser_approval.dart';
 import 'package:flutter/material.dart';
 import 'package:eventhub/model/user.dart';
-import 'package:eventhub/screen/event_page.dart';
+// import 'package:eventhub/screen/event_page.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/model/event.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminHomePage extends StatefulWidget {
   final User passUser;
@@ -19,91 +19,97 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHomePage> {
   final List<Event> dummyEvents = [
-      Event(
+    Event(
       event: "Sprint 2 MAP",
-      date: DateTime.now().add(Duration(days: 2)),
+      dateTime: DateTime.now().add(Duration(days: 2)),
       location: "N28",
       // registration: 40,
       organiser: "UTM",
       details: "Presentation for MAP project from every groups in section 3.",
       fee: 00.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Education",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
       event: "Football Match",
-      date: DateTime.now(),
+      dateTime: DateTime.now(),
       location: "Stadium A",
       // registration: 150,
       organiser: "Sports Club",
       details: "Exciting football match between top teams.",
       fee: 20.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Entertainment",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
       event: "Tech Conference",
-      date: DateTime.now().add(Duration(days: 1)),
+      dateTime: DateTime.now().add(Duration(days: 1)),
       location: "Convention Center",
       // registration: 200,
       organiser: "Tech Corp",
       details: "Latest trends in technology.",
       fee: 50.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Technology",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
       event: "Art Exhibition",
-      date: DateTime.now().add(Duration(days: 2)),
+      dateTime: DateTime.now().add(Duration(days: 2)),
       location: "Art Gallery",
       // registration: 80,
       organiser: "Art Society",
       details: "Showcasing contemporary art pieces.",
       fee: 10.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Exhibition",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
       event: "Music Concert",
-      date: DateTime.now().add(Duration(days: 3)),
+      dateTime: DateTime.now().add(Duration(days: 3)),
       location: "Outdoor Arena",
       // registration: 300,
       organiser: "Music Productions",
       details: "Live performances by famous artists.",
       fee: 40.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Entertainment",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
       event: "Food Festival",
-      date: DateTime.now().add(Duration(days: 4)),
+      dateTime: DateTime.now().add(Duration(days: 4)),
       location: "City Park",
       // registration: 100,
       organiser: "Culinary Society",
       details: "A variety of cuisines from around the world.",
       fee: 15.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Festival",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
       event: "Book Fair",
-      date: DateTime.now().add(Duration(days: 5)),
+      dateTime: DateTime.now().add(Duration(days: 5)),
       location: "Exhibition Hall",
       // registration: 120,
       organiser: "Publishing House",
       details: "Discover the latest books and authors.",
       fee: 25.0,
-      image: "lib/images/mainpage.png",
+      imageURL: "lib/images/mainpage.png",
       category: "Festival",
+      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
   ];
 
-    List<Event> _filteredEvents = [];
+  List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
   String _filter = "All";
 
-  
   @override
   void initState() {
     super.initState();
@@ -114,16 +120,22 @@ class _AdminHomeState extends State<AdminHomePage> {
     final now = DateTime.now();
     setState(() {
       _filteredEvents = dummyEvents.where((event) {
-        final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
-        final matchesCategory = _selectedCategory == "All" || event.category == _selectedCategory; // Check if event matches selected category
+        final matchesSearch =
+            event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+        final matchesCategory = _selectedCategory == "All" ||
+            event.category ==
+                _selectedCategory; // Check if event matches selected category
         if (_filter == "All") {
           return matchesSearch && matchesCategory;
         } else if (_filter == "Past") {
-          return event.date.isBefore(now) && matchesCategory;
+          return event.dateTime.isBefore(now) && matchesCategory;
         } else if (_filter == "Today") {
-          return event.date.year == now.year && event.date.month == now.month && event.date.day == now.day && matchesCategory;
+          return event.dateTime.year == now.year &&
+              event.dateTime.month == now.month &&
+              event.dateTime.day == now.day &&
+              matchesCategory;
         } else if (_filter == "Future") {
-          return event.date.isAfter(now) && matchesCategory;
+          return event.dateTime.isAfter(now) && matchesCategory;
         }
         return false;
       }).toList();
@@ -150,7 +162,6 @@ class _AdminHomeState extends State<AdminHomePage> {
       _filterEvents();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -209,13 +220,14 @@ class _AdminHomeState extends State<AdminHomePage> {
                                 Icons.search,
                                 color: Colors.white,
                               ),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 15),
                             ),
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         const SizedBox(height: 15),
-   const Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
@@ -233,12 +245,14 @@ class _AdminHomeState extends State<AdminHomePage> {
                         ),
                         const SizedBox(height: 1),
                         SingleChildScrollView(
-                          scrollDirection: Axis.horizontal, // Scroll horizontally
+                          scrollDirection:
+                              Axis.horizontal, // Scroll horizontally
                           child: Wrap(
                             spacing: 5,
                             runSpacing: 2,
                             children: [
-                              _buildCategoryButton('All'), // Added category buttons
+                              _buildCategoryButton(
+                                  'All'), // Added category buttons
                               _buildCategoryButton('Education'),
                               _buildCategoryButton('Sport'),
                               _buildCategoryButton('Charity'),
@@ -264,7 +278,8 @@ class _AdminHomeState extends State<AdminHomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0), // Add horizontal padding
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0), // Add horizontal padding
                               child: Text(
                                 "Events",
                                 style: TextStyle(
@@ -276,7 +291,8 @@ class _AdminHomeState extends State<AdminHomePage> {
                             ),
                             DropdownButton<String>(
                               value: _filter,
-                              icon: Icon(Icons.arrow_downward, color: Colors.white),
+                              icon: Icon(Icons.arrow_downward,
+                                  color: Colors.white),
                               iconSize: 24,
                               elevation: 16,
                               style: TextStyle(color: Colors.white),
@@ -285,7 +301,12 @@ class _AdminHomeState extends State<AdminHomePage> {
                                 color: Colors.white,
                               ),
                               onChanged: _onFilterChanged,
-                              items: <String>['All', 'Past', 'Today', 'Future'].map<DropdownMenuItem<String>>((String value) {
+                              items: <String>[
+                                'All',
+                                'Past',
+                                'Today',
+                                'Future'
+                              ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -294,7 +315,8 @@ class _AdminHomeState extends State<AdminHomePage> {
                                   ),
                                 );
                               }).toList(),
-                              dropdownColor: Colors.grey[800], // Set dropdown box color to grey
+                              dropdownColor: Colors
+                                  .grey[800], // Set dropdown box color to grey
                             ),
                           ],
                         ),
@@ -326,7 +348,7 @@ class _AdminHomeState extends State<AdminHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  OrganizerApprovalPage(),
+                        builder: (context) => OrganizerApprovalPage(),
                       ),
                     );
                   },
@@ -350,7 +372,8 @@ class _AdminHomeState extends State<AdminHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
+                        builder: (context) =>
+                            ProfileScreen(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -362,13 +385,16 @@ class _AdminHomeState extends State<AdminHomePage> {
       ),
     );
   }
+
   Widget _buildCategoryButton(String category) {
     return ElevatedButton(
       onPressed: () => _onCategoryChanged(category),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         minimumSize: const Size(0, 30),
-        backgroundColor: _selectedCategory == category ? Colors.blueAccent : Colors.white, // Use backgroundColor instead of primary
+        backgroundColor: _selectedCategory == category
+            ? Colors.blueAccent
+            : Colors.white, // Use backgroundColor instead of primary
       ),
       child: Text(
         category,
@@ -377,16 +403,17 @@ class _AdminHomeState extends State<AdminHomePage> {
     );
   }
 
-   List<Widget> buildEventCards() {
+  List<Widget> buildEventCards() {
     return _filteredEvents.map((event) {
       return Card(
         elevation: 4,
         color: Colors.grey[900],
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.asset(
-            event.image,
+            event.imageURL,
             fit: BoxFit.cover,
             width: 80,
           ),
@@ -395,27 +422,25 @@ class _AdminHomeState extends State<AdminHomePage> {
             style: const TextStyle(color: Colors.white),
           ),
           subtitle: Text(
-            '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
+            '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
             style: const TextStyle(color: Colors.white70),
           ),
           // trailing: Text(
           //   'Registration: ${event.registration}',
           //   style: const TextStyle(color: Colors.white70),
           // ),
-         onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => EventDetailsPage(event: event),
-    ),
-  );
-},
-
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventDetailsPage(event: event),
+              ),
+            );
+          },
         ),
       );
     }).toList();
   }
-
 
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushReplacement(
@@ -479,28 +504,31 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.image),
+            Image.asset(event.imageURL),
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white), // Set text color to white
             ),
             SizedBox(height: 8.0),
-                Row(
+            Row(
               children: [
                 Icon(Icons.date_range, color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat.yMMMMd().format(event.date),
+                  DateFormat.yMMMMd().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
             ),
             SizedBox(height: 8.0),
-
-             Row(
+            Row(
               children: [
-                Icon(Icons.location_on, color: Colors.white), // Icon for location
+                Icon(Icons.location_on,
+                    color: Colors.white), // Icon for location
                 const SizedBox(width: 8),
                 Text(
                   event.location,
@@ -509,7 +537,7 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-              Row(
+            Row(
               children: [
                 Icon(Icons.attach_money, color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
@@ -519,9 +547,8 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            
             SizedBox(height: 8.0),
-             Row(
+            Row(
               children: [
                 Icon(Icons.person, color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
@@ -532,7 +559,7 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-              Row(
+            Row(
               children: [
                 Icon(Icons.archive, color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
@@ -545,7 +572,9 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white), // Set text color to white
             ),
             const SizedBox(height: 50),
             Row(
@@ -555,13 +584,15 @@ class EventDetailsPage extends StatelessWidget {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 140, 40, 222),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                   ),
                   child: Row(
                     children: [
                       Icon(Icons.edit, color: Colors.white),
                       const SizedBox(width: 8),
-                      const Text('Edit Event', style: TextStyle(color: Colors.white)),
+                      const Text('Edit Event',
+                          style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
@@ -569,13 +600,15 @@ class EventDetailsPage extends StatelessWidget {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 140, 40, 222),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                   ),
                   child: Row(
                     children: [
                       Icon(Icons.delete, color: Colors.white),
                       const SizedBox(width: 8),
-                      const Text('Delete Event', style: TextStyle(color: Colors.white)),
+                      const Text('Delete Event',
+                          style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
@@ -588,5 +621,3 @@ class EventDetailsPage extends StatelessWidget {
     );
   }
 }
-
-
