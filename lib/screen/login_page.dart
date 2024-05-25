@@ -1,12 +1,16 @@
+//import dart
+import 'package:flutter/material.dart';
+
+//import firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+//import screen & model
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/admin/admin_homepage.dart';
 import 'package:eventhub/screen/forgot_password.dart';
-import 'package:eventhub/screen/organiser/fetchdata.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/signup/signup_screen.dart';
 import 'package:eventhub/screen/user/user_homepage.dart';
-import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key});
@@ -49,7 +53,7 @@ class _LoginState extends State<Login> {
                       ),
                       SizedBox(height: 30),
                       // Add some spacing between the image and text
-                      Text(
+                      const Text(
                         'Welcome to EventHub!',
                         style: TextStyle(
                           color: Colors.white,
@@ -59,12 +63,13 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
+
                 // Email, password, and submit button container
                 Container(
-                  margin: EdgeInsets.symmetric(
+                  margin: const EdgeInsets.symmetric(
                       horizontal:
                           15), // Add margin for spacing from the screen edges
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal: 30, vertical: 20), // Adjust padding
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -83,7 +88,7 @@ class _LoginState extends State<Login> {
                                 BorderRadius.circular(10), // Round edge border
                           ),
                           labelText: "Email",
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.email,
                             color: Colors.black,
                           ),
@@ -159,7 +164,7 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     );
-                                  } //Organizer
+                                  } //ORGANIZER
                                   else if (userSnapshot['accountType'] ==
                                           'Organizer' &&
                                       userSnapshot['password'] ==
@@ -179,6 +184,8 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     );
+
+                                    //PARTICIPANT
                                   } else if (userSnapshot['accountType'] ==
                                           'Participant' &&
                                       userSnapshot['password'] ==
@@ -225,15 +232,15 @@ class _LoginState extends State<Login> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Color.fromARGB(255, 100, 8, 222),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 50, vertical: 9),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 9),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: const Text('LOGIN'),
                       ),
-                      // SizedBox(height: 10),
+
                       Center(
                         child: TextButton(
                           onPressed: () {
@@ -242,13 +249,13 @@ class _LoginState extends State<Login> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      ForgotPasswordPage()), //to go to sign up page
+                                      const ForgotPasswordPage()), //to go to sign up page
                             );
                           },
-                          child: Text('Forgot Password?'),
+                          child: const Text('Forgot Password?'),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       // Don't have an account? Create one
                       Row(
@@ -271,7 +278,7 @@ class _LoginState extends State<Login> {
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               "Create an account",
                               style: TextStyle(
                                 color: Colors.blue,
@@ -292,6 +299,7 @@ class _LoginState extends State<Login> {
     );
   }
 
+  //To check if the email is empty
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
@@ -299,6 +307,7 @@ class _LoginState extends State<Login> {
     return null;
   }
 
+  //To check if the password is empty
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
@@ -306,6 +315,7 @@ class _LoginState extends State<Login> {
     return null;
   }
 
+  //To validate if user is valid or not found or incorrect password
   Future<String?> _validateUser() async {
     try {
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance

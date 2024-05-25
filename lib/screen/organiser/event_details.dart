@@ -2,7 +2,7 @@ import 'package:eventhub/model/event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
-import 'package:eventhub/screen/organiser/create_event.dart';
+// import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
@@ -47,28 +47,31 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           Image.asset(event.image),
+            Image.asset(event.imageURL),
             SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white), // Set text color to white
             ),
             SizedBox(height: 8.0),
-                Row(
+            Row(
               children: [
                 Icon(Icons.date_range, color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat.yMMMMd().format(event.date),
+                  DateFormat.yMMMMd().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
             ),
             SizedBox(height: 8.0),
-
-             Row(
+            Row(
               children: [
-                Icon(Icons.location_on, color: Colors.white), // Icon for location
+                Icon(Icons.location_on,
+                    color: Colors.white), // Icon for location
                 const SizedBox(width: 8),
                 Text(
                   event.location,
@@ -77,7 +80,7 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-              Row(
+            Row(
               children: [
                 Icon(Icons.attach_money, color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
@@ -87,9 +90,8 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            
             SizedBox(height: 8.0),
-             Row(
+            Row(
               children: [
                 Icon(Icons.person, color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
@@ -100,7 +102,7 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-              Row(
+            Row(
               children: [
                 Icon(Icons.archive, color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
@@ -113,7 +115,9 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white), // Set text color to white
             ),
           ],
         ),
@@ -128,49 +132,51 @@ class EventDetailsPage extends StatelessWidget {
               icon: Icons.home,
               label: "Home",
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OrganiserHomePage(passUser: null,),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const OrganiserHomePage(
+                //       passUser: null,
+                //     ),
+                //   ),
+                // );
               },
             ),
             FooterIconButton(
               icon: Icons.event,
               label: "My Event",
               onPressed: () {
-                var widget;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyEvent(passUser: null,),
-                  ),
-                );
+                // var widget;
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => MyEvent(passUser: passUser),
+                //   ),
+                // );
               },
             ),
             FooterIconButton(
               icon: Icons.add,
               label: "Create Event",
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateEventPage(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => CreateEventPage(user: widget.user),
+                //   ),
+                // );
               },
             ),
             FooterIconButton(
               icon: Icons.person,
               label: "Profile",
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => ProfileScreen(),
+                //     ),
+                //   );
               },
             ),
           ],

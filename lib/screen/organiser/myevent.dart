@@ -1,13 +1,14 @@
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/organiser/create_event.dart';
+// import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/event_details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyEvent extends StatefulWidget {
   final User? passUser;
@@ -21,36 +22,36 @@ class MyEvent extends StatefulWidget {
 class _MyEventState extends State<MyEvent> {
   List<Event> dummyEvents = [
     Event(
-      event: "Proposal MAP",
-      date: DateTime.now().add(Duration(days: 1)),
-      location: "N28",
-      organiser: "MobileCraft",
-      details: "Presentation for MAP project from every group in section 3.",
-      fee: 00.0,
-      image: "lib/images/mainpage.png",
-      category: "Education",
-    ),
+        event: "Proposal MAP",
+        dateTime: DateTime.now().add(Duration(days: 1)),
+        location: "N28",
+        organiser: "MobileCraft",
+        details: "Presentation for MAP project from every group in section 3.",
+        fee: 00.0,
+        imageURL: "lib/images/mainpage.png",
+        category: "Education",
+        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
-      event: "AI Talk",
-      date: DateTime.now().add(Duration(days: 2)),
-      location: "N28",
-      organiser: "MobileCraft",
-      details: "A talk about AI and its future's pros and cons",
-      fee: 00.0,
-      image: "lib/images/mainpage.png",
-      category: "Exhibition",
-    ),
+        event: "AI Talk",
+        dateTime: DateTime.now().add(Duration(days: 2)),
+        location: "N28",
+        organiser: "MobileCraft",
+        details: "A talk about AI and its future's pros and cons",
+        fee: 00.0,
+        imageURL: "lib/images/mainpage.png",
+        category: "Exhibition",
+        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
-      event: "Program Kerjaya",
-      date: DateTime.now().add(Duration(days: 5)),
-      location: "N28",
-      organiser: "MobileCraft",
-      details:
-          "Program for computer science students to find their networks and job opportunities.",
-      fee: 00.0,
-      image: "lib/images/mainpage.png",
-      category: "Talk",
-    ),
+        event: "Program Kerjaya",
+        dateTime: DateTime.now().add(Duration(days: 5)),
+        location: "N28",
+        organiser: "MobileCraft",
+        details:
+            "Program for computer science students to find their networks and job opportunities.",
+        fee: 00.0,
+        imageURL: "lib/images/mainpage.png",
+        category: "Talk",
+        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     // Add more dummy events here
   ];
 
@@ -77,17 +78,17 @@ class _MyEventState extends State<MyEvent> {
         if (_filter == "All") {
           return matchesSearch && matchesCategory && matchesOrganiser;
         } else if (_filter == "Past") {
-          return event.date.isBefore(now) &&
+          return event.dateTime.isBefore(now) &&
               matchesCategory &&
               matchesOrganiser;
         } else if (_filter == "Today") {
-          return event.date.year == now.year &&
-              event.date.month == now.month &&
-              event.date.day == now.day &&
+          return event.dateTime.year == now.year &&
+              event.dateTime.month == now.month &&
+              event.dateTime.day == now.day &&
               matchesCategory &&
               matchesOrganiser;
         } else if (_filter == "Future") {
-          return event.date.isAfter(now) &&
+          return event.dateTime.isAfter(now) &&
               matchesCategory &&
               matchesOrganiser;
         }
@@ -134,7 +135,8 @@ class _MyEventState extends State<MyEvent> {
             TextButton(
               child: Text("Delete"),
               onPressed: () {
-                _deleteEvent(event); // Call the _deleteEvent method to delete the event
+                _deleteEvent(
+                    event); // Call the _deleteEvent method to delete the event
                 Navigator.of(context).pop(); // Close the dialog
               },
             ),
@@ -202,7 +204,8 @@ class _MyEventState extends State<MyEvent> {
                                 Icons.search,
                                 color: Colors.white,
                               ),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 15),
                             ),
                             style: const TextStyle(color: Colors.white),
                           ),
@@ -257,7 +260,8 @@ class _MyEventState extends State<MyEvent> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
                                 "Events",
                                 style: TextStyle(
@@ -269,7 +273,8 @@ class _MyEventState extends State<MyEvent> {
                             ),
                             DropdownButton<String>(
                               value: _filter,
-                              icon: Icon(Icons.arrow_downward, color: Colors.white),
+                              icon: Icon(Icons.arrow_downward,
+                                  color: Colors.white),
                               iconSize: 24,
                               elevation: 16,
                               style: TextStyle(color: Colors.white),
@@ -278,8 +283,12 @@ class _MyEventState extends State<MyEvent> {
                                 color: Colors.white,
                               ),
                               onChanged: _onFilterChanged,
-                              items: <String>['All', 'Past', 'Today', 'Future']
-                                  .map<DropdownMenuItem<String>>((String value) {
+                              items: <String>[
+                                'All',
+                                'Past',
+                                'Today',
+                                'Future'
+                              ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -312,12 +321,13 @@ class _MyEventState extends State<MyEvent> {
                   icon: Icons.home,
                   label: "Home",
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrganiserHomePage(passUser: widget.passUser),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         OrganiserHomePage(passUser: widget.passUser),
+                    //   ),
+                    // );
                   },
                 ),
                 FooterIconButton(
@@ -327,7 +337,8 @@ class _MyEventState extends State<MyEvent> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyEvent(passUser: widget.passUser),
+                        builder: (context) =>
+                            MyEvent(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -336,24 +347,25 @@ class _MyEventState extends State<MyEvent> {
                   icon: Icons.add,
                   label: "Create Event",
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateEventPage(user: widget.passUser),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         CreateEventPage(user: widget.passUser),
+                    //   ),
+                    // );
                   },
                 ),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreen(),
-                      ),
-                    );
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ProfileScreen(),
+                    //     ),
+                    //   );
                   },
                 ),
               ],
@@ -370,7 +382,8 @@ class _MyEventState extends State<MyEvent> {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         minimumSize: const Size(0, 30),
-        backgroundColor: _selectedCategory == category ? Colors.blueAccent : Colors.white,
+        backgroundColor:
+            _selectedCategory == category ? Colors.blueAccent : Colors.white,
       ),
       child: Text(
         category,
@@ -390,7 +403,8 @@ class _MyEventState extends State<MyEvent> {
             TextButton(
               child: Text("Cancel"),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog without deleting
+                Navigator.of(context)
+                    .pop(); // Close the dialog without deleting
               },
             ),
             TextButton(
@@ -403,7 +417,8 @@ class _MyEventState extends State<MyEvent> {
                   _filterEvents(); // Refresh the event list
                 });
 
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event deleted successfully")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Event deleted successfully")));
               },
             ),
           ],
@@ -427,9 +442,10 @@ class _MyEventState extends State<MyEvent> {
         color: Colors.grey[900],
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.asset(
-            event.image,
+            event.imageURL,
             fit: BoxFit.cover,
             width: 80,
           ),
@@ -438,7 +454,7 @@ class _MyEventState extends State<MyEvent> {
             style: const TextStyle(color: Colors.white),
           ),
           subtitle: Text(
-            '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
+            '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
             style: const TextStyle(color: Colors.white70),
           ),
           trailing: Row(
@@ -447,7 +463,8 @@ class _MyEventState extends State<MyEvent> {
               IconButton(
                 icon: Icon(Icons.edit, color: Colors.green),
                 onPressed: () {
-                  _navigateToEditEvent(event); // Navigate to the edit event page
+                  _navigateToEditEvent(
+                      event); // Navigate to the edit event page
                 },
               ),
               IconButton(
@@ -476,11 +493,12 @@ class _MyEventState extends State<MyEvent> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const EditEventPage(event: '',),
+        builder: (context) => const EditEventPage(
+          event: '',
+        ),
       ),
     );
   }
-
 }
 
 class FooterIconButton extends StatelessWidget {
