@@ -8,6 +8,9 @@ import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:eventhub/screen/user/myevent_saved.dart';
+import 'package:eventhub/screen/user/myevent_reg.dart';
+
 
 class UserHomePage extends StatefulWidget {
   final User passUser;
@@ -24,69 +27,132 @@ class _UserHomeState extends State<UserHomePage> {
       event: "Sprint 2 MAP",
       date: DateTime.now().add(Duration(days: 2)),
       location: "N28",
-      registration: 40,
+      // registration: 40,
       organiser: "UTM",
       details: "Presentation for MAP project from every groups in section 3.",
       fee: 00.0,
       image: "lib/images/mainpage.png",
+      category: "Education",
     ),
   Event(
     event: "Football Match",
     date: DateTime.now(),
     location: "Stadium A",
-    registration: 150,
+    // registration: 150,
     organiser: "Sports Club",
     details: "Exciting football match between top teams.",
     fee: 20.0,
      image: "lib/images/mainpage.png",
+     category: "Entertainment",
   ),
   Event(
     event: "Tech Conference",
     date: DateTime.now().add(Duration(days: 1)),
     location: "Convention Center",
-    registration: 200,
+    // registration: 200,
     organiser: "Tech Corp",
     details: "Latest trends in technology.",
     fee: 50.0,
-image: "lib/images/mainpage.png",  ),
+image: "lib/images/mainpage.png",
+category: "Conference",
+),
+
   Event(
     event: "Art Exhibition",
     date: DateTime.now().add(Duration(days: 2)),
     location: "Art Gallery",
-    registration: 80,
+    // registration: 80,
     organiser: "Art Society",
     details: "Showcasing contemporary art pieces.",
     fee: 10.0,
-image: "lib/images/mainpage.png",  ),
+image: "lib/images/mainpage.png",  
+category: "Exhibition",
+),
   Event(
     event: "Music Concert",
     date: DateTime.now().add(Duration(days: 3)),
     location: "Outdoor Arena",
-    registration: 300,
+    // registration: 300,
     organiser: "Music Productions",
     details: "Live performances by famous artists.",
     fee: 40.0,
-image: "lib/images/mainpage.png",  ),
+image: "lib/images/mainpage.png",  
+category: "Entertainment",
+),
   Event(
     event: "Food Festival",
     date: DateTime.now().add(Duration(days: 4)),
     location: "City Park",
-    registration: 100,
+    // registration: 100,
     organiser: "Culinary Society",
     details: "A variety of cuisines from around the world.",
     fee: 15.0,
-image: "lib/images/mainpage.png",  ),
+image: "lib/images/mainpage.png", 
+category: "Festival", ),
   Event(
     event: "Book Fair",
     date: DateTime.now().add(Duration(days: 5)),
     location: "Exhibition Hall",
-    registration: 120,
+    // registration: 120,
     organiser: "Publishing House",
     details: "Discover the latest books and authors.",
     fee: 25.0,
-image: "lib/images/mainpage.png",  ),
+image: "lib/images/mainpage.png", 
+category: "Festival",
+ ),
 ];
+  List<Event> _filteredEvents = [];
+  String _searchQuery = "";
+  String _selectedCategory = "All"; // Added selected category
+  String _filter = "All";
 
+  
+  @override
+  void initState() {
+    super.initState();
+    _filteredEvents = dummyEvents;
+  }
+
+  void _filterEvents() {
+    final now = DateTime.now();
+    setState(() {
+      _filteredEvents = dummyEvents.where((event) {
+        final matchesSearch = event.event.toLowerCase().contains(_searchQuery.toLowerCase());
+        final matchesCategory = _selectedCategory == "All" || event.category == _selectedCategory; // Check if event matches selected category
+        if (_filter == "All") {
+          return matchesSearch && matchesCategory;
+        } else if (_filter == "Past") {
+          return event.date.isBefore(now) && matchesCategory;
+        } else if (_filter == "Today") {
+          return event.date.year == now.year && event.date.month == now.month && event.date.day == now.day && matchesCategory;
+        } else if (_filter == "Future") {
+          return event.date.isAfter(now) && matchesCategory;
+        }
+        return false;
+      }).toList();
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filterEvents();
+    });
+  }
+
+  void _onFilterChanged(String? filter) {
+    setState(() {
+      _filter = filter ?? 'All';
+      _filterEvents();
+    });
+  }
+
+  void _onCategoryChanged(String? category) {
+    setState(() {
+      _selectedCategory = category ?? 'All';
+      _filterEvents();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +176,7 @@ image: "lib/images/mainpage.png",  ),
           ),
         ],
         title: Text(
-          "Welcome to EventHub!",
+          "Participant",
           style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 20,
@@ -120,7 +186,7 @@ image: "lib/images/mainpage.png",  ),
       ),
       body: Column(
         children: [
-          Expanded(
+         Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -132,8 +198,9 @@ image: "lib/images/mainpage.png",  ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: TextFormField(
+                            onChanged: _onSearchChanged,
                             decoration: InputDecoration(
-                              hintText: 'Search event/category/organizer',
+                              hintText: 'Search event..',
                               hintStyle: const TextStyle(color: Colors.white),
                               filled: true,
                               fillColor: Colors.grey[800],
@@ -155,7 +222,7 @@ image: "lib/images/mainpage.png",  ),
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(6.0), // You can adjust the padding value as needed
+                              padding: EdgeInsets.all(6.0),
                               child: Text(
                                 "Categories",
                                 style: TextStyle(
@@ -164,140 +231,43 @@ image: "lib/images/mainpage.png",  ),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                         const SizedBox(height: 1),
-                        Wrap(
-                          spacing: 5,
-                          runSpacing: 2,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Sport",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Education",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Charity",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Festival",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Entertainment",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Workshop",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Talk",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Technology",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Conference",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                minimumSize: const Size(0, 30),
-                              ),
-                              child: const Text(
-                                "Fundraiser",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ],
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal, // Scroll horizontally
+                          child: Wrap(
+                            spacing: 5,
+                            runSpacing: 2,
+                            children: [
+                              _buildCategoryButton('All'), // Added category buttons
+                              _buildCategoryButton('Education'),
+                              _buildCategoryButton('Sport'),
+                              _buildCategoryButton('Charity'),
+                              _buildCategoryButton('Festival'),
+                              _buildCategoryButton('Entertainment'),
+                              _buildCategoryButton('Workshop'),
+                              _buildCategoryButton('Talk'),
+                              _buildCategoryButton('Conference'),
+                              _buildCategoryButton('Exhibition'),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
                   Container(
-                    color: Colors.black, // Set the background color to black
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    color: Colors.black,
                     child: Column(
                       children: [
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0), // Add horizontal padding
                               child: Text(
                                 "Events",
                                 style: TextStyle(
@@ -307,43 +277,42 @@ image: "lib/images/mainpage.png",  ),
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const EventPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    "See More",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
+                            DropdownButton<String>(
+                              value: _filter,
+                              icon: Icon(Icons.arrow_downward, color: Colors.white),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: TextStyle(color: Colors.white),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.white,
+                              ),
+                              onChanged: _onFilterChanged,
+                              items: <String>['All', 'Past', 'Today', 'Future'].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.white,
-                                ),
-                              ],
+                                );
+                              }).toList(),
+                              dropdownColor: Colors.grey[800], // Set dropdown box color to grey
                             ),
                           ],
                         ),
-                        const SizedBox(height: 5),
-                        buildEventCards(context), // Display event cards
+                        const SizedBox(height: 10),
+                        Column(
+                          children: buildEventCards(),
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
                 ],
               ),
             ),
           ),
+          //navbar
           Container(
             color: const Color.fromARGB(255, 100, 8, 222), // Set the background color to purple
             child: Row(
@@ -352,7 +321,14 @@ image: "lib/images/mainpage.png",  ),
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
-                  onPressed: () {},
+                  onPressed: () {
+              //          Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const UserHomePage(passUser: loggedInUser),
+              //   ),
+              // );
+                  },
                 ),
                 FooterIconButton(
                   icon: Icons.bookmark,
@@ -361,7 +337,7 @@ image: "lib/images/mainpage.png",  ),
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MyEvent(),
+                        builder: (context) => MyEventSaved(),
                       ),
                     );
                   },
@@ -373,7 +349,7 @@ image: "lib/images/mainpage.png",  ),
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MyEvent(),
+                        builder: (context) => MyEventReg(),
                       ),
                     );
                   },
@@ -398,45 +374,60 @@ image: "lib/images/mainpage.png",  ),
     );
   }
 
-  Widget buildEventCards(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: dummyEvents.length,
-      itemBuilder: (context, index) {
-        final event = dummyEvents[index];
-
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventDetailsPage(event: event),
-              ),
-            );
-          },
-          child: Card(
-            color: Colors.grey[900], // Set card color to dark grey
-            child: ListTile(
-             leading: Image.asset(
-  event.image,
-  fit: BoxFit.cover,
-),
-
-              title: Text(
-                event.event,
-                style: const TextStyle(color: Colors.white),
-              ),
-              subtitle: Text(
-                event.date.toString(),
-                style: const TextStyle(color: Colors.white70),
-              ),
-            ),
-          ),
-        );
-      },
+    Widget _buildCategoryButton(String category) {
+    return ElevatedButton(
+      onPressed: () => _onCategoryChanged(category),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        minimumSize: const Size(0, 30),
+        backgroundColor: _selectedCategory == category ? Colors.blueAccent : Colors.white, // Use backgroundColor instead of primary
+      ),
+      child: Text(
+        category,
+        style: TextStyle(fontSize: 10),
+      ),
     );
   }
+
+  List<Widget> buildEventCards() {
+    return _filteredEvents.map((event) {
+      return Card(
+        elevation: 4,
+        color: Colors.grey[900],
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          leading: Image.asset(
+            event.image,
+            fit: BoxFit.cover,
+            width: 80,
+          ),
+          title: Text(
+            event.event,
+            style: const TextStyle(color: Colors.white),
+          ),
+          subtitle: Text(
+            '${DateFormat.yMMMMd().format(event.date)} at ${event.location}',
+            style: const TextStyle(color: Colors.white70),
+          ),
+          // trailing: Text(
+          //   'Registration: ${event.registration}',
+          //   style: const TextStyle(color: Colors.white70),
+          // ),
+         onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EventDetailsPage(event: event),
+    ),
+  );
+},
+
+        ),
+      );
+    }).toList();
+  }
+
 
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushReplacement(
@@ -504,10 +495,10 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
             ),
-            const SizedBox(height: 18),
-            Row(
+            SizedBox(height: 8.0),
+                Row(
               children: [
                 Icon(Icons.date_range, color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
@@ -517,19 +508,9 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.access_time, color: Colors.white), // Icon for time
-                const SizedBox(width: 8),
-                Text(
-                  DateFormat.jm().format(event.date),
-                  style: const TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
+            SizedBox(height: 8.0),
+
+             Row(
               children: [
                 Icon(Icons.location_on, color: Colors.white), // Icon for location
                 const SizedBox(width: 8),
@@ -539,19 +520,20 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
+            SizedBox(height: 8.0),
+              Row(
               children: [
                 Icon(Icons.attach_money, color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
-                  '\$${event.fee.toStringAsFixed(2)}',
+                  '${event.fee.toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
+            
+            SizedBox(height: 8.0),
+             Row(
               children: [
                 Icon(Icons.person, color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
@@ -561,10 +543,21 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 8.0),
+              Row(
+              children: [
+                Icon(Icons.archive, color: Colors.white), // Icon for category
+                const SizedBox(width: 8),
+                Text(
+                  event.category,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.0),
             Text(
-              '${event.details}',
-              style: const TextStyle(fontSize: 16, color: Colors.white),
+              'Details: ${event.details}',
+              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
             ),
             const SizedBox(height: 50),
             Row(
@@ -580,9 +573,9 @@ class EventDetailsPage extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.favorite, color: Colors.white), // Custom save icon
+                      Icon(Icons.bookmark_border, color: Colors.white), // Custom save icon
                       const SizedBox(width: 8),
-                      const Text('Save Event', style: TextStyle(color: Colors.white)),
+                      const Text('Save', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
@@ -603,7 +596,7 @@ class EventDetailsPage extends StatelessWidget {
                     children: [
                       Icon(Icons.event_available, color: Colors.white), // Icon for register event
                       const SizedBox(width: 6),
-                      const Text('Register Event', style: TextStyle(color: Colors.white)),
+                      const Text('Register', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),

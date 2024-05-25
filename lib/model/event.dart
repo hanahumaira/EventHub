@@ -5,22 +5,22 @@ class Event {
   String event;
   DateTime date;
   String location;
-  int registration;
   String organiser;
   String details;
   double fee;
   String image;
+  String category;
 
   Event({
     this.id,
     required this.event,
     required this.date,
     required this.location,
-    required this.registration,
     required this.organiser,
     required this.details,
     required this.fee,
     required this.image,
+    required this.category,
   });
 
   factory Event.fromSnapshot(DocumentSnapshot snapshot) {
@@ -30,11 +30,11 @@ class Event {
       event: data['event'],
       date: (data['date'] as Timestamp).toDate(),
       location: data['location'],
-      registration: data['registration'],
       organiser: data['organiser'],
       details: data['details'],
       fee: data['fee'].toDouble(),
       image: data['image'],
+      category: data['category'],
     );
   }
 
@@ -43,11 +43,25 @@ class Event {
       'event': event,
       'date': date,
       'location': location,
-      'registration': registration,
       'organiser': organiser,
       'details': details,
       'fee': fee,
       'image': image,
+      'category': category,
     };
   }
+
+  Map<String, dynamic> toMap() {
+  return {
+    'event': event,
+    'date': date,
+    'location': location,
+    'organiser': organiser,
+    'details': details,
+    'fee': fee,
+    'image': image,
+    'category': category,
+  };
+}
+
 }
