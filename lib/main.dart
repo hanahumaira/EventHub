@@ -15,11 +15,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
- User dummyUser = User(
+  User dummyUser = User(
     name: 'Admin User',
-    email: 'admin@example.com', 
-    password: '123456', 
-    phoneNum: '', 
+    email: 'admin@example.com',
+    password: '123456',
+    phoneNum: '',
     accountType: '',
   );
   runApp(
