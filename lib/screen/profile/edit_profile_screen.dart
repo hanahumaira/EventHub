@@ -318,7 +318,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         // Get.to(() => ProfileScreen(passUser: widget.passUser));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
+        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
                         side: BorderSide.none,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

@@ -15,19 +15,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // User dummyUser = User(
-  //   name: 'Admin User',
-  //   email: 'admin@example.com',
-  //   password: '123456',
-  //   phoneNum: '',
-  //   accountType: '',
-  // );
+
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       getPages: [
-        //GetPage(name: '/', page: () => AdminHomePage(passUser: dummyUser)),
         GetPage(name: '/', page: () => Login()),
         // GetPage(name: '/editProfile', page: () => const EditProfileScreen()),
       ],

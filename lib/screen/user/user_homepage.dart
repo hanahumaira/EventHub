@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/screen/user/register_event.dart';
 import 'package:flutter/material.dart';
 import 'package:eventhub/model/user.dart';
@@ -15,7 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserHomePage extends StatefulWidget {
   final User passUser;
 
-  const UserHomePage({super.key, required this.passUser});
+  const UserHomePage({Key? key, required this.passUser}) : super(key: key);
 
   @override
   State<UserHomePage> createState() => _UserHomeState();
@@ -363,33 +366,34 @@ class _UserHomeState extends State<UserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyEventSaved(),
+    builder: (context) => MyEventSaved(savedEvents:dummyEvents),
                       ),
                     );
                   },
                 ),
-                FooterIconButton(
-                  icon: Icons.how_to_reg,
-                  label: "Registered",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyEventReg(),
-                      ),
-                    );
-                  },
-                ),
+FooterIconButton(
+  icon: Icons.how_to_reg,
+  label: "Registered",
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyEventReg(dummyEvents: dummyEvents),
+      ),
+    );
+  },
+),
+
                 FooterIconButton(
                   icon: Icons.account_circle,
                   label: "Profile",
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => ProfileScreen(passUser: widget.passUser),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(passUser: widget.passUser),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -506,6 +510,14 @@ class EventDetailsPage extends StatelessWidget {
 
   const EventDetailsPage({required this.event});
 
+  void _showSaveSuccessSnackbar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Event saved successfully'),
+      duration: Duration(seconds: 2), // Adjust duration as needed
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -530,7 +542,7 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.date_range, color: Colors.white), // Icon for date
+                Icon(Icons.date_range, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
@@ -538,11 +550,12 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
+
+
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.location_on,
-                    color: Colors.white), // Icon for location
+                Icon(Icons.location_on, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   event.location,
@@ -553,7 +566,7 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                Icon(Icons.attach_money, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   '${event.fee.toStringAsFixed(2)}',
@@ -564,7 +577,7 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.person, color: Colors.white), // Icon for organizer
+                Icon(Icons.person, color: Colors.white),
                 const SizedBox(width: 8),
                 // Text(
                 //   event.organiser,
@@ -575,7 +588,7 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.archive, color: Colors.white), // Icon for category
+                Icon(Icons.archive, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   event.category,
@@ -586,9 +599,7 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white), // Set text color to white
+              style: TextStyle(fontSize: 16.0, color: Colors.white),
             ),
             const SizedBox(height: 50),
             Row(
@@ -596,7 +607,7 @@ class EventDetailsPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Add save event functionality here
+                    _showSaveSuccessSnackbar(context); // Show success snackbar
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(
@@ -606,21 +617,20 @@ class EventDetailsPage extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.bookmark_border,
-                          color: Colors.white), // Custom save icon
+                      Icon(Icons.bookmark_border, color: Colors.white),
                       const SizedBox(width: 8),
                       const Text('Save', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegisterEventPage(event: event),
-                      ),
-                    );
+                   onPressed: () {
+                     Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterEventPage(event: event),
+      ),
+    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(

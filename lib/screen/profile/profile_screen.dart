@@ -89,7 +89,7 @@ class ProfileScreen extends StatelessWidget {
                     Get.to(() => EditProfileScreen(passUser: passUser));
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
+        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
                     side: BorderSide.none,
                     shape: const StadiumBorder(),
                   ),
