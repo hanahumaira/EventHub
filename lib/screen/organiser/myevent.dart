@@ -1,7 +1,7 @@
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
-// import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
@@ -11,7 +11,7 @@ import 'package:eventhub/screen/organiser/event_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyEvent extends StatefulWidget {
-  final User? passUser;
+  final User passUser;
 
   const MyEvent({Key? key, required this.passUser}) : super(key: key);
 
@@ -22,6 +22,7 @@ class MyEvent extends StatefulWidget {
 class _MyEventState extends State<MyEvent> {
   List<Event> dummyEvents = [
     Event(
+        id: '',
         event: "Proposal MAP",
         dateTime: DateTime.now().add(Duration(days: 1)),
         location: "N28",
@@ -32,6 +33,7 @@ class _MyEventState extends State<MyEvent> {
         category: "Education",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+        id: '',
         event: "AI Talk",
         dateTime: DateTime.now().add(Duration(days: 2)),
         location: "N28",
@@ -42,6 +44,7 @@ class _MyEventState extends State<MyEvent> {
         category: "Exhibition",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+        id: '',
         event: "Program Kerjaya",
         dateTime: DateTime.now().add(Duration(days: 5)),
         location: "N28",
@@ -321,13 +324,13 @@ class _MyEventState extends State<MyEvent> {
                   icon: Icons.home,
                   label: "Home",
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         OrganiserHomePage(passUser: widget.passUser),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OrganiserHomePage(passUser: widget.passUser),
+                      ),
+                    );
                   },
                 ),
                 FooterIconButton(
@@ -347,25 +350,26 @@ class _MyEventState extends State<MyEvent> {
                   icon: Icons.add,
                   label: "Create Event",
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         CreateEventPage(user: widget.passUser),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CreateEventPage(passUser: widget.passUser),
+                      ),
+                    );
                   },
                 ),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
                   onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => ProfileScreen(),
-                    //     ),
-                    //   );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileScreen(passUser: widget.passUser),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -445,7 +449,7 @@ class _MyEventState extends State<MyEvent> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.asset(
-            event.imageURL,
+            event.imageURL ?? 'lib/images/mainpage.png',
             fit: BoxFit.cover,
             width: 80,
           ),

@@ -47,7 +47,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL),
+            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
             SizedBox(height: 16),
             Text(
               event.event,

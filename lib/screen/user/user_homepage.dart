@@ -24,6 +24,7 @@ class UserHomePage extends StatefulWidget {
 class _UserHomeState extends State<UserHomePage> {
   final List<Event> dummyEvents = [
     Event(
+        id: '',
         event: "Sprint 2 MAP",
         dateTime: DateTime.now().add(Duration(days: 2)),
         location: "N28",
@@ -35,6 +36,7 @@ class _UserHomeState extends State<UserHomePage> {
         category: "Education",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+        id: '',
         event: "Football Match",
         dateTime: DateTime.now(),
         location: "Stadium A",
@@ -46,6 +48,7 @@ class _UserHomeState extends State<UserHomePage> {
         category: "Entertainment",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+        id: '',
         event: "Tech Conference",
         dateTime: DateTime.now().add(Duration(days: 1)),
         location: "Convention Center",
@@ -57,6 +60,7 @@ class _UserHomeState extends State<UserHomePage> {
         category: "Conference",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+        id: '',
         event: "Art Exhibition",
         dateTime: DateTime.now().add(Duration(days: 2)),
         location: "Art Gallery",
@@ -68,6 +72,7 @@ class _UserHomeState extends State<UserHomePage> {
         category: "Exhibition",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+        id: '',
         event: "Music Concert",
         dateTime: DateTime.now().add(Duration(days: 3)),
         location: "Outdoor Arena",
@@ -79,6 +84,7 @@ class _UserHomeState extends State<UserHomePage> {
         category: "Entertainment",
         timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
     Event(
+      id: '',
       event: "Food Festival",
       dateTime: DateTime.now().add(Duration(days: 4)),
       location: "City Park",
@@ -91,6 +97,7 @@ class _UserHomeState extends State<UserHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+        id: '',
         event: "Book Fair",
         dateTime: DateTime.now().add(Duration(days: 5)),
         location: "Exhibition Hall",
@@ -420,7 +427,7 @@ class _UserHomeState extends State<UserHomePage> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.asset(
-            event.imageURL,
+            event.imageURL ?? 'lib/images/mainpage.png',
             fit: BoxFit.cover,
             width: 80,
           ),
@@ -511,7 +518,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL),
+            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,

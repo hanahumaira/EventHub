@@ -66,6 +66,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'phoneNum': phoneNumController.text,
           'password': passwordController.text,
         });
+        // Fetch the updated user data
+        DocumentSnapshot updatedUserData = await FirebaseFirestore.instance
+            .collection('userData')
+            .doc(userId)
+            .get();
 
         // Navigate back to the ProfileScreen after updating profile
         Get.to(() => ProfileScreen(passUser: widget.passUser));
@@ -310,7 +315,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                         updateUserProfile();
 
-                        Get.to(() => ProfileScreen(passUser: widget.passUser));
+                        // Get.to(() => ProfileScreen(passUser: widget.passUser));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,

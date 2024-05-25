@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "408678428729",
+    "firebase_url": "https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "eventhub-map4",
     "storage_bucket": "eventhub-map4.appspot.com"
   },

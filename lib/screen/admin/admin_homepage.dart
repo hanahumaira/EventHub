@@ -20,6 +20,7 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomeState extends State<AdminHomePage> {
   final List<Event> dummyEvents = [
     Event(
+      id: '',
       event: "Sprint 2 MAP",
       dateTime: DateTime.now().add(Duration(days: 2)),
       location: "N28",
@@ -32,6 +33,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+      id: '',
       event: "Football Match",
       dateTime: DateTime.now(),
       location: "Stadium A",
@@ -44,6 +46,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+      id: '',
       event: "Tech Conference",
       dateTime: DateTime.now().add(Duration(days: 1)),
       location: "Convention Center",
@@ -56,6 +59,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+      id: '',
       event: "Art Exhibition",
       dateTime: DateTime.now().add(Duration(days: 2)),
       location: "Art Gallery",
@@ -68,6 +72,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+      id: '',
       event: "Music Concert",
       dateTime: DateTime.now().add(Duration(days: 3)),
       location: "Outdoor Arena",
@@ -80,6 +85,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+      id: '',
       event: "Food Festival",
       dateTime: DateTime.now().add(Duration(days: 4)),
       location: "City Park",
@@ -92,6 +98,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
     ),
     Event(
+      id: '',
       event: "Book Fair",
       dateTime: DateTime.now().add(Duration(days: 5)),
       location: "Exhibition Hall",
@@ -413,7 +420,7 @@ class _AdminHomeState extends State<AdminHomePage> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.asset(
-            event.imageURL,
+            event.imageURL ?? 'lib/images/mainpage.png',
             fit: BoxFit.cover,
             width: 80,
           ),
@@ -504,7 +511,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL),
+            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,

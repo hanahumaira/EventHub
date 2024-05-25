@@ -48,6 +48,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
         _events = events;
         _filteredEvents = events;
       });
+      print('Successfully fetching event!');
     } catch (e) {
       print('Error fetching event: $e');
     }
@@ -170,6 +171,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                           ),
                         ),
                         const SizedBox(height: 15),
+
                         //Category
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -188,6 +190,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                           ],
                         ),
                         const SizedBox(height: 1),
+
                         //Categories button
                         SingleChildScrollView(
                           scrollDirection:
@@ -290,9 +293,8 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OrganiserHomePage(
-                          passUser: widget.passUser,
-                        ),
+                        builder: (context) =>
+                            OrganiserHomePage(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -318,7 +320,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            CreateEventPage(user: widget.passUser),
+                            CreateEventPage(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -379,7 +381,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.asset(
-            event.imageURL,
+            event.imageURL ?? 'lib/images/mainpage.png',
             fit: BoxFit.cover,
             width: 80,
           ),
