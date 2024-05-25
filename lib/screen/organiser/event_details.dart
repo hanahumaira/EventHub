@@ -47,42 +47,68 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              event.image,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: 200.0,
-            ),
-            SizedBox(height: 16.0),
+           Image.asset(event.image),
+            SizedBox(height: 16),
             Text(
               event.event,
               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
             ),
             SizedBox(height: 8.0),
-            Text(
-              'Date & Time: ${DateFormat.yMMMMd().add_jm().format(event.date)}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+                Row(
+              children: [
+                Icon(Icons.date_range, color: Colors.white), // Icon for date
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat.yMMMMd().format(event.date),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
             ),
             SizedBox(height: 8.0),
-            Text(
-              'Location: ${event.location}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+
+             Row(
+              children: [
+                Icon(Icons.location_on, color: Colors.white), // Icon for location
+                const SizedBox(width: 8),
+                Text(
+                  event.location,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
             ),
             SizedBox(height: 8.0),
-            Text(
-              'Fee: ${event.fee.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+              Row(
+              children: [
+                Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                const SizedBox(width: 8),
+                Text(
+                  '${event.fee.toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
             ),
             
             SizedBox(height: 8.0),
-            Text(
-              'Organiser: ${event.organiser}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+             Row(
+              children: [
+                Icon(Icons.person, color: Colors.white), // Icon for organizer
+                const SizedBox(width: 8),
+                Text(
+                  event.organiser,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
             ),
             SizedBox(height: 8.0),
-            Text(
-              'Category: ${event.category}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+              Row(
+              children: [
+                Icon(Icons.archive, color: Colors.white), // Icon for category
+                const SizedBox(width: 8),
+                Text(
+                  event.category,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
             ),
             SizedBox(height: 8.0),
             Text(

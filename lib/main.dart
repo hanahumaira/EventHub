@@ -27,7 +27,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       getPages: [
-        // GetPage(name: '/', page: () => AdminHomePage(passUser: dummyUser)),
+        //GetPage(name: '/', page: () => AdminHomePage(passUser: dummyUser)),
         GetPage(name: '/', page: () => Login()),
         GetPage(name: '/editProfile', page: () => const EditProfileScreen()),
       ],
