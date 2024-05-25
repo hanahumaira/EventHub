@@ -337,23 +337,24 @@ category: "Festival",
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyEventSaved(),
+    builder: (context) => MyEventSaved(savedEvents:dummyEvents),
                       ),
                     );
                   },
                 ),
-                FooterIconButton(
-                  icon: Icons.how_to_reg,
-                  label: "Registered",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyEventReg(),
-                      ),
-                    );
-                  },
-                ),
+FooterIconButton(
+  icon: Icons.how_to_reg,
+  label: "Registered",
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyEventReg(dummyEvents: dummyEvents),
+      ),
+    );
+  },
+),
+
                 FooterIconButton(
                   icon: Icons.account_circle,
                   label: "Profile",
@@ -479,6 +480,14 @@ class EventDetailsPage extends StatelessWidget {
 
   const EventDetailsPage({required this.event});
 
+  void _showSaveSuccessSnackbar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Event saved successfully'),
+      duration: Duration(seconds: 2), // Adjust duration as needed
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -495,12 +504,12 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             SizedBox(height: 8.0),
-                Row(
+            Row(
               children: [
-                Icon(Icons.date_range, color: Colors.white), // Icon for date
+                Icon(Icons.date_range, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.date),
@@ -509,10 +518,9 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-
-             Row(
+            Row(
               children: [
-                Icon(Icons.location_on, color: Colors.white), // Icon for location
+                Icon(Icons.location_on, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   event.location,
@@ -521,9 +529,9 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-              Row(
+            Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                Icon(Icons.attach_money, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   '${event.fee.toStringAsFixed(2)}',
@@ -531,11 +539,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            
             SizedBox(height: 8.0),
-             Row(
+            Row(
               children: [
-                Icon(Icons.person, color: Colors.white), // Icon for organizer
+                Icon(Icons.person, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   event.organiser,
@@ -544,9 +551,9 @@ class EventDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-              Row(
+            Row(
               children: [
-                Icon(Icons.archive, color: Colors.white), // Icon for category
+                Icon(Icons.archive, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   event.category,
@@ -557,7 +564,7 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white), // Set text color to white
+              style: TextStyle(fontSize: 16.0, color: Colors.white),
             ),
             const SizedBox(height: 50),
             Row(
@@ -565,22 +572,22 @@ class EventDetailsPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Add save event functionality here
+                    _showSaveSuccessSnackbar(context); // Show success snackbar
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 140, 40, 222), // Purple with a lighter shade
+                    backgroundColor: const Color.fromARGB(255, 140, 40, 222),
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.bookmark_border, color: Colors.white), // Custom save icon
+                      Icon(Icons.bookmark_border, color: Colors.white),
                       const SizedBox(width: 8),
                       const Text('Save', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                   onPressed: () {
                      Navigator.push(
       context,
       MaterialPageRoute(
@@ -589,12 +596,12 @@ class EventDetailsPage extends StatelessWidget {
     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 140, 40, 222), // Purple with a lighter shade
+                    backgroundColor: const Color.fromARGB(255, 140, 40, 222),
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.event_available, color: Colors.white), // Icon for register event
+                      Icon(Icons.event_available, color: Colors.white),
                       const SizedBox(width: 6),
                       const Text('Register', style: TextStyle(color: Colors.white)),
                     ],
