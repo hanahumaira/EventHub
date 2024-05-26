@@ -20,44 +20,7 @@ class MyEvent extends StatefulWidget {
 }
 
 class _MyEventState extends State<MyEvent> {
-  List<Event> dummyEvents = [
-    Event(
-        id: '',
-        event: "Proposal MAP",
-        dateTime: DateTime.now().add(Duration(days: 1)),
-        location: "N28",
-        organiser: "MobileCraft",
-        details: "Presentation for MAP project from every group in section 3.",
-        fee: 00.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Education",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-        id: '',
-        event: "AI Talk",
-        dateTime: DateTime.now().add(Duration(days: 2)),
-        location: "N28",
-        organiser: "MobileCraft",
-        details: "A talk about AI and its future's pros and cons",
-        fee: 00.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Exhibition",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-        id: '',
-        event: "Program Kerjaya",
-        dateTime: DateTime.now().add(Duration(days: 5)),
-        location: "N28",
-        organiser: "MobileCraft",
-        details:
-            "Program for computer science students to find their networks and job opportunities.",
-        fee: 00.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Talk",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    // Add more dummy events here
-  ];
-
+  List<Event> _myevent = [];
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
@@ -72,12 +35,12 @@ class _MyEventState extends State<MyEvent> {
   void _filterEvents() {
     final now = DateTime.now();
     setState(() {
-      _filteredEvents = dummyEvents.where((event) {
+      _filteredEvents = _myevent.where((event) {
         final matchesSearch =
             event.event.toLowerCase().contains(_searchQuery.toLowerCase());
         final matchesCategory =
             _selectedCategory == "All" || event.category == _selectedCategory;
-        final matchesOrganiser = event.organiser == "MobileCraft";
+        final matchesOrganiser = event.organiser == widget.passUser.name;
         if (_filter == "All") {
           return matchesSearch && matchesCategory && matchesOrganiser;
         } else if (_filter == "Past") {
@@ -417,7 +380,7 @@ class _MyEventState extends State<MyEvent> {
                 Navigator.of(context).pop(); // Close the dialog first
 
                 setState(() {
-                  dummyEvents.remove(event);
+                  _myevent.remove(event);
                   _filterEvents(); // Refresh the event list
                 });
 

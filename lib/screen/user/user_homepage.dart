@@ -297,7 +297,7 @@ class _UserHomeState extends State<UserHomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MyEventSaved(savedEvents: _events),
+                            MyEventSaved(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -361,7 +361,7 @@ class _UserHomeState extends State<UserHomePage> {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          leading: Image.asset(
+          leading: Image.network(
             event.imageURL ?? 'lib/images/mainpage.png',
             fit: BoxFit.cover,
             width: 80,
@@ -443,6 +443,28 @@ class EventDetailsPage extends StatelessWidget {
 
   const EventDetailsPage({required this.event, required this.passUser});
 
+  // Method to add event details and username to Firestore collection
+  Future<void> _saveEventToDatabase() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('mysave_event')
+          .doc(passUser.name)
+          .set({
+        'eventName': event.event,
+        'eventDateTime': event.dateTime,
+        'eventLocation': event.location,
+        'eventFee': event.fee,
+        'eventOrganiser': event.organiser,
+        'eventCategory': event.category,
+        'eventDetails': event.details,
+        'eventImage': event.imageURL,
+      });
+      print('successfully saved');
+    } catch (e) {
+      print('fail to saved $e');
+    }
+  }
+
   void _showSaveSuccessSnackbar(BuildContext context) {
     final snackBar = SnackBar(
       content: Text('Event saved successfully'),
@@ -463,7 +485,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
+            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,
@@ -475,10 +497,17 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.date_range, color: Colors.white),
+                Icon(Icons.date_range, color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                const SizedBox(width: 16), // Add spacing
+                Icon(Icons.access_time, color: Colors.white), // Icon for time
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat.Hm().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -508,12 +537,12 @@ class EventDetailsPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.person, color: Colors.white),
+                Icon(Icons.person, color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
-                // Text(
-                //   event.organiser,
-                //   style: const TextStyle(fontSize: 18, color: Colors.white),
-                // ),
+                Text(
+                  event.organiser,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ],
             ),
             SizedBox(height: 8.0),
@@ -538,6 +567,7 @@ class EventDetailsPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    _saveEventToDatabase();
                     _showSaveSuccessSnackbar(context); // Show success snackbar
                   },
                   style: ElevatedButton.styleFrom(

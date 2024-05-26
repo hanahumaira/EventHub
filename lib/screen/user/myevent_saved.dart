@@ -1,10 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:eventhub/model/user.dart';
 import 'package:eventhub/model/event.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MyEventSaved extends StatelessWidget {
-  final List<Event> savedEvents;
+class MyEventSaved extends StatefulWidget {
+  final User passUser;
 
-  const MyEventSaved({Key? key, required this.savedEvents}) : super(key: key);
+  const MyEventSaved({Key? key, required this.passUser}) : super(key: key);
+
+  @override
+  _MyEventSavedState createState() => _MyEventSavedState();
+}
+
+class _MyEventSavedState extends State<MyEventSaved> {
+  List<Event>? _savedEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSavedEvents();
+  }
+
+  Future<void> _fetchSavedEvents() async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection('mysave_event')
+          .doc(widget.passUser.name)
+          .get();
+
+      if (documentSnapshot.exists) {
+        final eventData = documentSnapshot.data();
+        print('Event data retrieved: $eventData');
+        if (eventData != null) {
+          final event = Event(
+            id: eventData['id'] ?? 'N/A',
+            event: eventData['eventName'] ?? '',
+            dateTime: (eventData['eventDateTime'] as Timestamp).toDate(),
+            location: eventData['eventLocation'] ?? '',
+            fee: eventData['eventFee']?.toDouble() ?? 0.0,
+            organiser: eventData['eventOrganiser'] ?? '',
+            category: eventData['eventCategory'] ?? '',
+            details: eventData['eventDetails'] ?? '',
+            timestamp: eventData['timestamp'] ?? Timestamp.now(),
+            imageURL: eventData['eventImage'] ?? 'lib/images/mainpage.png',
+          );
+          setState(() {
+            _savedEvents = [event];
+          });
+          print('Successfully fetched saved events: $_savedEvents');
+        } else {
+          print('Event data is null');
+        }
+      } else {
+        print('No event found for user: ${widget.passUser.name}');
+      }
+    } catch (e) {
+      print('Error fetching saved events: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,21 +66,15 @@ class MyEventSaved extends StatelessWidget {
         title: Text('Saved Events'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
-      body: ListView.builder(
-        itemCount: savedEvents.length,
-        itemBuilder: (context, index) {
-          final event = savedEvents[index];
-          return EventCard(
-            event: event,
-            onDelete: () {
-              // Implement delete functionality here
-              // For example, you can remove the event from the savedEvents list
-              // savedEvents.removeAt(index);
-              // Then call setState() to update the UI
-            },
-          );
-        },
-      ),
+      body: _savedEvents != null
+          ? ListView.builder(
+              itemCount: _savedEvents!.length,
+              itemBuilder: (context, index) {
+                final event = _savedEvents![index];
+                return EventCard(event: event);
+              },
+            )
+          : Center(child: CircularProgressIndicator()),
       backgroundColor: Colors.black,
     );
   }
@@ -35,10 +82,8 @@ class MyEventSaved extends StatelessWidget {
 
 class EventCard extends StatelessWidget {
   final Event event;
-  final VoidCallback onDelete;
 
-  const EventCard({Key? key, required this.event, required this.onDelete})
-      : super(key: key);
+  const EventCard({Key? key, required this.event}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +93,18 @@ class EventCard extends StatelessWidget {
       child: ListTile(
         contentPadding:
             const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        leading: Image.asset(
-          event.imageURL ?? 'lib/images/mainpage.png',
-          fit: BoxFit.cover,
+        leading: SizedBox(
           width: 80,
+          child: Image.network(
+            event.imageURL ?? 'lib/images/mainpage.png',
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'lib/images/mainpage.png',
+                fit: BoxFit.cover,
+              );
+            },
+          ),
         ),
         title: Text(
           event.event,
@@ -61,10 +114,6 @@ class EventCard extends StatelessWidget {
           '${event.dateTime}',
           style: const TextStyle(color: Colors.white70),
         ),
-        // trailing: IconButton(
-        //   icon: Icon(Icons.delete, color: Colors.red),
-        //   onPressed: onDelete,
-        // ),
         onTap: () {
           Navigator.push(
             context,
@@ -95,7 +144,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
+            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,
@@ -145,7 +194,7 @@ class EventDetailsPage extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
               child: Text(
-                'Delete Event',
+                'Remove Event',
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -161,8 +210,8 @@ class EventDetailsPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Event"),
-          content: Text("Are you sure you want to delete this event?"),
+          title: Text("Remove Event"),
+          content: Text("Are you sure you want to remove this event?"),
           actions: [
             TextButton(
               onPressed: () {
