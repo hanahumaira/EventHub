@@ -366,24 +366,25 @@ class _UserHomeState extends State<UserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-    builder: (context) => MyEventSaved(savedEvents:dummyEvents),
+                        builder: (context) =>
+                            MyEventSaved(savedEvents: dummyEvents),
                       ),
                     );
                   },
                 ),
-FooterIconButton(
-  icon: Icons.how_to_reg,
-  label: "Registered",
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MyEventReg(dummyEvents: dummyEvents),
-      ),
-    );
-  },
-),
-
+                FooterIconButton(
+                  icon: Icons.how_to_reg,
+                  label: "Registered",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MyEventReg(dummyEvents: dummyEvents),
+                      ),
+                    );
+                  },
+                ),
                 FooterIconButton(
                   icon: Icons.account_circle,
                   label: "Profile",
@@ -391,7 +392,8 @@ FooterIconButton(
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfileScreen(passUser: widget.passUser),
+                        builder: (context) =>
+                            ProfileScreen(passUser: widget.passUser),
                       ),
                     );
                   },
@@ -451,7 +453,8 @@ FooterIconButton(
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EventDetailsPage(event: event),
+                builder: (context) =>
+                    EventDetailsPage(event: event, passUser: widget.passUser),
               ),
             );
           },
@@ -507,8 +510,9 @@ class FooterIconButton extends StatelessWidget {
 
 class EventDetailsPage extends StatelessWidget {
   final Event event;
+  final User passUser;
 
-  const EventDetailsPage({required this.event});
+  const EventDetailsPage({required this.event, required this.passUser});
 
   void _showSaveSuccessSnackbar(BuildContext context) {
     final snackBar = SnackBar(
@@ -550,8 +554,6 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-
-
             SizedBox(height: 8.0),
             Row(
               children: [
@@ -624,13 +626,14 @@ class EventDetailsPage extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                   onPressed: () {
-                     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RegisterEventPage(event: event),
-      ),
-    );
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EventDetailsPage(event: event, passUser: passUser),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(

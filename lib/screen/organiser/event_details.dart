@@ -1,4 +1,5 @@
 import 'package:eventhub/model/event.dart';
+import 'package:eventhub/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
@@ -9,8 +10,11 @@ import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final Event event;
+  final User passUser;
 
-  const EventDetailsPage({Key? key, required this.event}) : super(key: key);
+  const EventDetailsPage(
+      {Key? key, required this.event, required this.passUser})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -401,7 +401,8 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EventDetailsPage(event: event),
+                builder: (context) =>
+                    EventDetailsPage(event: event, passUser: widget.passUser),
               ),
             );
           },

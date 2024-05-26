@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/model/event.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/model/user.dart';
 
 class RegisterEventPage extends StatelessWidget {
   final Event event;
+  final User user; // Add the user parameter
 
-  const RegisterEventPage({required this.event});
+  const RegisterEventPage(
+      {required this.event, required this.user}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,8 @@ class RegisterEventPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            EventRegistrationForm(event: event),
+            EventRegistrationForm(
+                event: event, user: user), // Pass user to form
           ],
         ),
       ),
@@ -95,8 +100,10 @@ class RegisterEventPage extends StatelessWidget {
 
 class EventRegistrationForm extends StatefulWidget {
   final Event event;
+  final User user; // Add the user parameter
 
-  const EventRegistrationForm({required this.event});
+  const EventRegistrationForm(
+      {required this.event, required this.user}); // Update constructor
 
   @override
   _EventRegistrationFormState createState() => _EventRegistrationFormState();
@@ -111,14 +118,38 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
   final TextEditingController _ageController = TextEditingController();
   String? _selectedGender;
 
-  void _registerEvent() {
+  void _registerEvent() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const EventWebsitePage(),
-        ),
-      );
+      final registrationData = {
+        'event_id': widget.event.id,
+        'event_name': widget.event.event,
+        'full_name': _fullNameController.text,
+        'email': _emailController.text,
+        'phone_number': _phoneNumberController.text,
+        'ic': _icController.text,
+        'age': _ageController.text,
+        'gender': _selectedGender,
+        'timestamp': Timestamp.now(),
+      };
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('registrations')
+            .add(registrationData);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Event registered successfully')),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const EventWebsitePage(),
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to register event: $e')),
+        );
+      }
     }
   }
 
@@ -330,7 +361,7 @@ class EventWebsitePage extends StatelessWidget {
                 );
                 Future.delayed(Duration(seconds: 1), () {
                   // Use the browser to navigate to the event website
-                  launch('https://www.jomrun.com/event/Daiman-Run-2024');
+                  _launchURL('https://www.jomrun.com/event/Daiman-Run-2024');
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -348,10 +379,10 @@ class EventWebsitePage extends StatelessWidget {
     );
   }
 
-  void launch(String url) async {
+  void _launchURL(String url) async {
     // You can use a package like url_launcher to launch URLs
     if (await canLaunch(url)) {
-      launch(url);
+      await launch(url);
     } else {
       throw 'Could not launch $url';
     }
