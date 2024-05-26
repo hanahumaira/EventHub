@@ -3,7 +3,7 @@ import 'package:eventhub/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
-// import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
@@ -51,7 +51,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
+            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
             SizedBox(height: 16),
             Text(
               event.event,
@@ -67,6 +67,13 @@ class EventDetailsPage extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                const SizedBox(width: 16), // Add spacing
+                Icon(Icons.access_time, color: Colors.white), // Icon for time
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat.Hm().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -136,51 +143,48 @@ class EventDetailsPage extends StatelessWidget {
               icon: Icons.home,
               label: "Home",
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const OrganiserHomePage(
-                //       passUser: null,
-                //     ),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrganiserHomePage(passUser: passUser),
+                  ),
+                );
               },
             ),
             FooterIconButton(
               icon: Icons.event,
               label: "My Event",
               onPressed: () {
-                // var widget;
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => MyEvent(passUser: passUser),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyEvent(passUser: passUser),
+                  ),
+                );
               },
             ),
             FooterIconButton(
               icon: Icons.add,
               label: "Create Event",
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => CreateEventPage(user: widget.user),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateEventPage(passUser: passUser),
+                  ),
+                );
               },
             ),
             FooterIconButton(
               icon: Icons.person,
               label: "Profile",
               onPressed: () {
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => ProfileScreen(),
-                //     ),
-                //   );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(passUser: passUser),
+                  ),
+                );
               },
             ),
           ],

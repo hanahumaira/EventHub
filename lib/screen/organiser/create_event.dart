@@ -97,13 +97,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
       print('Uploading image..');
 
       final UploadTask uploadTask = storageReference.putFile(_selectedImage!);
-      await uploadTask.whenComplete(() {});
-      // final TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-      print('image uploaded');
+      print('image uploaded part 1');
+
+      final TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+      print('image uploaded part 2');
 
       // Get the download URL of the uploaded image
-      // final String imageURL = await taskSnapshot.ref.getDownloadURL();
-      final String imageURL = await storageReference.getDownloadURL();
+      final String imageURL = await taskSnapshot.ref.getDownloadURL();
+      // final String imageURL = await storageReference.getDownloadURL();
       print('Image URL: $imageURL');
 
       // Ensure all fields are properly filled before adding to Firestore
@@ -121,7 +122,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       DocumentReference docRef = await _firestore.collection('eventData').add({
         'imageURL': imageURL, // Store event image
         'event': _eventNameController.text, // Store event name
-        'date': _dateTimeController.text, // Store event date & time
+        'dateTime': _dateTimeController.text, // Store event date & time
         'location': _locationController.text, // Store event location
         'fee': _isFreeEvent ? 'Free' : _feeController.text, // Store event fee
         'feeLink': _feeLinkController.text, // Store fee link if any
@@ -147,14 +148,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
       );
       // Handle error accordingly
     }
-    // } catch (e, stackTrace) {
-    //   print('Error creating event: $e');
-    //   print('Stack trace: $stackTrace');
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Error creating event: $e')),
-    //   );
-    //   // Handle error accordingly
-    // }
   }
 
   @override

@@ -16,7 +16,6 @@ import 'package:intl/intl.dart';
 
 class OrganiserHomePage extends StatefulWidget {
   final User passUser;
-
   const OrganiserHomePage({Key? key, required this.passUser}) : super(key: key);
 
   @override
@@ -380,10 +379,18 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          leading: Image.asset(
-            event.imageURL ?? 'lib/images/mainpage.png',
-            fit: BoxFit.cover,
+          leading: SizedBox(
             width: 80,
+            child: Image.network(
+              event.imageURL ?? 'lib/images/mainpage.png',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'lib/images/mainpage.png',
+                  fit: BoxFit.cover,
+                );
+              },
+            ),
           ),
           title: Text(
             event.event,
