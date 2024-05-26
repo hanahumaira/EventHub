@@ -5,11 +5,7 @@ import 'package:eventhub/screen/user/register_event.dart';
 import 'package:flutter/material.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/model/event.dart';
-// import 'package:eventhub/screen/event_page.dart';
 import 'package:eventhub/screen/login_page.dart';
-// import 'package:eventhub/screen/organiser/create_event.dart';
-// import 'package:eventhub/screen/organiser/myevent.dart';
-// import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/user/myevent_saved.dart';
 import 'package:eventhub/screen/user/myevent_reg.dart';
@@ -25,93 +21,7 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomeState extends State<UserHomePage> {
-  final List<Event> dummyEvents = [
-    Event(
-        id: '',
-        event: "Sprint 2 MAP",
-        dateTime: DateTime.now().add(Duration(days: 2)),
-        location: "N28",
-        // registration: 40,
-        organiser: "UTM",
-        details: "Presentation for MAP project from every groups in section 3.",
-        fee: 00.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Education",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-        id: '',
-        event: "Football Match",
-        dateTime: DateTime.now(),
-        location: "Stadium A",
-        // registration: 150,
-        organiser: "Sports Club",
-        details: "Exciting football match between top teams.",
-        fee: 20.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Entertainment",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-        id: '',
-        event: "Tech Conference",
-        dateTime: DateTime.now().add(Duration(days: 1)),
-        location: "Convention Center",
-        // registration: 200,
-        organiser: "Tech Corp",
-        details: "Latest trends in technology.",
-        fee: 50.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Conference",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-        id: '',
-        event: "Art Exhibition",
-        dateTime: DateTime.now().add(Duration(days: 2)),
-        location: "Art Gallery",
-        // registration: 80,
-        organiser: "Art Society",
-        details: "Showcasing contemporary art pieces.",
-        fee: 10.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Exhibition",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-        id: '',
-        event: "Music Concert",
-        dateTime: DateTime.now().add(Duration(days: 3)),
-        location: "Outdoor Arena",
-        // registration: 300,
-        organiser: "Music Productions",
-        details: "Live performances by famous artists.",
-        fee: 40.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Entertainment",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-    Event(
-      id: '',
-      event: "Food Festival",
-      dateTime: DateTime.now().add(Duration(days: 4)),
-      location: "City Park",
-      // registration: 100,
-      organiser: "Culinary Society",
-      details: "A variety of cuisines from around the world.",
-      fee: 15.0,
-      imageURL: "lib/images/mainpage.png",
-      category: "Festival",
-      timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30)),
-    ),
-    Event(
-        id: '',
-        event: "Book Fair",
-        dateTime: DateTime.now().add(Duration(days: 5)),
-        location: "Exhibition Hall",
-        // registration: 120,
-        organiser: "Publishing House",
-        details: "Discover the latest books and authors.",
-        fee: 25.0,
-        imageURL: "lib/images/mainpage.png",
-        category: "Festival",
-        timestamp: Timestamp.fromDate(DateTime(2024, 5, 26, 14, 30))),
-  ];
+  List<Event> _events = [];
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
@@ -120,13 +30,30 @@ class _UserHomeState extends State<UserHomePage> {
   @override
   void initState() {
     super.initState();
-    _filteredEvents = dummyEvents;
+    _fetchEvents();
+  }
+
+  Future<void> _fetchEvents() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore.instance.collection('eventData').get();
+      final events =
+          querySnapshot.docs.map((doc) => Event.fromSnapshot(doc)).toList();
+
+      setState(() {
+        _events = events;
+        _filteredEvents = events;
+      });
+      print('Successfully fetching event!');
+    } catch (e) {
+      print('Error fetching event: $e');
+    }
   }
 
   void _filterEvents() {
     final now = DateTime.now();
     setState(() {
-      _filteredEvents = dummyEvents.where((event) {
+      _filteredEvents = _events.where((event) {
         final matchesSearch =
             event.event.toLowerCase().contains(_searchQuery.toLowerCase());
         final matchesCategory = _selectedCategory == "All" ||
@@ -149,6 +76,7 @@ class _UserHomeState extends State<UserHomePage> {
     });
   }
 
+  //Apply search
   void _onSearchChanged(String query) {
     setState(() {
       _searchQuery = query;
@@ -156,6 +84,7 @@ class _UserHomeState extends State<UserHomePage> {
     });
   }
 
+  //Apply filter
   void _onFilterChanged(String? filter) {
     setState(() {
       _filter = filter ?? 'All';
@@ -163,6 +92,7 @@ class _UserHomeState extends State<UserHomePage> {
     });
   }
 
+  //Apply catergory
   void _onCategoryChanged(String? category) {
     setState(() {
       _selectedCategory = category ?? 'All';
@@ -367,7 +297,7 @@ class _UserHomeState extends State<UserHomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MyEventSaved(savedEvents: dummyEvents),
+                            MyEventSaved(savedEvents: _events),
                       ),
                     );
                   },
@@ -379,8 +309,7 @@ class _UserHomeState extends State<UserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            MyEventReg(dummyEvents: dummyEvents),
+                        builder: (context) => MyEventReg(dummyEvents: _events),
                       ),
                     );
                   },
