@@ -29,18 +29,42 @@ class Event {
 
   factory Event.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+    // Check if 'fee' is a String and convert to double if necessary
+    double fee;
+    if (data['fee'] is String) {
+      fee = double.tryParse(data['fee']) ?? 0.0;
+    } else if (data['fee'] is num) {
+      fee = (data['fee'] as num).toDouble();
+    } else {
+      fee = 0.0;
+    }
+
+    // Convert 'dateTime' string to DateTime
+    DateTime dateTime = DateTime.now(); // Default value if conversion fails
+    if (data['dateTime'] is String) {
+      try {
+        dateTime = DateTime.parse(data['dateTime']);
+      } catch (e) {
+        print('Error parsing dateTime: $e');
+      }
+    }
+
+    // Extract 'timestamp' field as Timestamp
+    Timestamp timestamp = data['timestamp'] ?? Timestamp.now();
+
     return Event(
       id: snapshot.id,
       imageURL: data['imageURL'] ?? 'lib/images/mainpage.png',
-      event: data['event'],
-      dateTime: (data['dateTime'] as Timestamp).toDate(),
-      location: data['location'],
-      fee: (data['fee'] as num).toDouble(),
+      event: data['event'] ?? '',
+      dateTime: dateTime,
+      location: data['location'] ?? '',
+      fee: fee,
       paymentLink: data['paymentLink'],
-      category: data['category'],
-      details: data['details'],
-      organiser: data['organiser'],
-      timestamp: data['timestamp'],
+      category: data['category'] ?? '',
+      details: data['details'] ?? '',
+      organiser: data['organiser'] ?? '',
+      timestamp: timestamp,
     );
   }
 

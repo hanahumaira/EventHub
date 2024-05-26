@@ -37,7 +37,8 @@ class EventCard extends StatelessWidget {
   final Event event;
   final VoidCallback onDelete;
 
-  const EventCard({Key? key, required this.event, required this.onDelete}) : super(key: key);
+  const EventCard({Key? key, required this.event, required this.onDelete})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +46,10 @@ class EventCard extends StatelessWidget {
       color: Colors.grey[900],
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         leading: Image.asset(
-          event.imageURL,
+          event.imageURL ?? 'lib/images/mainpage.png',
           fit: BoxFit.cover,
           width: 80,
         ),
@@ -93,11 +95,14 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL),
+            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(height: 8.0),
             Text(
@@ -136,7 +141,8 @@ class EventDetailsPage extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
               child: Text(
                 'Delete Event',

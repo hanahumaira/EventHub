@@ -483,7 +483,8 @@ class _MyEventState extends State<MyEvent> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EventDetailsPage(event: event),
+                builder: (context) =>
+                    EventDetailsPage(event: event, passUser: widget.passUser),
               ),
             );
           },

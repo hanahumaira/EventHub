@@ -41,9 +41,10 @@ class EventCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             leading: Image.asset(
-              event.imageURL,
+              event.imageURL ?? 'lib/images/mainpage.png',
               fit: BoxFit.cover,
               width: 80,
             ),
@@ -152,11 +153,14 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL),
+            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(height: 8.0),
             Text(
