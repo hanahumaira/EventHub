@@ -8,7 +8,7 @@ import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
-import 'package:eventhub/screen/organiser/event_details.dart';
+import 'package:eventhub/screen/event/event_details.dart';
 
 //dart import
 import 'package:flutter/material.dart';

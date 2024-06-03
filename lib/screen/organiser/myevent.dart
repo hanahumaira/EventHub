@@ -7,7 +7,7 @@ import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:eventhub/screen/organiser/event_details.dart';
+import 'package:eventhub/screen/event/event_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyEvent extends StatefulWidget {
