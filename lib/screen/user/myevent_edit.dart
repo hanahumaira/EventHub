@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditEventRegPage extends StatefulWidget {
-  const EditEventRegPage({Key? key}) : super(key: key);
+  const EditEventRegPage({super.key});
 
   @override
   _EditEventRegPageState createState() => _EditEventRegPageState();
@@ -20,7 +20,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit'),
+        title: const Text('Edit'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
       body: SingleChildScrollView(
@@ -34,7 +34,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: const TextStyle(color: Colors.white70),
                   filled: true,
                   fillColor: Colors.grey[800],
                   border: OutlineInputBorder(
@@ -42,7 +42,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Name';
@@ -55,7 +55,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                 controller: _icController,
                 decoration: InputDecoration(
                   labelText: 'IC',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: const TextStyle(color: Colors.white70),
                   filled: true,
                   fillColor: Colors.grey[800],
                   border: OutlineInputBorder(
@@ -63,7 +63,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your IC';
@@ -80,7 +80,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                 controller: _ageController,
                 decoration: InputDecoration(
                   labelText: 'Age',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: const TextStyle(color: Colors.white70),
                   filled: true,
                   fillColor: Colors.grey[800],
                   border: OutlineInputBorder(
@@ -88,7 +88,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Age';
@@ -103,7 +103,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: const TextStyle(color: Colors.white70),
                   filled: true,
                   fillColor: Colors.grey[800],
                   border: OutlineInputBorder(
@@ -111,7 +111,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Email';
@@ -126,7 +126,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                 controller: _phoneNumberController,
                 decoration: InputDecoration(
                   labelText: 'Phone Number',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: const TextStyle(color: Colors.white70),
                   filled: true,
                   fillColor: Colors.grey[800],
                   border: OutlineInputBorder(
@@ -134,7 +134,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Phone Number';
@@ -157,7 +157,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                       backgroundColor: Colors.grey[600],
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(color: Colors.white),
                     ),
@@ -175,7 +175,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                       backgroundColor: const Color.fromARGB(255, 140, 40, 222),
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Save',
                       style: TextStyle(color: Colors.white),
                     ),

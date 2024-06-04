@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MyDeletePage extends StatelessWidget {
   final String event;
 
-  const MyDeletePage({Key? key, required this.event}) : super(key: key);
+  const MyDeletePage({super.key, required this.event});
 
   Future<void> deleteDocument(String event) async {
     try {
@@ -32,14 +32,14 @@ class MyDeletePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Delete Documents by event'),
+        title: const Text('Delete Documents by event'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
             deleteDocument(event); // Pass the event to the delete method
           },
-          child: Text('Delete Documents by event'),
+          child: const Text('Delete Documents by event'),
         ),
       ),
     );

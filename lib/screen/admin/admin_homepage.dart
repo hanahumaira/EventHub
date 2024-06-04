@@ -22,7 +22,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Event(
       id: '',
       event: "Sprint 2 MAP",
-      dateTime: DateTime.now().add(Duration(days: 2)),
+      dateTime: DateTime.now().add(const Duration(days: 2)),
       location: "N28",
       // registration: 40,
       organiser: "UTM",
@@ -48,7 +48,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Event(
       id: '',
       event: "Tech Conference",
-      dateTime: DateTime.now().add(Duration(days: 1)),
+      dateTime: DateTime.now().add(const Duration(days: 1)),
       location: "Convention Center",
       // registration: 200,
       organiser: "Tech Corp",
@@ -61,7 +61,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Event(
       id: '',
       event: "Art Exhibition",
-      dateTime: DateTime.now().add(Duration(days: 2)),
+      dateTime: DateTime.now().add(const Duration(days: 2)),
       location: "Art Gallery",
       // registration: 80,
       organiser: "Art Society",
@@ -74,7 +74,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Event(
       id: '',
       event: "Music Concert",
-      dateTime: DateTime.now().add(Duration(days: 3)),
+      dateTime: DateTime.now().add(const Duration(days: 3)),
       location: "Outdoor Arena",
       // registration: 300,
       organiser: "Music Productions",
@@ -87,7 +87,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Event(
       id: '',
       event: "Food Festival",
-      dateTime: DateTime.now().add(Duration(days: 4)),
+      dateTime: DateTime.now().add(const Duration(days: 4)),
       location: "City Park",
       // registration: 100,
       organiser: "Culinary Society",
@@ -100,7 +100,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Event(
       id: '',
       event: "Book Fair",
-      dateTime: DateTime.now().add(Duration(days: 5)),
+      dateTime: DateTime.now().add(const Duration(days: 5)),
       location: "Exhibition Hall",
       // registration: 120,
       organiser: "Publishing House",
@@ -175,7 +175,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 100, 8, 222),
+        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
         elevation: 0,
         actions: [
           IconButton(
@@ -284,8 +284,8 @@ class _AdminHomeState extends State<AdminHomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
                                   horizontal: 20.0), // Add horizontal padding
                               child: Text(
                                 "Events",
@@ -298,11 +298,11 @@ class _AdminHomeState extends State<AdminHomePage> {
                             ),
                             DropdownButton<String>(
                               value: _filter,
-                              icon: Icon(Icons.arrow_downward,
+                              icon: const Icon(Icons.arrow_downward,
                                   color: Colors.white),
                               iconSize: 24,
                               elevation: 16,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               underline: Container(
                                 height: 2,
                                 color: Colors.white,
@@ -318,7 +318,7 @@ class _AdminHomeState extends State<AdminHomePage> {
                                   value: value,
                                   child: Text(
                                     value,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 );
                               }).toList(),
@@ -355,7 +355,7 @@ class _AdminHomeState extends State<AdminHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OrganizerApprovalPage(),
+                        builder: (context) => const OrganizerApprovalPage(),
                       ),
                     );
                   },
@@ -405,7 +405,7 @@ class _AdminHomeState extends State<AdminHomePage> {
       ),
       child: Text(
         category,
-        style: TextStyle(fontSize: 10),
+        style: const TextStyle(fontSize: 10),
       ),
     );
   }
@@ -453,7 +453,7 @@ class _AdminHomeState extends State<AdminHomePage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => Login(),
+        builder: (context) => const Login(),
       ),
     );
   }
@@ -464,7 +464,7 @@ class FooterIconButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const FooterIconButton({
+  const FooterIconButton({super.key, 
     required this.icon,
     required this.label,
     required this.onPressed,
@@ -497,7 +497,7 @@ class FooterIconButton extends StatelessWidget {
 class EventDetailsPage extends StatelessWidget {
   final Event event;
 
-  const EventDetailsPage({required this.event});
+  const EventDetailsPage({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -515,15 +515,15 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white), // Set text color to white
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.date_range, color: Colors.white), // Icon for date
+                const Icon(Icons.date_range, color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
@@ -531,10 +531,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.location_on,
+                const Icon(Icons.location_on,
                     color: Colors.white), // Icon for location
                 const SizedBox(width: 8),
                 Text(
@@ -543,21 +543,21 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                const Icon(Icons.attach_money, color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
-                  '${event.fee.toStringAsFixed(2)}',
+                  event.fee.toStringAsFixed(2),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.person, color: Colors.white), // Icon for organizer
+                const Icon(Icons.person, color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
                 Text(
                   event.organiser,
@@ -565,10 +565,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.archive, color: Colors.white), // Icon for category
+                const Icon(Icons.archive, color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
                 Text(
                   event.category,
@@ -576,10 +576,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.white), // Set text color to white
             ),
@@ -594,11 +594,11 @@ class EventDetailsPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 12),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.edit, color: Colors.white),
-                      const SizedBox(width: 8),
-                      const Text('Edit Event',
+                      SizedBox(width: 8),
+                      Text('Edit Event',
                           style: TextStyle(color: Colors.white)),
                     ],
                   ),
@@ -610,11 +610,11 @@ class EventDetailsPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 12),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.delete, color: Colors.white),
-                      const SizedBox(width: 8),
-                      const Text('Delete Event',
+                      SizedBox(width: 8),
+                      Text('Delete Event',
                           style: TextStyle(color: Colors.white)),
                     ],
                   ),

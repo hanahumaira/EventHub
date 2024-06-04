@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MyEventSaved extends StatefulWidget {
   final User passUser;
 
-  const MyEventSaved({Key? key, required this.passUser}) : super(key: key);
+  const MyEventSaved({super.key, required this.passUser});
 
   @override
   _MyEventSavedState createState() => _MyEventSavedState();
@@ -63,7 +63,7 @@ class _MyEventSavedState extends State<MyEventSaved> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved Events'),
+        title: const Text('Saved Events'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
       body: _savedEvents != null
@@ -74,7 +74,7 @@ class _MyEventSavedState extends State<MyEventSaved> {
                 return EventCard(event: event);
               },
             )
-          : Center(child: CircularProgressIndicator()),
+          : const Center(child: CircularProgressIndicator()),
       backgroundColor: Colors.black,
     );
   }
@@ -83,7 +83,7 @@ class _MyEventSavedState extends State<MyEventSaved> {
 class EventCard extends StatelessWidget {
   final Event event;
 
-  const EventCard({Key? key, required this.event}) : super(key: key);
+  const EventCard({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +130,7 @@ class EventCard extends StatelessWidget {
 class EventDetailsPage extends StatelessWidget {
   final Event event;
 
-  const EventDetailsPage({required this.event});
+  const EventDetailsPage({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
@@ -165,7 +165,7 @@ class EventDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(
-              '${event.fee.toStringAsFixed(2)}',
+              event.fee.toStringAsFixed(2),
               style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             const SizedBox(height: 8.0),
@@ -181,7 +181,7 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white),
+              style: const TextStyle(fontSize: 16.0, color: Colors.white),
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
@@ -193,7 +193,7 @@ class EventDetailsPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: Text(
+              child: const Text(
                 'Remove Event',
                 style: TextStyle(color: Colors.white),
               ),
@@ -210,14 +210,14 @@ class EventDetailsPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Remove Event"),
-          content: Text("Are you sure you want to remove this event?"),
+          title: const Text("Remove Event"),
+          content: const Text("Are you sure you want to remove this event?"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
@@ -225,7 +225,7 @@ class EventDetailsPage extends StatelessWidget {
                 // Once deleted, you can navigate back or perform any other action
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("Delete"),
+              child: const Text("Delete"),
             ),
           ],
         );

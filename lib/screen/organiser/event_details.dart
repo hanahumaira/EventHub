@@ -13,8 +13,7 @@ class EventDetailsPage extends StatelessWidget {
   final User passUser;
 
   const EventDetailsPage(
-      {Key? key, required this.event, required this.passUser})
-      : super(key: key);
+      {super.key, required this.event, required this.passUser});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class EventDetailsPage extends StatelessWidget {
             color: Colors.white,
           ),
         ],
-        title: Text(
+        title: const Text(
           "Event Details",
           style: TextStyle(
             fontSize: 20,
@@ -47,30 +46,30 @@ class EventDetailsPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white), // Set text color to white
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.date_range, color: Colors.white), // Icon for date
+                const Icon(Icons.date_range, color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 const SizedBox(width: 16), // Add spacing
-                Icon(Icons.access_time, color: Colors.white), // Icon for time
+                const Icon(Icons.access_time, color: Colors.white), // Icon for time
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.Hm().format(event.dateTime),
@@ -78,10 +77,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.location_on,
+                const Icon(Icons.location_on,
                     color: Colors.white), // Icon for location
                 const SizedBox(width: 8),
                 Text(
@@ -90,21 +89,21 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                const Icon(Icons.attach_money, color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
-                  '${event.fee.toStringAsFixed(2)}',
+                  event.fee.toStringAsFixed(2),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.person, color: Colors.white), // Icon for organizer
+                const Icon(Icons.person, color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
                 Text(
                   event.organiser,
@@ -112,10 +111,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Icon(Icons.archive, color: Colors.white), // Icon for category
+                const Icon(Icons.archive, color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
                 Text(
                   event.category,
@@ -123,10 +122,10 @@ class EventDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.white), // Set text color to white
             ),
@@ -196,7 +195,7 @@ class EventDetailsPage extends StatelessWidget {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (Route<dynamic> route) => false,
     );
   }
@@ -208,11 +207,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +221,7 @@ class FooterIconButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.white),
-          Text(label, style: TextStyle(color: Colors.white)),
+          Text(label, style: const TextStyle(color: Colors.white)),
         ],
       ),
     );

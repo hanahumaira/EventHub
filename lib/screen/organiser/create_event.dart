@@ -19,7 +19,7 @@ import 'package:intl/intl.dart';
 
 class CreateEventPage extends StatefulWidget {
   final User passUser;
-  const CreateEventPage({Key? key, required this.passUser}) : super(key: key);
+  const CreateEventPage({super.key, required this.passUser});
 
   @override
   _CreateEventPageState createState() => _CreateEventPageState();
@@ -83,7 +83,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Future<void> _createEvent() async {
     print('Creating event...');
     try {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       if (_selectedImage == null) {
         throw 'Please select an image';
@@ -119,7 +119,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       }
 
       // Add event data to Firestore
-      DocumentReference docRef = await _firestore.collection('eventData').add({
+      DocumentReference docRef = await firestore.collection('eventData').add({
         'imageURL': imageURL, // Store event image
         'event': _eventNameController.text, // Store event name
         'dateTime': _dateTimeController.text, // Store event date & time
@@ -172,7 +172,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           ),
         ],
         //Create event form
-        title: Text(
+        title: const Text(
           "Create Event",
           style: TextStyle(
             fontSize: 20,
@@ -201,7 +201,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       ),
                       child: _selectedImage != null
                           ? Image.file(_selectedImage!, fit: BoxFit.cover)
-                          : SizedBox(),
+                          : const SizedBox(),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -215,8 +215,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           onPressed: () {
                             _pickImageFromGallery();
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                          child: const Padding(
+                            padding: EdgeInsets.all(10.0),
                             child: Text(
                               "Upload a photo",
                               style: TextStyle(
@@ -236,7 +236,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 // Event Name
                 TextFormField(
                   controller: _eventNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Event Name',
                     hintText: 'Enter the name of the event.',
                     labelStyle: TextStyle(color: Colors.white),
@@ -250,7 +250,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       borderSide: BorderSide(color: Colors.grey, width: 1.0),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the event name';
@@ -267,7 +267,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       context: context,
                       initialDate: DateTime.now(),
                       firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(Duration(days: 365)),
+                      lastDate: DateTime.now().add(const Duration(days: 365)),
                     );
 
                     if (pickedDateTime != null) {
@@ -294,7 +294,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     }
                   },
                   controller: _dateTimeController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Event Date and Time',
                     hintText: 'Select the date and time of the event.',
                     labelStyle: TextStyle(color: Colors.white),
@@ -308,7 +308,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       borderSide: BorderSide(color: Colors.grey, width: 1.0),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   readOnly: true,
                   validator: (value) {
                     if (_selectedDateTime == null) {
@@ -322,7 +322,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 // Location
                 TextFormField(
                   controller: _locationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Event Location',
                     hintText: 'Location Address',
                     labelStyle: TextStyle(color: Colors.white),
@@ -336,7 +336,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       borderSide: BorderSide(color: Colors.grey, width: 1.0),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the event location';
@@ -355,7 +355,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     border: Border.all(color: Colors.white),
                   ),
                   child: SwitchListTile(
-                    title: Text(
+                    title: const Text(
                       'Is this event free?',
                       style: TextStyle(
                         color: Colors.white,
@@ -375,8 +375,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   TextFormField(
                     controller: _feeController,
                     keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
                       labelText: 'Event Fee',
                       hintText: 'RM XX.XX',
                       labelStyle: TextStyle(color: Colors.white),
@@ -390,7 +390,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         borderSide: BorderSide(color: Colors.grey, width: 1.0),
                       ),
                     ),
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the fee of the ticket';
@@ -406,7 +406,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   //paymentLink
                   TextFormField(
                     controller: _feeLinkController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Fee Link',
                       hintText: 'https://www.utm.my/',
                       labelStyle: TextStyle(color: Colors.white),
@@ -420,7 +420,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         borderSide: BorderSide(color: Colors.grey, width: 1.0),
                       ),
                     ),
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a fee link';
@@ -448,7 +448,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       _selectedCategory = value;
                     });
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Category',
                     hintText: 'Select the category of the event.',
                     labelStyle: TextStyle(color: Colors.white),
@@ -462,7 +462,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       borderSide: BorderSide(color: Colors.grey, width: 1.0),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please select a category';
@@ -476,7 +476,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 // Details
                 TextFormField(
                   controller: _detailsController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Event Details',
                     hintText: 'Write the event details information.',
                     labelStyle: TextStyle(color: Colors.white),
@@ -490,7 +490,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       borderSide: BorderSide(color: Colors.grey, width: 1.0),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please write the event details information';
@@ -503,7 +503,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 //Organiser
                 TextFormField(
                   controller: _organiserController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Organiser',
                     hintText: 'Enter the organizer name',
                     labelStyle: TextStyle(color: Colors.white),
@@ -517,7 +517,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       borderSide: BorderSide(color: Colors.grey, width: 1.0),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   readOnly: true, // Set the text field to read-only
                   onTap:
                       _fillOrganiserInformation, // Disable tapping on the text field
@@ -548,13 +548,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             print('Form is not valid');
                           }
                         },
-                        child: Text(
-                          'Create Event',
-                          style: TextStyle(color: Colors.white),
-                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 100, 8, 222),
+                        ),
+                        child: const Text(
+                          'Create Event',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
@@ -631,7 +631,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (Route<dynamic> route) => false,
     );
   }
@@ -643,11 +643,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -657,7 +657,7 @@ class FooterIconButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.white),
-          Text(label, style: TextStyle(color: Colors.white)),
+          Text(label, style: const TextStyle(color: Colors.white)),
         ],
       ),
     );

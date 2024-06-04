@@ -16,7 +16,7 @@ import 'package:intl/intl.dart';
 
 class OrganiserHomePage extends StatefulWidget {
   final User passUser;
-  const OrganiserHomePage({Key? key, required this.passUser}) : super(key: key);
+  const OrganiserHomePage({super.key, required this.passUser});
 
   @override
   State<OrganiserHomePage> createState() => _OrganiserHomeState();
@@ -125,7 +125,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             color: Colors.white,
           ),
         ],
-        title: Text(
+        title: const Text(
           "Home",
           style: TextStyle(
             fontSize: 20,
@@ -224,8 +224,8 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
                                   horizontal: 20.0), // Add horizontal padding
                               child: Text(
                                 "Events",
@@ -238,11 +238,11 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                             ),
                             DropdownButton<String>(
                               value: _filter,
-                              icon: Icon(Icons.arrow_downward,
+                              icon: const Icon(Icons.arrow_downward,
                                   color: Colors.white),
                               iconSize: 24,
                               elevation: 16,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               underline: Container(
                                 height: 2,
                                 color: Colors.white,
@@ -258,7 +258,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                                   value: value,
                                   child: Text(
                                     value,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 );
                               }).toList(),
@@ -357,7 +357,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
       ),
       child: Text(
         category,
-        style: TextStyle(fontSize: 10),
+        style: const TextStyle(fontSize: 10),
       ),
     );
   }
@@ -365,7 +365,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (Route<dynamic> route) => false,
     );
   }
@@ -425,11 +425,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +439,7 @@ class FooterIconButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.white),
-          Text(label, style: TextStyle(color: Colors.white)),
+          Text(label, style: const TextStyle(color: Colors.white)),
         ],
       ),
     );

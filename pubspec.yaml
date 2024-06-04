@@ -25,11 +25,11 @@ dependencies:
 
   
 
+  url_launcher: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  url_launcher: any
 
 flutter:
   uses-material-design: true

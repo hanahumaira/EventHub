@@ -10,7 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProfileScreen extends StatelessWidget {
   final User passUser;
 
-  const ProfileScreen({Key? key, required this.passUser}) : super(key: key);
+  const ProfileScreen({super.key, required this.passUser});
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +75,11 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 passUser.name,
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               Text(
                 passUser.email,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -141,7 +141,7 @@ class ProfileScreen extends StatelessWidget {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (route) => false,
     );
   }

@@ -13,7 +13,7 @@ import 'package:eventhub/screen/signup/signup_screen.dart';
 import 'package:eventhub/screen/user/user_homepage.dart';
 
 class Login extends StatefulWidget {
-  Login({Key? key});
+  const Login({super.key, Key? newKey});
 
   @override
   State<Login> createState() => _LoginState();
@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  bool _isChecked = false; // Variable to hold checkbox state
+  final bool _isChecked = false; // Variable to hold checkbox state
   bool _isPasswordVisible = false;
   String? _passwordError;
   String? _emailError;
@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
                         'lib/images/mainpage.png',
                         height: 150,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       // Add some spacing between the image and text
                       const Text(
                         'Welcome to EventHub!',
@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
                         ),
                         validator: _validateEmail,
                       ),
-                      SizedBox(
+                      const SizedBox(
                           height:
                               10), // Add some vertical spacing between the email and password fields
                       // Password
@@ -107,7 +107,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           labelText: "Password",
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.lock,
                             color: Colors.black,
                           ),
@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
                         ),
                         validator: _validatePassword,
                       ),
-                      SizedBox(
+                      const SizedBox(
                           height:
                               30), // Add some vertical spacing between the password field and the submit button
 
@@ -178,6 +178,9 @@ class _LoginState extends State<Login> {
                                             email: userSnapshot['email'],
                                             password: userSnapshot['password'],
                                             phoneNum: userSnapshot['phoneNum'],
+                                            address: userSnapshot['address'],
+                                            website: userSnapshot['website'],
+                                            sector: userSnapshot['sector'],
                                             accountType:
                                                 userSnapshot['accountType'],
                                           ),
@@ -231,7 +234,7 @@ class _LoginState extends State<Login> {
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Color.fromARGB(255, 100, 8, 222),
+                          backgroundColor: const Color.fromARGB(255, 100, 8, 222),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 50, vertical: 9),
                           shape: RoundedRectangleBorder(

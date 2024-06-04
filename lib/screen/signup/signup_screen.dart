@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class SignUp extends StatefulWidget {
   final FirebaseFirestore firestore;
 
-  const SignUp({Key? key, required this.firestore}) : super(key: key);
+  const SignUp({super.key, required this.firestore});
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -17,6 +17,10 @@ class _SignUpState extends State<SignUp> {
   final _password = TextEditingController();
   final _name = TextEditingController();
   final _phoneNum = TextEditingController();
+  final _address = TextEditingController();
+  final _website = TextEditingController();
+  final _sector = TextEditingController();
+  
   String? _accountType;
   bool _isPasswordVisible = false;
 
@@ -27,6 +31,9 @@ class _SignUpState extends State<SignUp> {
     _email.dispose();
     _password.dispose();
     _phoneNum.dispose();
+    _address.dispose();
+    _website.dispose();
+    _sector.dispose();
   }
 
   @override
@@ -38,16 +45,16 @@ class _SignUpState extends State<SignUp> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Login()),
+              MaterialPageRoute(builder: (context) => const Login()),
             );
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
         ),
         backgroundColor: Colors.black,
-        title: Text(
+        title: const Text(
           "Create Account",
           style: TextStyle(
             color: Colors.white,
@@ -102,53 +109,57 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
-                  child: TextFormField(
-                    controller: _name,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.white),
+                if (_accountType == 'Participant') ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                    child: TextFormField(
+                      controller: _name,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: "Full Name",
+                        prefixIcon: const Icon(
+                          Icons.person,
+                          color: Colors.black,
+                        ),
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: "Full Name",
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: Colors.black,
-                      ),
+                      style: const TextStyle(color: Colors.black),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your full name';
+                        }
+                        return null;
+                      },
                     ),
-                    style: TextStyle(color: Colors.black),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
-                      }
-                      return null;
-                    },
                   ),
-                ),
-                Padding(
+                                  Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                   child: TextFormField(
                     controller: _email,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                       ),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Email",
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.email,
                         color: Colors.black,
                       ),
                     ),
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
+                      }
+                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return 'Please enter a valid email';
                       }
                       return null;
                     },
@@ -161,23 +172,23 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                       ),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Phone Number",
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.phone_android,
                         color: Colors.black,
                       ),
                     ),
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your phone number';
                       }
                       if (!_isValidPhoneNumber(value)) {
-                        return 'Invalid Phone Number Format';
+                        return 'Invalid phone number format';
                       }
                       return null;
                     },
@@ -190,12 +201,12 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                       ),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Password",
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.lock,
                         color: Colors.black,
                       ),
@@ -212,7 +223,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     obscureText: !_isPasswordVisible,
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -223,7 +234,212 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                 ),
-                SizedBox(height: 30),
+                ] else if (_accountType == 'Organizer') ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                    child: TextFormField(
+                      controller: _name,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: "Company Name",
+                        prefixIcon: const Icon(
+                          Icons.business,
+                          color: Colors.black,
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your company name';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                    child: TextFormField(
+                      controller: _address,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: "Company Address",
+                        prefixIcon: const Icon(
+                          Icons.location_on,
+                          color: Colors.black,
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter company address';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                    child: TextFormField(
+                      controller: _website,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: "Company Website",
+                        prefixIcon: const Icon(
+                          Icons.web,
+                          color: Colors.black,
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter company website';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                    child: TextFormField(
+                      controller: _sector,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: "Sector",
+                        prefixIcon: const Icon(
+                          Icons.category,
+                          color: Colors.black,
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter sector';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                                  Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                  child: TextFormField(
+                    controller: _email,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "Email",
+                      prefixIcon: const Icon(
+                        Icons.email,
+                        color: Colors.black,
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                  child: TextFormField(
+                    controller: _phoneNum,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "Phone Number",
+                      prefixIcon: const Icon(
+                        Icons.phone_android,
+                        color: Colors.black,
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      if (!_isValidPhoneNumber(value)) {
+                        return 'Invalid phone number format';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                  child: TextFormField(
+                    controller: _password,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "Password",
+                      prefixIcon: const Icon(
+                        Icons.lock,
+                        color: Colors.black,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.blueGrey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                    ),
+                    obscureText: !_isPasswordVisible,
+                    style: const TextStyle(color: Colors.black),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      } else if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                ],
+
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: Center(
@@ -232,7 +448,7 @@ class _SignUpState extends State<SignUp> {
                         if (_formKey.currentState!.validate()) {
                           if (_accountType == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Please select an account type'),
                               ),
                             );
@@ -243,6 +459,9 @@ class _SignUpState extends State<SignUp> {
                             'email': _email.text,
                             'password': _password.text,
                             'phoneNum': _phoneNum.text,
+                            'address': _address.text,
+                            'website': _website.text,
+                            'sector': _sector.text,
                             'accountType': _accountType,
                           };
 
@@ -253,7 +472,7 @@ class _SignUpState extends State<SignUp> {
                                 .set(userData);
 
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Successfully Registered'),
                                 duration: Duration(seconds: 3),
                               ),
@@ -262,7 +481,7 @@ class _SignUpState extends State<SignUp> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Login(),
+                                builder: (context) => const Login(),
                               ),
                             );
                           } catch (e) {
@@ -278,13 +497,13 @@ class _SignUpState extends State<SignUp> {
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Color.fromARGB(255, 100, 8, 222),
-                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 9),
+                        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 9),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         'CREATE ACCOUNT',
                         style: TextStyle(
                           fontSize: 14,

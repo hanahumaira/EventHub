@@ -8,19 +8,18 @@ import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/event_details.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyEvent extends StatefulWidget {
   final User passUser;
 
-  const MyEvent({Key? key, required this.passUser}) : super(key: key);
+  const MyEvent({super.key, required this.passUser});
 
   @override
   State<MyEvent> createState() => _MyEventState();
 }
 
 class _MyEventState extends State<MyEvent> {
-  List<Event> _myevent = [];
+  final List<Event> _myevent = [];
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
@@ -89,17 +88,17 @@ class _MyEventState extends State<MyEvent> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Event"),
+          title: const Text("Delete Event"),
           content: Text("Do you want to delete the event: ${event.event}?"),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text("Delete"),
+              child: const Text("Delete"),
               onPressed: () {
                 _deleteEvent(
                     event); // Call the _deleteEvent method to delete the event
@@ -133,7 +132,7 @@ class _MyEventState extends State<MyEvent> {
             color: Colors.white,
           ),
         ],
-        title: Text(
+        title: const Text(
           "My Event",
           style: TextStyle(
             fontSize: 20,
@@ -225,9 +224,9 @@ class _MyEventState extends State<MyEvent> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
+                            const Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                                  EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
                                 "Events",
                                 style: TextStyle(
@@ -239,11 +238,11 @@ class _MyEventState extends State<MyEvent> {
                             ),
                             DropdownButton<String>(
                               value: _filter,
-                              icon: Icon(Icons.arrow_downward,
+                              icon: const Icon(Icons.arrow_downward,
                                   color: Colors.white),
                               iconSize: 24,
                               elevation: 16,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               underline: Container(
                                 height: 2,
                                 color: Colors.white,
@@ -259,7 +258,7 @@ class _MyEventState extends State<MyEvent> {
                                   value: value,
                                   child: Text(
                                     value,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 );
                               }).toList(),
@@ -354,7 +353,7 @@ class _MyEventState extends State<MyEvent> {
       ),
       child: Text(
         category,
-        style: TextStyle(fontSize: 10),
+        style: const TextStyle(fontSize: 10),
       ),
     );
   }
@@ -364,18 +363,18 @@ class _MyEventState extends State<MyEvent> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Event"),
+          title: const Text("Delete Event"),
           content: Text("Do you want to delete the event: ${event.event}?"),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
               onPressed: () {
                 Navigator.of(context)
                     .pop(); // Close the dialog without deleting
               },
             ),
             TextButton(
-              child: Text("Delete"),
+              child: const Text("Delete"),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog first
 
@@ -385,7 +384,7 @@ class _MyEventState extends State<MyEvent> {
                 });
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Event deleted successfully")));
+                    const SnackBar(content: Text("Event deleted successfully")));
               },
             ),
           ],
@@ -397,7 +396,7 @@ class _MyEventState extends State<MyEvent> {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (Route<dynamic> route) => false,
     );
   }
@@ -428,14 +427,14 @@ class _MyEventState extends State<MyEvent> {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.edit, color: Colors.green),
+                icon: const Icon(Icons.edit, color: Colors.green),
                 onPressed: () {
                   _navigateToEditEvent(
                       event); // Navigate to the edit event page
                 },
               ),
               IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
                   _confirmDelete(event);
                 },
@@ -475,11 +474,11 @@ class FooterIconButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const FooterIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -489,7 +488,7 @@ class FooterIconButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.white),
-          Text(label, style: TextStyle(color: Colors.white)),
+          Text(label, style: const TextStyle(color: Colors.white)),
         ],
       ),
     );

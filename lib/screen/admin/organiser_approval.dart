@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OrganizerApprovalPage extends StatefulWidget {
+  const OrganizerApprovalPage({super.key});
+
   @override
   _OrganizerApprovalPageState createState() => _OrganizerApprovalPageState();
 }
@@ -88,9 +90,9 @@ class _OrganizerApprovalPageState extends State<OrganizerApprovalPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 "Close",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -103,7 +105,7 @@ class _OrganizerApprovalPageState extends State<OrganizerApprovalPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Organizer Approval'),
+        title: const Text('Organizer Approval'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
       body: ListView.builder(
@@ -125,11 +127,11 @@ class _OrganizerApprovalPageState extends State<OrganizerApprovalPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.check, color: Colors.green),
+                    icon: const Icon(Icons.check, color: Colors.green),
                     onPressed: () => _approveOrganizer(index),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: Colors.red),
+                    icon: const Icon(Icons.close, color: Colors.red),
                     onPressed: () => _rejectOrganizer(index),
                   ),
                 ],

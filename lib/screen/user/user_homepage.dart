@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:eventhub/screen/profile/profile_screen.dart';
-import 'package:eventhub/screen/user/register_event.dart';
 import 'package:flutter/material.dart';
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/model/event.dart';
@@ -14,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserHomePage extends StatefulWidget {
   final User passUser;
 
-  const UserHomePage({Key? key, required this.passUser}) : super(key: key);
+  const UserHomePage({super.key, required this.passUser});
 
   @override
   State<UserHomePage> createState() => _UserHomeState();
@@ -407,7 +406,7 @@ class FooterIconButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const FooterIconButton({
+  const FooterIconButton({super.key, 
     required this.icon,
     required this.label,
     required this.onPressed,
@@ -441,7 +440,7 @@ class EventDetailsPage extends StatelessWidget {
   final Event event;
   final User passUser;
 
-  const EventDetailsPage({required this.event, required this.passUser});
+  const EventDetailsPage({super.key, required this.event, required this.passUser});
 
   // Method to add event details and username to Firestore collection
   Future<void> _saveEventToDatabase() async {
@@ -529,7 +528,7 @@ class EventDetailsPage extends StatelessWidget {
                 Icon(Icons.attach_money, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
-                  '${event.fee.toStringAsFixed(2)}',
+                  event.fee.toStringAsFixed(2),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -577,10 +576,10 @@ class EventDetailsPage extends StatelessWidget {
                         horizontal: 24, vertical: 12),
                   ),
                   child: Row(
-                    children: [
+                    children: const [
                       Icon(Icons.bookmark_border, color: Colors.white),
-                      const SizedBox(width: 8),
-                      const Text('Save', style: TextStyle(color: Colors.white)),
+                      SizedBox(width: 8),
+                      Text('Save', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
@@ -601,11 +600,11 @@ class EventDetailsPage extends StatelessWidget {
                         horizontal: 24, vertical: 12),
                   ),
                   child: Row(
-                    children: [
+                    children: const [
                       Icon(Icons.event_available,
                           color: Colors.white), // Icon for register event
-                      const SizedBox(width: 6),
-                      const Text('Register',
+                      SizedBox(width: 6),
+                      Text('Register',
                           style: TextStyle(color: Colors.white)),
                     ],
                   ),

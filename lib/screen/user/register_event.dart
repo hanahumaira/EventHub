@@ -10,7 +10,7 @@ class RegisterEventPage extends StatelessWidget {
   final User user; // Add the user parameter
 
   const RegisterEventPage(
-      {required this.event, required this.user}); // Update constructor
+      {super.key, required this.event, required this.user}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class RegisterEventPage extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Icon(Icons.date_range, color: Colors.white),
+                const Icon(Icons.date_range, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
@@ -48,7 +48,7 @@ class RegisterEventPage extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.access_time, color: Colors.white),
+                const Icon(Icons.access_time, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.jm().format(event.dateTime),
@@ -59,7 +59,7 @@ class RegisterEventPage extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.location_on, color: Colors.white),
+                const Icon(Icons.location_on, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   event.location,
@@ -70,7 +70,7 @@ class RegisterEventPage extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.white),
+                const Icon(Icons.attach_money, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   '\$${event.fee.toStringAsFixed(2)}',
@@ -79,9 +79,9 @@ class RegisterEventPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            Text(
+            const Text(
               'Register for the Event',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -103,7 +103,7 @@ class EventRegistrationForm extends StatefulWidget {
   final User user; // Add the user parameter
 
   const EventRegistrationForm(
-      {required this.event, required this.user}); // Update constructor
+      {super.key, required this.event, required this.user}); // Update constructor
 
   @override
   _EventRegistrationFormState createState() => _EventRegistrationFormState();
@@ -137,7 +137,7 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
             .collection('registrations')
             .add(registrationData);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Event registered successfully')),
+          const SnackBar(content: Text('Event registered successfully')),
         );
         Navigator.push(
           context,
@@ -235,12 +235,12 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
               backgroundColor: const Color.fromARGB(255, 140, 40, 222),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
-            child: Row(
+            child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.event_available, color: Colors.white),
-                const SizedBox(width: 8),
-                const Text('Register Event',
+                SizedBox(width: 8),
+                Text('Register Event',
                     style: TextStyle(color: Colors.white)),
               ],
             ),
@@ -324,7 +324,7 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
 }
 
 class EventWebsitePage extends StatelessWidget {
-  const EventWebsitePage({Key? key}) : super(key: key);
+  const EventWebsitePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +359,7 @@ class EventWebsitePage extends StatelessWidget {
                     ),
                   ),
                 );
-                Future.delayed(Duration(seconds: 1), () {
+                Future.delayed(const Duration(seconds: 1), () {
                   // Use the browser to navigate to the event website
                   _launchURL('https://www.jomrun.com/event/Daiman-Run-2024');
                 });

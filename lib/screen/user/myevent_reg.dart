@@ -1,4 +1,3 @@
-import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:eventhub/screen/user/myevent_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:eventhub/model/event.dart';
@@ -6,13 +5,13 @@ import 'package:eventhub/model/event.dart';
 class MyEventReg extends StatelessWidget {
   final List<Event> dummyEvents;
 
-  const MyEventReg({Key? key, required this.dummyEvents}) : super(key: key);
+  const MyEventReg({super.key, required this.dummyEvents});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registered Events'),
+        title: const Text('Registered Events'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
       body: ListView.builder(
@@ -30,7 +29,7 @@ class MyEventReg extends StatelessWidget {
 class EventCard extends StatelessWidget {
   final Event event;
 
-  const EventCard({Key? key, required this.event}) : super(key: key);
+  const EventCard({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +72,11 @@ class EventCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditEventRegPage(),
+                      builder: (context) => const EditEventRegPage(),
                     ),
                   );
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.edit,
                   color: Color.fromARGB(255, 241, 210, 247),
                 ),
@@ -86,12 +85,12 @@ class EventCard extends StatelessWidget {
                 onPressed: () {
                   _showDeleteConfirmationDialog(context);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete,
                   color: Colors.red,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ],
@@ -108,21 +107,21 @@ class EventCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Delete"),
-          content: Text("Are you sure you want to delete this event?"),
+          title: const Text("Confirm Delete"),
+          content: const Text("Are you sure you want to delete this event?"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
                 // Perform delete operation here
                 _deleteEvent(context);
               },
-              child: Text("Delete"),
+              child: const Text("Delete"),
             ),
           ],
         );
@@ -139,7 +138,7 @@ class EventCard extends StatelessWidget {
 class EventDetailsPage extends StatelessWidget {
   final Event event;
 
-  const EventDetailsPage({required this.event});
+  const EventDetailsPage({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +156,7 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               event.event,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
@@ -174,7 +173,7 @@ class EventDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(
-              '${event.fee.toStringAsFixed(2)}',
+              event.fee.toStringAsFixed(2),
               style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             const SizedBox(height: 8.0),
@@ -190,7 +189,7 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Text(
               'Details: ${event.details}',
-              style: TextStyle(fontSize: 16.0, color: Colors.white),
+              style: const TextStyle(fontSize: 16.0, color: Colors.white),
             ),
           ],
         ),
