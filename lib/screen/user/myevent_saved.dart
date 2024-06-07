@@ -23,17 +23,18 @@ class _MyEventSavedState extends State<MyEventSaved> {
 
   Future<void> _fetchSavedEvents() async {
     try {
-      final documentSnapshot = await FirebaseFirestore.instance
+      final querySnapshot = await FirebaseFirestore.instance
           .collection('mysave_event')
           .doc(widget.passUser.name)
           .get();
 
-      if (documentSnapshot.exists) {
-        final eventData = documentSnapshot.data();
-        print('Event data retrieved: $eventData');
-        if (eventData != null) {
+      if (querySnapshot.exists) {
+        final eventData = querySnapshot.data();
+        final List<Event> events = [];
+
+        eventData!.forEach((eventId, eventData) {
           final event = Event(
-            id: eventData['id'] ?? 'N/A',
+            id: eventId,
             event: eventData['eventName'] ?? '',
             dateTime: (eventData['eventDateTime'] as Timestamp).toDate(),
             location: eventData['eventLocation'] ?? '',
@@ -44,15 +45,15 @@ class _MyEventSavedState extends State<MyEventSaved> {
             timestamp: eventData['timestamp'] ?? Timestamp.now(),
             imageURL: eventData['eventImage'] ?? 'lib/images/mainpage.png',
           );
-          setState(() {
-            _savedEvents = [event];
-          });
-          print('Successfully fetched saved events: $_savedEvents');
-        } else {
-          print('Event data is null');
-        }
+          events.add(event);
+        });
+
+        setState(() {
+          _savedEvents = events;
+        });
+        print('Successfully fetched saved events: $_savedEvents');
       } else {
-        print('No event found for user: ${widget.passUser.name}');
+        print('No events found for user: ${widget.passUser.name}');
       }
     } catch (e) {
       print('Error fetching saved events: $e');
@@ -68,12 +69,12 @@ class _MyEventSavedState extends State<MyEventSaved> {
       ),
       body: _savedEvents != null
           ? ListView.builder(
-              itemCount: _savedEvents!.length,
-              itemBuilder: (context, index) {
-                final event = _savedEvents![index];
-                return EventCard(event: event);
-              },
-            )
+        itemCount: _savedEvents!.length,
+        itemBuilder: (context, index) {
+          final event = _savedEvents![index];
+          return EventCard(event: event);
+        },
+      )
           : Center(child: CircularProgressIndicator()),
       backgroundColor: Colors.black,
     );
@@ -92,7 +93,7 @@ class EventCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         leading: SizedBox(
           width: 80,
           child: Image.network(
@@ -191,7 +192,7 @@ class EventDetailsPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
               child: Text(
                 'Remove Event',
