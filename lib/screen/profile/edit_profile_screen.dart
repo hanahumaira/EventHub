@@ -38,15 +38,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController websiteController = TextEditingController();
+  TextEditingController sectorController = TextEditingController();
+
   bool _isPasswordVisible = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
     nameController.text = widget.passUser.name;
     emailController.text = widget.passUser.email;
     phoneNumController.text = widget.passUser.phoneNum;
     passwordController.text = widget.passUser.password;
+    addressController.text = widget.passUser.address!;
+    websiteController.text = widget.passUser.website!;
+    sectorController.text = widget.passUser.sector!;
+  }
+
+  Future<void> _fetchUpdatedUserData() async {
+    try {
+      // Fetch the updated user data from Firestore
+      DocumentSnapshot updatedUserData = await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(widget.passUser.email)
+          .get();
+
+      // Update the passUser object with the new data
+      setState(() {
+        widget.passUser.name = updatedUserData['name'];
+        widget.passUser.email = updatedUserData['email'];
+        widget.passUser.phoneNum = updatedUserData['phoneNum'];
+        widget.passUser.password = updatedUserData['password'];
+        widget.passUser.address = updatedUserData['address'];
+        widget.passUser.website = updatedUserData['website'];
+        widget.passUser.sector = updatedUserData['sector'];
+      });
+
+      // Refresh the controllers with the updated data
+      _initializeControllers();
+    } catch (error) {
+      print('Error fetching updated user data: $error');
+    }
   }
 
   @override
@@ -65,12 +102,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'email': emailController.text,
           'phoneNum': phoneNumController.text,
           'password': passwordController.text,
+          'address': addressController.text,
+          'website': websiteController.text,
+          'sector': sectorController.text
         });
+
         // Fetch the updated user data
-        DocumentSnapshot updatedUserData = await FirebaseFirestore.instance
-            .collection('userData')
-            .doc(userId)
-            .get();
+        await _fetchUpdatedUserData();
 
         // Navigate back to the ProfileScreen after updating profile
         Get.to(() => ProfileScreen(passUser: widget.passUser));
@@ -252,6 +290,75 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
+                    controller: addressController,
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Address',
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
+                      prefixIcon: const Icon(
+                        Icons.location_on,
+                        color: Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your address';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    controller: websiteController,
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Website',
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
+                      prefixIcon: const Icon(
+                        Icons.web,
+                        color: Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your company website';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    controller: sectorController,
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Sector',
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
+                      prefixIcon: const Icon(
+                        Icons.category,
+                        color: Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your company sector';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
                     controller: passwordController,
                     obscureText: !_isPasswordVisible,
                     style: const TextStyle(fontSize: 18, color: Colors.white),
@@ -318,7 +425,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         // Get.to(() => ProfileScreen(passUser: widget.passUser));
                       },
                       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
                         side: BorderSide.none,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
