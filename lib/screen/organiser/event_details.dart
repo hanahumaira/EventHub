@@ -17,6 +17,9 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String slotsLeftText =
+        event.slots != null ? "${event.slots} slots left" : "Unlimited slots";
+
     return Scaffold(
       backgroundColor: Colors.black, // Set background color to black
       appBar: AppBar(
@@ -62,14 +65,16 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.date_range, color: Colors.white), // Icon for date
+                const Icon(Icons.date_range,
+                    color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 const SizedBox(width: 16), // Add spacing
-                const Icon(Icons.access_time, color: Colors.white), // Icon for time
+                const Icon(Icons.access_time,
+                    color: Colors.white), // Icon for time
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.Hm().format(event.dateTime),
@@ -92,7 +97,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                const Icon(Icons.attach_money,
+                    color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
                   event.fee!.toStringAsFixed(2),
@@ -103,7 +109,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.person, color: Colors.white), // Icon for organizer
+                const Icon(Icons.person,
+                    color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
                 Text(
                   event.organiser,
@@ -114,7 +121,19 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.archive, color: Colors.white), // Icon for category
+                const Icon(Icons.person, color: Colors.white), // Icon for slot
+                const SizedBox(width: 8),
+                Text(
+                  'Slots Left: $slotsLeftText',
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                const Icon(Icons.category,
+                    color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
                 Text(
                   event.category,

@@ -12,6 +12,8 @@ class Event {
   String details;
   String organiser;
   Timestamp timestamp;
+  int? registration;
+  int? slots;
 
   Event({
     required this.id,
@@ -25,6 +27,8 @@ class Event {
     required this.details,
     required this.organiser,
     required this.timestamp,
+    this.registration,
+    this.slots,
   });
 
   factory Event.fromSnapshot(DocumentSnapshot snapshot) {
@@ -53,6 +57,13 @@ class Event {
     // Extract 'timestamp' field as Timestamp
     Timestamp timestamp = data['timestamp'] ?? Timestamp.now();
 
+    // Extract 'registration' field, allow null if missing or invalid
+    int? registration =
+        data['registration'] is int ? data['registration'] as int : null;
+
+    // Extract 'slots' field, allow null if missing or invalid
+    int? slots = data['slots'] is int ? data['slots'] as int : null;
+
     return Event(
       id: snapshot.id,
       imageURL: data['imageURL'] ?? 'lib/images/mainpage.png',
@@ -65,6 +76,8 @@ class Event {
       details: data['details'] ?? '',
       organiser: data['organiser'] ?? '',
       timestamp: timestamp,
+      registration: registration,
+      slots: slots,
     );
   }
 
@@ -81,6 +94,8 @@ class Event {
       'details': details,
       'organiser': organiser,
       'timestamp': timestamp,
+      'registration': registration,
+      'slots': slots,
     };
   }
 
@@ -97,6 +112,8 @@ class Event {
       'details': details,
       'organiser': organiser,
       'timestamp': timestamp,
+      'registration': registration,
+      'slots': slots,
     };
   }
 }

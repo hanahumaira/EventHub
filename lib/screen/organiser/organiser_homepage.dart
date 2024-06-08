@@ -7,6 +7,7 @@ import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
+import 'package:eventhub/screen/organiser/report_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/screen/organiser/event_details.dart';
 
@@ -284,6 +285,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                Spacer(),
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
@@ -297,6 +299,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
+                Spacer(),
                 FooterIconButton(
                   icon: Icons.event,
                   label: "My Event",
@@ -310,6 +313,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
+                Spacer(),
                 FooterIconButton(
                   icon: Icons.add,
                   label: "Create Event",
@@ -323,6 +327,20 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
+                Spacer(),
+                FooterIconButton(
+                  icon: Icons.analytics,
+                  label: "Report",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReportPage(),
+                      ),
+                    );
+                  },
+                ),
+                Spacer(),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",

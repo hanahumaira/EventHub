@@ -44,6 +44,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   File? _selectedImage;
   DateTime? _selectedDateTime;
   bool _isFreeEvent = true;
+  int? _selectedSlots;
 
   final _formKey = GlobalKey<FormState>();
   final _eventNameController = TextEditingController();
@@ -53,6 +54,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final _feeLinkController = TextEditingController();
   final _organiserController = TextEditingController();
   final _detailsController = TextEditingController();
+  final _slotsController = TextEditingController();
   // final _categoryController = TextEditingController();
 
   @override
@@ -126,6 +128,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         'location': _locationController.text, // Store event location
         'fee': _isFreeEvent ? 'Free' : _feeController.text, // Store event fee
         'feeLink': _feeLinkController.text, // Store fee link if any
+        'slots': _slotsController.text, //Store the slots
         'category': _selectedCategory, // Store event category
         'details': _detailsController.text, // Store event details
         'organiser': _organiserController.text, // Store event organizer
@@ -434,6 +437,33 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   const SizedBox(height: 20),
                 ],
 
+                TextFormField(
+                  controller: _slotsController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Registration Slots (Optional)',
+                    hintText:
+                        'Enter the number of slots available for registration.',
+                    labelStyle: TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                  onChanged: (value) {
+                    // Parse the input string to int and update the selectedSlots
+                    setState(() {
+                      _selectedSlots = int.tryParse(value);
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
                 // Category
                 DropdownButtonFormField<String>(
                   value: _selectedCategory,
