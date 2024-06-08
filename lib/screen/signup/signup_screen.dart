@@ -90,8 +90,14 @@ class _SignUpState extends State<SignUp> {
                                 _accountType = value;
                               });
                             },
-                            fillColor: WidgetStateColor.resolveWith(
-                                (states) => Colors.white),
+                            fillColor: MaterialStateProperty.resolveWith<Color>(
+    (Set<MaterialState> states) {
+      if (states.contains(MaterialState.selected)) {
+        return Colors.white;
+      }
+      return Colors.grey; // Use the default color if not selected
+    },
+  ),
                           ),
                         ),
                       ),
@@ -108,8 +114,14 @@ class _SignUpState extends State<SignUp> {
                                 _accountType = value;
                               });
                             },
-                            fillColor: WidgetStateColor.resolveWith(
-                                (states) => Colors.white),
+                            fillColor: MaterialStateProperty.resolveWith<Color>(
+    (Set<MaterialState> states) {
+      if (states.contains(MaterialState.selected)) {
+        return Colors.white;
+      }
+      return Colors.grey; // Use the default color if not selected
+    },
+  ),
                           ),
                         ),
                       ),
