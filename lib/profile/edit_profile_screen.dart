@@ -1,17 +1,12 @@
-import 'dart:io';
-
-import 'package:eventhub/screen/profile/profile_screen.dart';
-import 'package:eventhub/model/user.dart';
+import 'package:eventhub/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  final User passUser;
-
-  const EditProfileScreen({Key? key, required this.passUser}) : super(key: key);
+  const EditProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -38,47 +33,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
-  bool _isPasswordVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    nameController.text = widget.passUser.name;
-    emailController.text = widget.passUser.email;
-    phoneNumController.text = widget.passUser.phoneNum;
-    passwordController.text = widget.passUser.password;
-  }
 
   @override
   Widget build(BuildContext context) {
-    Future<void> updateUserProfile() async {
-      try {
-        // Get the current user ID
-        String userId = widget.passUser.email;
-
-        // Update user data in Firestore
-        await FirebaseFirestore.instance
-            .collection('userData')
-            .doc(userId)
-            .update({
-          'name': nameController.text,
-          'email': emailController.text,
-          'phoneNum': phoneNumController.text,
-          'password': passwordController.text,
-        });
-        // Fetch the updated user data
-        DocumentSnapshot updatedUserData = await FirebaseFirestore.instance
-            .collection('userData')
-            .doc(userId)
-            .get();
-
-        // Navigate back to the ProfileScreen after updating profile
-        Get.to(() => ProfileScreen(passUser: widget.passUser));
-      } catch (error) {
-        print('Error updating user profile: $error');
-      }
-    }
-
     Future<void> pickImage(ImageSource source) async {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: source);
@@ -155,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             fit: BoxFit.cover,
                           )
                         : const Image(
-                            image: AssetImage('lib/images/dp.png'),
+                            image: AssetImage('lib/profile/img/dp.png'),
                           ),
                   ),
                 ),
@@ -193,19 +150,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Full Name',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      hintText: 'Nadiya Binti Ahmadi',
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your full name';
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
@@ -213,19 +173,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      hintText: 'nadiya@gmail.com',
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your email';
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
@@ -233,56 +196,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Phone No',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
+                      hintText: '0123456789',
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(163, 158, 158, 158)),
                       prefixIcon: const Icon(Icons.call),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      if (!_isValidPhoneNumber(value)) {
-                        return 'Invalid Phone Number Format';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your phone number';
+                    //   }
+                    //   if (!_isValidPhoneNumber(value)) {
+                    //   return 'Invalid Phone Number Format';
+                    // }
+                    // return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
                     controller: passwordController,
-                    obscureText: !_isPasswordVisible,
                     style: const TextStyle(fontSize: 18, color: Colors.white),
+                    obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
+                      labelStyle:
+                          const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
                       prefixIcon: const Icon(Icons.fingerprint),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.blueGrey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your password';
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 30),
                   SizedBox(
@@ -290,7 +243,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         String enteredEmail = emailController.text.trim();
-                        String enteredPassword = passwordController.text;
+                        // String enteredPassword = passwordController.text;
 
                         // Validate email format
                         if (!_isValidEmail(enteredEmail)) {
@@ -303,22 +256,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         }
 
                         // Validate password criteria (e.g., minimum length)
-                        if (enteredPassword.length < 6) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Password must be at least 6 characters'),
-                            ),
-                          );
-                          return; // Exit the function if password is invalid
-                        }
-
-                        updateUserProfile();
-
-                        // Get.to(() => ProfileScreen(passUser: widget.passUser));
+                        // if (enteredPassword.length < 6) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text('Password must be at least 6 characters'),
+                        //     ),
+                        //   );
+                        //   return; // Exit the function if password is invalid
+                        // }
+                        Get.to(() => const ProfileScreen());
                       },
                       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                        backgroundColor: Colors.purple,
                         side: BorderSide.none,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

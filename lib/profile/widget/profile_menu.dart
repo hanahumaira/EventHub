@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
     super.key,
@@ -9,6 +10,7 @@ class ProfileMenuWidget extends StatelessWidget {
     required this.onPress,
     this.endIcon = true,
     this.textColor,
+    
   });
 
   final String title;
@@ -19,9 +21,9 @@ class ProfileMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     var iconColor = isDark ? Colors.white : Colors.purple;
-
+    
     return ListTile(
       onTap: onPress,
       leading: Container(
@@ -33,20 +35,15 @@ class ProfileMenuWidget extends StatelessWidget {
         ),
         child: Icon(icon, color: iconColor),
       ),
-      title: Text(title,
-          style:
-              Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),
-      trailing: endIcon
-          ? Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.grey.withOpacity(0.1),
-              ),
-              child: const Icon(LineAwesomeIcons.arrow_right,
-                  size: 18.0, color: Colors.grey))
-          : null,
+      title: Text(title, style: Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),
+      trailing: endIcon? Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: Colors.grey.withOpacity(0.1),
+        ),
+        child: const Icon(LineAwesomeIcons.arrow_right, size: 18.0, color: Colors.grey)) : null,
     );
   }
 }

@@ -1,6 +1,5 @@
 {
     "java.project.sourcePaths": [
         "lib/login-forgotPassword"
-    ],
-    "java.configuration.updateBuildConfiguration": "interactive"
+    ]
 }

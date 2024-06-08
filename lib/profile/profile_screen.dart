@@ -1,16 +1,11 @@
-import 'package:eventhub/model/user.dart';
-import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/profile/edit_profile_screen.dart';
+import 'package:eventhub/profile/edit_profile_screen.dart';
+import 'package:eventhub/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-// import 'package:eventhub/screen/organiser/organiser_homepage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final User passUser;
-
-  const ProfileScreen({Key? key, required this.passUser}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +68,12 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              Text(
-                passUser.name,
+              const Text(
+                "Nadiya",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              Text(
-                passUser.email,
+              const Text(
+                "nadiya@gmail.com",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               const SizedBox(height: 20),
@@ -86,10 +81,10 @@ class ProfileScreen extends StatelessWidget {
                 width: 200,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.to(() => EditProfileScreen(passUser: passUser));
+                    Get.to(() => const EditProfileScreen());
                   },
                   style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                    backgroundColor: Colors.purple,
                     side: BorderSide.none,
                     shape: const StadiumBorder(),
                   ),
@@ -141,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (route) => false,
     );
   }
@@ -154,12 +149,12 @@ class ProfileMenuWidget extends StatelessWidget {
   final Color textColor;
 
   const ProfileMenuWidget({
-    super.key,
+    Key? key,
     required this.title,
     required this.icon,
     required this.onPress,
     this.textColor = Colors.black,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -179,24 +174,5 @@ class ProfileMenuWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<User> fetchUserData(String email) async {
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('userData')
-        .doc(email)
-        .get();
-
-    if (userSnapshot.exists) {
-      return User(
-        name: userSnapshot['name'],
-        email: userSnapshot['email'],
-        password: userSnapshot['password'],
-        phoneNum: userSnapshot['phoneNum'],
-        accountType: userSnapshot['accountType'],
-      );
-    } else {
-      throw Exception('User not found');
-    }
   }
 }
