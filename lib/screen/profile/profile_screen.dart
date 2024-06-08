@@ -89,7 +89,7 @@ class ProfileScreen extends StatelessWidget {
                     Get.to(() => EditProfileScreen(passUser: passUser));
                   },
                   style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                    backgroundColor: const Color.fromARGB(255, 100, 8, 222),
                     side: BorderSide.none,
                     shape: const StadiumBorder(),
                   ),
@@ -109,18 +109,20 @@ class ProfileScreen extends StatelessWidget {
                 textColor: Colors.white,
               ),
               ProfileMenuWidget(
-                title: "Billing Details",
-                icon: LineAwesomeIcons.wallet,
+                title: "Information",
+                icon: LineAwesomeIcons.info,
                 onPress: () {},
                 textColor: Colors.white,
               ),
               const Divider(color: Colors.grey),
               const SizedBox(height: 10),
               ProfileMenuWidget(
-                title: "Information",
-                icon: LineAwesomeIcons.info,
-                onPress: () {},
-                textColor: Colors.white,
+                title: "Delete Account",
+                icon: LineAwesomeIcons.trash,
+                onPress: () {
+                  _showDeleteConfirmationDialog(context);
+                },
+                textColor: Colors.red,
               ),
               ProfileMenuWidget(
                 title: "Logout",
@@ -136,6 +138,53 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete your account?"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            TextButton(
+              child: const Text("Delete"),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
+                await _deleteAccount(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteAccount(BuildContext context) async {
+    try {
+      // Delete the user document from Firestore
+      await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(passUser.email)
+          .delete();
+
+      // Navigate back to the login page
+      Get.offAll(() => const Login());
+    } catch (error) {
+      print('Error deleting account: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting account: $error'),
+        ),
+      );
+    }
   }
 
   void _logoutAndNavigateToLogin(BuildContext context) {
