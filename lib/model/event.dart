@@ -6,7 +6,7 @@ class Event {
   String event;
   DateTime dateTime;
   String location;
-  double fee;
+  double? fee;
   String? paymentLink;
   String category;
   String details;
@@ -19,7 +19,7 @@ class Event {
     required this.event,
     required this.dateTime,
     required this.location,
-    required this.fee,
+    this.fee,
     this.paymentLink,
     required this.category,
     required this.details,

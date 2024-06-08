@@ -95,7 +95,7 @@ class EventDetailsPage extends StatelessWidget {
                 const Icon(Icons.attach_money, color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
-                  event.fee.toStringAsFixed(2),
+                  event.fee!.toStringAsFixed(2),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],

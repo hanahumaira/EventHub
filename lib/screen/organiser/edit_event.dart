@@ -1,161 +1,242 @@
-// ignore_for_file: use_super_parameters, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/model/event.dart';
+import 'package:eventhub/model/user.dart';
 
 class EditEventPage extends StatefulWidget {
-  final String event;
+  final Event event;
+  final User passUser;
+  final double? fee;
 
-  const EditEventPage({Key? key, required this.event}) : super(key: key);
+  const EditEventPage({Key? key, required this.event, required this.passUser, this.fee}) : super(key: key);
 
   @override
   _EditEventPageState createState() => _EditEventPageState();
 }
 
 class _EditEventPageState extends State<EditEventPage> {
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _feeController = TextEditingController();
-  final TextEditingController _organizerController = TextEditingController();
-  final TextEditingController _detailsController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _eventController;
+  late TextEditingController _locationController;
+  late TextEditingController _dateTimeController;
+  late TextEditingController _categoryController;
+  late TextEditingController _feeController;
+  late TextEditingController _feeLinkController;
+  late TextEditingController _detailsController;
 
+  List<String> categories = [
+    'Education',
+    'Sport',
+    'Charity',
+    'Festival',
+    'Entertainment',
+    'Workshop',
+    'Talk',
+    'Conference',
+    'Exhibition',
+  ];
+  
   @override
   void initState() {
     super.initState();
-    // Fetch event details based on widget.event and populate controllers
-    _fetchEventDetails();
+    _eventController = TextEditingController(text: widget.event.event);
+    _locationController = TextEditingController(text: widget.event.location);
+    _dateTimeController = TextEditingController(text: widget.event.dateTime.toString());
+    _categoryController = TextEditingController(text: widget.event.category);
+    _feeController = TextEditingController(text: widget.fee?.toString() ?? '');
+    _feeLinkController = TextEditingController(text: widget.event.paymentLink ?? '');
+    _detailsController = TextEditingController(text: widget.event.details ?? '');
+    print("Fee Link: ${_feeLinkController.text}");
+    print("Event Payment Link: ${widget.event.paymentLink}");
   }
 
-  Future<void> _fetchEventDetails() async {
-    try {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('event')
-          .where('event', isEqualTo: widget.event)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final DocumentSnapshot eventSnapshot = querySnapshot.docs.first;
-        setState(() {
-          _locationController.text = eventSnapshot['location'];
-          _feeController.text = eventSnapshot['fee'];
-          _organizerController.text = eventSnapshot['organizer'];
-          _detailsController.text = eventSnapshot['details'];
-        });
-      }
-    } catch (e) {
-      print('Error fetching event details: $e');
-      // Handle error accordingly (e.g., show a snackbar or dialog)
-    }
+  @override
+  void dispose() {
+    _eventController.dispose();
+    _locationController.dispose();
+    _dateTimeController.dispose();
+    _categoryController.dispose();
+    _feeController.dispose();
+    _feeLinkController.dispose();
+    _detailsController.dispose();
+    super.dispose();
   }
 
   Future<void> _updateEvent() async {
-    try {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-      // Update event data in Firestore based on event name
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('event')
-          .where('event', isEqualTo: widget.event)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final DocumentSnapshot eventSnapshot = querySnapshot.docs.first;
-        await eventSnapshot.reference.update({
-          'location': _locationController.text,
-          'fee': _feeController.text,
-          'organizer': _organizerController.text,
-          'details': _detailsController.text,
-          'timestamp': Timestamp.now(),
-        });
-        // Show a success message (e.g., snackbar) after updating event
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event updated successfully')),
+    if (_formKey.currentState!.validate()) {
+      try {
+        final updatedEvent = Event(
+          id: widget.event.id,
+          event: _eventController.text,
+          location: _locationController.text,
+          dateTime: DateTime.parse(_dateTimeController.text),
+          category: _categoryController.text,
+          organiser: widget.passUser.name,
+          imageURL: widget.event.imageURL,
+          fee: widget.fee,
+          paymentLink: _feeLinkController.text,
+          details: _detailsController.text,
+          timestamp: Timestamp.now(),
         );
-      } else {
-        print('Event not found with name: ${widget.event}');
-        // Handle event not found error
+
+        await FirebaseFirestore.instance
+            .collection('eventData')
+            .doc(widget.event.id)
+            .update(updatedEvent.toMap());
+
+        Navigator.pop(context, updatedEvent);
+      } catch (e) {
+        print('Error updating event: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to update event")),
+        );
       }
-    } catch (e) {
-      print('Error updating event: $e');
-      // Handle error accordingly (e.g., show a snackbar or dialog)
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          "Edit Event",
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
+        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        title: Text('Edit Event', style: TextStyle(color: Colors.white)),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: SingleChildScrollView(
+      backgroundColor: Colors.black,
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Location
-            TextFormField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Location *',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _eventController,
+                decoration: InputDecoration(
+                  labelText: 'Event Name',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: TextStyle(color: Colors.white),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter event name';
+                  }
+                  return null;
+                },
               ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20),
-
-            // Fee
-            TextFormField(
-              controller: _feeController,
-              decoration: const InputDecoration(
-                labelText: 'Fee *',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: 'Location',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: TextStyle(color: Colors.white),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter location';
+                  }
+                  return null;
+                },
               ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20),
-
-            // Organizer
-            TextFormField(
-              controller: _organizerController,
-              decoration: const InputDecoration(
-                labelText: 'Organizer *',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: _dateTimeController,
+                decoration: InputDecoration(
+                  labelText: 'Date and Time',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: TextStyle(color: Colors.white),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter date and time';
+                  }
+                  return null;
+                },
               ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 20),
-
-            // Details
-            TextFormField(
-              controller: _detailsController,
-              decoration: const InputDecoration(
-                labelText: 'Details *',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
+              DropdownButtonFormField<String>(
+                value: _categoryController.text,
+                decoration: InputDecoration(
+                  labelText: 'Category',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: TextStyle(color: Colors.white),
+                items: categories.map((String category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Text(category, style: TextStyle(color: Colors.white)),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _categoryController.text = newValue!;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select category';
+                  }
+                  return null;
+                },
               ),
-              style: const TextStyle(color: Colors.white),
-              maxLines: null,
-            ),
-            const SizedBox(height: 20),
-
-            // Update Event button
-            ElevatedButton(
-              onPressed: _updateEvent,
-              child: const Text('Update Event'),
-            ),
-          ],
+              if (widget.fee != null && widget.fee != 0.0) ...[
+                TextFormField(
+                  controller: _feeController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Event Fee',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                  style: TextStyle(color: Colors.white),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the fee of the ticket';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid fee amount';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+              TextFormField(
+                controller: _detailsController,
+                decoration: InputDecoration(
+                  labelText: 'Event Details',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: TextStyle(color: Colors.white),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter event details';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 70),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                        onPressed:_updateEvent,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 100, 8, 222),
+                        ),
+                        child: const Text(
+                          'Update Event',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                  
+                      
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

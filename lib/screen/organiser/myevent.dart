@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
+
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/event_details.dart';
@@ -19,7 +23,7 @@ class MyEvent extends StatefulWidget {
 }
 
 class _MyEventState extends State<MyEvent> {
-  final List<Event> _myevent = [];
+  List<Event> _myevent = [];
   List<Event> _filteredEvents = [];
   String _searchQuery = "";
   String _selectedCategory = "All"; // Added selected category
@@ -28,9 +32,27 @@ class _MyEventState extends State<MyEvent> {
   @override
   void initState() {
     super.initState();
-    _filterEvents();
+    _fetchEvents();
   }
+  Future<void> _fetchEvents() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore
+          .instance.collection('eventData')
+          .where('organiser', isEqualTo: widget.passUser.name)
+          .get();
+      final events =
+          querySnapshot.docs.map((doc) => Event.fromSnapshot(doc)).toList();
 
+      setState(() {
+        _myevent = events;
+        _filteredEvents = events;
+      });
+      print('Successfully fetching event!');
+    } catch (e) {
+      print('Error fetching event: $e');
+    }
+  }
   void _filterEvents() {
     final now = DateTime.now();
     setState(() {
@@ -83,33 +105,33 @@ class _MyEventState extends State<MyEvent> {
     });
   }
 
-  void _confirmDelete(Event event) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Delete Event"),
-          content: Text("Do you want to delete the event: ${event.event}?"),
-          actions: [
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Delete"),
-              onPressed: () {
-                _deleteEvent(
-                    event); // Call the _deleteEvent method to delete the event
-                Navigator.of(context).pop(); // Close the dialog
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+void _confirmDelete(Event event) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Delete Event"),
+        content: Text("Do you want to delete the event: ${event.event}?"),
+        actions: [
+          TextButton(
+            child: const Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text("Delete"),
+            onPressed: () {
+              _deleteEvent(event); // Call the _deleteEvent method to delete the event
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +198,7 @@ class _MyEventState extends State<MyEvent> {
                           ),
                         ),
                         const SizedBox(height: 15),
+
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -358,40 +381,32 @@ class _MyEventState extends State<MyEvent> {
     );
   }
 
-  void _deleteEvent(Event event) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Delete Event"),
-          content: Text("Do you want to delete the event: ${event.event}?"),
-          actions: [
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); // Close the dialog without deleting
-              },
-            ),
-            TextButton(
-              child: const Text("Delete"),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog first
+void _deleteEvent(Event event) async {
+  try {
+    // Delete the event from Firestore
+    await FirebaseFirestore.instance
+        .collection('eventData')
+        .doc(event.id)
+        .delete();
 
-                setState(() {
-                  _myevent.remove(event);
-                  _filterEvents(); // Refresh the event list
-                });
+    // Remove the event from the local list and refresh
+    setState(() {
+      _myevent.remove(event);
+      _filterEvents(); // Refresh the event list
+    });
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Event deleted successfully")));
-              },
-            ),
-          ],
-        );
-      },
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Event deleted successfully")),
+    );
+  } catch (e) {
+    print('Error deleting event: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Failed to delete event")),
     );
   }
+}
+
+
 
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
@@ -410,10 +425,18 @@ class _MyEventState extends State<MyEvent> {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          leading: Image.asset(
-            event.imageURL ?? 'lib/images/mainpage.png',
-            fit: BoxFit.cover,
+          leading: SizedBox(
             width: 80,
+            child: Image.network(
+              event.imageURL ?? 'lib/images/mainpage.png',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'lib/images/mainpage.png',
+                  fit: BoxFit.cover,
+                );
+              },
+            ),
           ),
           title: Text(
             event.event,
@@ -429,8 +452,7 @@ class _MyEventState extends State<MyEvent> {
               IconButton(
                 icon: const Icon(Icons.edit, color: Colors.green),
                 onPressed: () {
-                  _navigateToEditEvent(
-                      event); // Navigate to the edit event page
+                _editEvent(event);
                 },
               ),
               IconButton(
@@ -455,17 +477,30 @@ class _MyEventState extends State<MyEvent> {
     }).toList();
   }
 
-  void _navigateToEditEvent(Event event) {
-    // Navigate to the EditEventPage, passing the event object
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const EditEventPage(
-          event: '',
-        ),
+void _editEvent(Event event) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EditEventPage(
+        event: event,
+        passUser: widget.passUser,
+        fee: event.fee ?? 0.0, // Set fee to event.fee if available, otherwise set to 0.0
       ),
-    );
-  }
+    ),
+  ).then((updatedEvent) {
+    if (updatedEvent != null) {
+      setState(() {
+        final index = _myevent.indexWhere((e) => e.id == event.id);
+        if (index != -1) {
+          _myevent[index] = updatedEvent;
+          _filterEvents();
+        }
+      });
+    }
+  });
+}
+
+
 }
 
 class FooterIconButton extends StatelessWidget {

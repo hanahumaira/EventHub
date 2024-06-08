@@ -145,7 +145,6 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     color: const Color.fromARGB(255, 100, 8, 222),
                     child: Column(
                       children: [
-                        //Search
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: TextFormField(

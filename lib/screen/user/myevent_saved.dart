@@ -165,7 +165,7 @@ class EventDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(
-              event.fee.toStringAsFixed(2),
+              event.fee!.toStringAsFixed(2),
               style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             const SizedBox(height: 8.0),
