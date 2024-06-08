@@ -8,6 +8,7 @@ import 'package:eventhub/screen/login_page.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/user/myevent_saved.dart';
 import 'package:eventhub/screen/user/myevent_reg.dart';
+import 'package:eventhub/screen/user/register_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserHomePage extends StatefulWidget {
@@ -406,7 +407,8 @@ class FooterIconButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const FooterIconButton({super.key, 
+  const FooterIconButton({
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
@@ -440,7 +442,8 @@ class EventDetailsPage extends StatelessWidget {
   final Event event;
   final User passUser;
 
-  const EventDetailsPage({super.key, required this.event, required this.passUser});
+  const EventDetailsPage(
+      {super.key, required this.event, required this.passUser});
 
   // Method to add event details and username to Firestore collection
   Future<void> _saveEventToDatabase() async {
@@ -589,7 +592,7 @@ class EventDetailsPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            EventDetailsPage(event: event, passUser: passUser),
+                            RegisterEventPage(event: event, passUser: passUser),
                       ),
                     );
                   },
@@ -604,8 +607,7 @@ class EventDetailsPage extends StatelessWidget {
                       Icon(Icons.event_available,
                           color: Colors.white), // Icon for register event
                       SizedBox(width: 6),
-                      Text('Register',
-                          style: TextStyle(color: Colors.white)),
+                      Text('Register', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),

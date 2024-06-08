@@ -7,10 +7,12 @@ import 'package:eventhub/model/user.dart';
 
 class RegisterEventPage extends StatelessWidget {
   final Event event;
-  final User user; // Add the user parameter
+  final User passUser; // Add the user parameter
 
   const RegisterEventPage(
-      {super.key, required this.event, required this.user}); // Update constructor
+      {super.key,
+      required this.event,
+      required this.passUser}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,7 @@ class RegisterEventPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             EventRegistrationForm(
-                event: event, user: user), // Pass user to form
+                event: event, passUser: passUser), // Pass user to form
           ],
         ),
       ),
@@ -100,10 +102,12 @@ class RegisterEventPage extends StatelessWidget {
 
 class EventRegistrationForm extends StatefulWidget {
   final Event event;
-  final User user; // Add the user parameter
+  final User passUser; // Add the user parameter
 
   const EventRegistrationForm(
-      {super.key, required this.event, required this.user}); // Update constructor
+      {super.key,
+      required this.event,
+      required this.passUser}); // Update constructor
 
   @override
   _EventRegistrationFormState createState() => _EventRegistrationFormState();
@@ -240,8 +244,7 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
               children: [
                 Icon(Icons.event_available, color: Colors.white),
                 SizedBox(width: 8),
-                Text('Register Event',
-                    style: TextStyle(color: Colors.white)),
+                Text('Register Event', style: TextStyle(color: Colors.white)),
               ],
             ),
           ),
