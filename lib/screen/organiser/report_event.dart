@@ -1,4 +1,3 @@
-import 'package:eventhub/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,6 +24,8 @@ class _ReportPageState extends State<ReportPage> {
   int pastEventsCount = 0;
   int futureEventsCount = 0;
   int totalRegistrations = 0;
+  int totalShared = 0;
+  int totalSaved = 0;
 
   List<Event> _myevent = [];
 
@@ -36,51 +37,43 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Future<void> fetchEventData() async {
-    final today = DateTime.now();
-
+    DateTime now = DateTime.now().toUtc();
     try {
-      // Fetch past events
-      final pastEventsQuery = await FirebaseFirestore.instance
+      final querySnapshot = await FirebaseFirestore.instance
           .collection('eventData')
-          .where('organizer', isEqualTo: widget.passUser.email)
-          .where('date', isLessThan: today)
+          .where('organiser', isEqualTo: widget.passUser.name)
           .get();
 
-      print('Past Events: ${pastEventsQuery.docs.length}');
-      setState(() {
-        pastEventsCount = pastEventsQuery.docs.length;
-      });
+      List<Event> allEvents =
+          querySnapshot.docs.map((doc) => Event.fromSnapshot(doc)).toList();
 
-      // Fetch future events
-      final futureEventsQuery = await FirebaseFirestore.instance
-          .collection('eventData')
-          .where('organizer', isEqualTo: widget.passUser.email)
-          .where('date', isGreaterThanOrEqualTo: today)
-          .get();
+      List<Event> pastEvents = [];
+      List<Event> futureEvents = [];
+      int registrations = 0;
+      int shared = 0;
+      int saved = 0;
 
-      print('Future Events: ${futureEventsQuery.docs.length}');
-      setState(() {
-        futureEventsCount = futureEventsQuery.docs.length;
-      });
-
-      // Fetch total registrations
-      num totalRegs = 0;
-      for (var doc in pastEventsQuery.docs) {
-        totalRegs += doc['registration'] ?? 0;
+      for (Event event in allEvents) {
+        if (event.dateTime.isBefore(now)) {
+          pastEvents.add(event);
+        } else {
+          futureEvents.add(event);
+        }
+        registrations += event.registration ?? 0;
+        shared += event.shared ?? 0;
+        saved += event.saved ?? 0;
       }
-      for (var doc in futureEventsQuery.docs) {
-        totalRegs += doc['registration'] ?? 0;
-      }
-      setState(() {
-        totalRegistrations = totalRegs.round();
-      });
 
-      print('Total Registrations: $totalRegs');
       setState(() {
-        totalRegistrations = totalRegs.round();
+        pastEventsCount = pastEvents.length;
+        futureEventsCount = futureEvents.length;
+        totalRegistrations = registrations;
+        totalShared = shared; // Update totalShared
+        totalSaved = saved;
+        _myevent = allEvents;
       });
     } catch (e) {
-      print('Error fetching event data: $e');
+      print('Error fetching and filtering events: $e');
     }
   }
 
@@ -109,7 +102,7 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 16, 3, 33),
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
         elevation: 0,
@@ -277,7 +270,7 @@ class _ReportPageState extends State<ReportPage> {
         children: [
           Row(
             children: [
-              Flexible(
+              Expanded(
                 child: Card(
                   color: const Color.fromARGB(255, 255, 255, 255),
                   child: Padding(
@@ -307,7 +300,7 @@ class _ReportPageState extends State<ReportPage> {
                 ),
               ),
               const SizedBox(width: 16),
-              Flexible(
+              Expanded(
                 child: Card(
                   color: const Color.fromARGB(255, 255, 255, 255),
                   child: Padding(
@@ -339,31 +332,101 @@ class _ReportPageState extends State<ReportPage> {
             ],
           ),
           const SizedBox(height: 16),
-          Card(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Total Registrations',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 100, 8, 222),
+          Expanded(
+            child: Card(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Registrations',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 100, 8, 222),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '$totalRegistrations',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 100, 8, 222),
+                    const SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        '$totalRegistrations',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 100, 8, 222),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Card(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Shared',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 100, 8, 222),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        '$totalShared',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 100, 8, 222),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Card(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Saved',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 100, 8, 222),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        '$totalSaved',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 100, 8, 222),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
