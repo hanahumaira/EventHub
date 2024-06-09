@@ -480,29 +480,31 @@ Future<void> _saveEventToDatabase() async {
     }
   }
 
-  Future<void> _sharedEventToDatabase() async {
-    try {
-     
-      await FirebaseFirestore.instance
-          .collection('eventData')
-          .doc(event.id) // Assuming there's an id field in the Event class
-          .update({'shared': FieldValue.increment(1)});
-      print('Successfully shared');
-    } catch (e) {
-      print('Failed to shared: $e');
-    }
-  }
+ Future<void> shareEvent(Event event) async {
+  // Define the event details to be shared
+  final String eventDetails = '''
+      Event Name: ${event.event}
+      Location: ${event.location}
+      Fee: ${event.fee}
+      Organizer: ${event.organiser}
+      Details: ${event.details}
+      ''';
 
-   void shareEvent(Event event) {
-    final String eventDetails = '''
-Event Name: ${event.event}
-Location: ${event.location}
-Fee: ${event.fee}
-Organizer: ${event.organiser}
-Details: ${event.details}
-    ''';
+  try {
+    // Share the event details using the Share class
     Share.share(eventDetails, subject: 'Check out this event!');
+
+    // Update the database to increment the share count
+    await FirebaseFirestore.instance
+        .collection('eventData')
+        .doc(event.id) // Assuming there's an id field in the Event class
+        .update({'shared': FieldValue.increment(1)});
+    
+    print('Successfully shared');
+  } catch (e) {
+    print('Failed to share: $e');
   }
+}
 
   void _showSaveSuccessSnackbar(BuildContext context) {
     final snackBar = SnackBar(
@@ -522,7 +524,9 @@ Details: ${event.details}
         Text(event.event),
 IconButton(
   icon: Icon(Icons.share),
-  onPressed: _sharedEventToDatabase,
+  onPressed: () {
+    shareEvent(event);
+  },
 ),
           ],
         ),
