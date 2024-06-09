@@ -468,9 +468,26 @@ Future<void> _saveEventToDatabase() async {
           .doc(event.id) // Assuming there's an id field in the Event class
           .update({'saved': FieldValue.increment(1)});
       
+      await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id) // Assuming there's an id field in the Event class
+          .update({'shared': FieldValue.increment(1)});
       print('Successfully saved');
     } catch (e) {
       print('Failed to save: $e');
+    }
+  }
+
+  Future<void> _sharedEventToDatabase() async {
+    try {
+     
+      await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id) // Assuming there's an id field in the Event class
+          .update({'shared': FieldValue.increment(1)});
+      print('Successfully shared');
+    } catch (e) {
+      print('Failed to shared: $e');
     }
   }
 
@@ -490,12 +507,10 @@ Future<void> _saveEventToDatabase() async {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
         Text(event.event),
-        IconButton(
-          icon: Icon(Icons.share),
-          onPressed: () {
-            // Add your share functionality here
-          },
-        ),
+IconButton(
+  icon: Icon(Icons.share),
+  onPressed: _sharedEventToDatabase,
+),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
