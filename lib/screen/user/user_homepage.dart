@@ -446,7 +446,7 @@ class EventDetailsPage extends StatelessWidget {
       {super.key, required this.event, required this.passUser});
 
   // Method to add event details and username to Firestore collection
-  Future<void> _saveEventToDatabase() async {
+Future<void> _saveEventToDatabase() async {
     try {
       await FirebaseFirestore.instance
           .collection('mysave_event')
@@ -461,9 +461,16 @@ class EventDetailsPage extends StatelessWidget {
         'eventDetails': event.details,
         'eventImage': event.imageURL,
       });
-      print('successfully saved');
+
+      // Increment the count of saved events in the event document
+      await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id) // Assuming there's an id field in the Event class
+          .update({'saved': FieldValue.increment(1)});
+      
+      print('Successfully saved');
     } catch (e) {
-      print('fail to saved $e');
+      print('Failed to save: $e');
     }
   }
 
@@ -479,8 +486,27 @@ class EventDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(event.event),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+        Text(event.event),
+        IconButton(
+          icon: Icon(Icons.share),
+          onPressed: () {
+            // Add your share functionality here
+          },
+        ),
+          ],
+        ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        titleTextStyle: const TextStyle(
+          color: Colors.white, // Set the text color to white
+          fontSize: 20.0, // You can adjust the font size if needed
+          fontWeight:
+          FontWeight.bold, // You can adjust the font weight if needed
+        ),
+        iconTheme:
+        IconThemeData(color: Colors.white), // Set icon color to white
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),

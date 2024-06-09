@@ -234,7 +234,8 @@ class _LoginState extends State<Login> {
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                          backgroundColor:
+                              const Color.fromARGB(255, 100, 8, 222),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 50, vertical: 9),
                           shape: RoundedRectangleBorder(
