@@ -1,5 +1,6 @@
 import 'package:eventhub/model/user.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/screen/login_page.dart';
@@ -7,6 +8,7 @@ import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/model/user.dart';
+import 'package:eventhub/model/event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 
 class ReportPage extends StatefulWidget {
@@ -24,9 +26,12 @@ class _ReportPageState extends State<ReportPage> {
   int futureEventsCount = 0;
   int totalRegistrations = 0;
 
+  List<Event> _myevent = [];
+
   @override
   void initState() {
     super.initState();
+    _fetchEvents();
     fetchEventData();
   }
 
@@ -61,10 +66,10 @@ class _ReportPageState extends State<ReportPage> {
       // Fetch total registrations
       num totalRegs = 0;
       for (var doc in pastEventsQuery.docs) {
-        totalRegs += doc['registrations'] ?? 0;
+        totalRegs += doc['registration'] ?? 0;
       }
       for (var doc in futureEventsQuery.docs) {
-        totalRegs += doc['registrations'] ?? 0;
+        totalRegs += doc['registration'] ?? 0;
       }
       setState(() {
         totalRegistrations = totalRegs.round();
@@ -77,14 +82,6 @@ class _ReportPageState extends State<ReportPage> {
     } catch (e) {
       print('Error fetching event data: $e');
     }
-  }
-
-  List<Event> _myevent = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchEvents();
   }
 
   Future<void> _fetchEvents() async {
