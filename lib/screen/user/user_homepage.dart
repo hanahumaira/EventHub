@@ -11,6 +11,9 @@ import 'package:eventhub/screen/user/myevent_reg.dart';
 import 'package:eventhub/screen/user/register_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+ import 'dart:io'; // Import the 'dart:io' package
 
 
 class UserHomePage extends StatefulWidget {
@@ -491,8 +494,19 @@ Future<void> _saveEventToDatabase() async {
       ''';
 
   try {
-    // Share the event details using the Share class
-    Share.share(eventDetails, subject: 'Check out this event!');
+    // Download the image
+      final response = await http.get(Uri.parse(event.imageURL!));
+      if (response.statusCode == 200) {
+        final Directory tempDir = await getTemporaryDirectory();
+        final String tempPath = tempDir.path;
+        final File file = File('$tempPath/temp_image.png');
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Share the event details and image
+        await Share.shareFiles([file.path], text: eventDetails, subject: 'Check out this event!');
+      } else {
+        print('Failed to download image: ${response.statusCode}');
+      }
 
     // Update the database to increment the share count
     await FirebaseFirestore.instance
@@ -522,12 +536,12 @@ Future<void> _saveEventToDatabase() async {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
         Text(event.event),
-IconButton(
-  icon: Icon(Icons.share),
-  onPressed: () {
-    shareEvent(event);
-  },
-),
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              shareEvent(event);
+            },
+          ),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
