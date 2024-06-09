@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/model/event.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -151,7 +152,8 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const EventWebsitePage(),
+            builder: (context) =>
+                RegistrationConfirmationPage(passUser: widget.passUser),
           ),
         );
              } catch (e) {
@@ -331,14 +333,17 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
   }
 }
 
-class EventWebsitePage extends StatelessWidget {
-  const EventWebsitePage({super.key});
+class RegistrationConfirmationPage extends StatelessWidget {
+  final User passUser; // Add the user parameter
+
+  const RegistrationConfirmationPage(
+      {super.key, required this.passUser}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Payment'),
+        title: const Text('Registration Confirmation'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
       body: Center(
@@ -346,53 +351,94 @@ class EventWebsitePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'You will be redirected to the event website to complete your payment.',
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              'You are registered successfully',
+              style: TextStyle(color: Colors.white, fontSize: 20),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                // Redirect to the event website
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Scaffold(
-                      body: Center(
-                        child: Text(
-                          'Redirecting to event website...',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-                Future.delayed(const Duration(seconds: 1), () {
-                  // Use the browser to navigate to the event website
-                  _launchURL('https://www.jomrun.com/event/Daiman-Run-2024');
-                });
+                // Navigate back to user homepage
+                Get.back();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 140, 40, 222),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Text('Go to Event Website',
+              child: const Text('Back to Homepage',
                   style: TextStyle(color: Colors.white)),
-            ),
+            )
           ],
         ),
       ),
       backgroundColor: Colors.black,
     );
   }
-
-  void _launchURL(String url) async {
-    // You can use a package like url_launcher to launch URLs
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }
+
+// class EventWebsitePage extends StatelessWidget {
+//   const EventWebsitePage({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Event Payment'),
+//         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             const Text(
+//               'You will be redirected to the event website to complete your payment.',
+//               style: TextStyle(color: Colors.white, fontSize: 16),
+//               textAlign: TextAlign.center,
+//             ),
+//             const SizedBox(height: 24),
+//             ElevatedButton(
+//               onPressed: () {
+//                 // Redirect to the event website
+//                 Navigator.pushReplacement(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => const Scaffold(
+//                       body: Center(
+//                         child: Text(
+//                           'Redirecting to event website...',
+//                           style: TextStyle(color: Colors.white),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//                 Future.delayed(const Duration(seconds: 1), () {
+//                   // Use the browser to navigate to the event website
+//                   _launchURL('https://www.jomrun.com/event/Daiman-Run-2024');
+//                 });
+//               },
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor: const Color.fromARGB(255, 140, 40, 222),
+//                 padding:
+//                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+//               ),
+//               child: const Text('Go to Event Website',
+//                   style: TextStyle(color: Colors.white)),
+//             ),
+//           ],
+//         ),
+//       ),
+//       backgroundColor: Colors.black,
+//     );
+//   }
+
+//   void _launchURL(String url) async {
+//     // You can use a package like url_launcher to launch URLs
+//     if (await canLaunch(url)) {
+//       await launch(url);
+//     } else {
+//       throw 'Could not launch $url';
+//     }
+//   }
+// }

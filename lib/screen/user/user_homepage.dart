@@ -486,8 +486,27 @@ Future<void> _saveEventToDatabase() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(event.event),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+        Text(event.event),
+        IconButton(
+          icon: Icon(Icons.share),
+          onPressed: () {
+            // Add your share functionality here
+          },
+        ),
+          ],
+        ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        titleTextStyle: const TextStyle(
+          color: Colors.white, // Set the text color to white
+          fontSize: 20.0, // You can adjust the font size if needed
+          fontWeight:
+          FontWeight.bold, // You can adjust the font weight if needed
+        ),
+        iconTheme:
+        IconThemeData(color: Colors.white), // Set icon color to white
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),

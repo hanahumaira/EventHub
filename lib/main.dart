@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 
 import 'firebase_options.dart';
 import 'screen/login_page.dart';
+import 'screen/user/user_homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,9 @@ void main() async {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => Login()),
-        // GetPage(name: '/editProfile', page: () => const EditProfileScreen()),
+        GetPage(
+            name: '/userHomepage',
+            page: () => UserHomePage(passUser: Get.arguments)),
       ],
     ),
   );
