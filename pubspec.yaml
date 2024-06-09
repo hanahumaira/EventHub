@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.1
+  share_plus: ^6.0.0
+  http: ^0.13.4 # Check for the latest version
+  path_provider: ^2.0.7
   image_picker: ^1.1.1
   cupertino_icons: ^1.0.2
   line_awesome_flutter: ^2.0.0

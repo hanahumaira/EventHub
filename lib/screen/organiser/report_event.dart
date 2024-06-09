@@ -498,7 +498,7 @@ class _ReportPageState extends State<ReportPage> {
                             Icon(Icons.share,
                                 color: Color.fromARGB(255, 100, 8, 222)),
                             SizedBox(width: 8),
-                            Text('Shared: ${index * 5}'),
+                            Text('Shared: ${event.shared ?? 0}'),
                           ],
                         ),
                         SizedBox(height: 8),

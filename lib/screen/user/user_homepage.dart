@@ -10,6 +10,11 @@ import 'package:eventhub/screen/user/myevent_saved.dart';
 import 'package:eventhub/screen/user/myevent_reg.dart';
 import 'package:eventhub/screen/user/register_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+ import 'dart:io'; // Import the 'dart:io' package
+
 
 class UserHomePage extends StatefulWidget {
   final User passUser;
@@ -468,11 +473,52 @@ Future<void> _saveEventToDatabase() async {
           .doc(event.id) // Assuming there's an id field in the Event class
           .update({'saved': FieldValue.increment(1)});
       
+      await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id) // Assuming there's an id field in the Event class
+          .update({'shared': FieldValue.increment(1)});
       print('Successfully saved');
     } catch (e) {
       print('Failed to save: $e');
     }
   }
+
+ Future<void> shareEvent(Event event) async {
+  // Define the event details to be shared
+  final String eventDetails = '''
+      Event Name: ${event.event}
+      Location: ${event.location}
+      Fee: ${event.fee}
+      Organizer: ${event.organiser}
+      Details: ${event.details}
+      ''';
+
+  try {
+    // Download the image
+      final response = await http.get(Uri.parse(event.imageURL!));
+      if (response.statusCode == 200) {
+        final Directory tempDir = await getTemporaryDirectory();
+        final String tempPath = tempDir.path;
+        final File file = File('$tempPath/temp_image.png');
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Share the event details and image
+        await Share.shareFiles([file.path], text: eventDetails, subject: 'Check out this event!');
+      } else {
+        print('Failed to download image: ${response.statusCode}');
+      }
+
+    // Update the database to increment the share count
+    await FirebaseFirestore.instance
+        .collection('eventData')
+        .doc(event.id) // Assuming there's an id field in the Event class
+        .update({'shared': FieldValue.increment(1)});
+    
+    print('Successfully shared');
+  } catch (e) {
+    print('Failed to share: $e');
+  }
+}
 
   void _showSaveSuccessSnackbar(BuildContext context) {
     final snackBar = SnackBar(
@@ -490,12 +536,12 @@ Future<void> _saveEventToDatabase() async {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
         Text(event.event),
-        IconButton(
-          icon: Icon(Icons.share),
-          onPressed: () {
-            // Add your share functionality here
-          },
-        ),
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              shareEvent(event);
+            },
+          ),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
