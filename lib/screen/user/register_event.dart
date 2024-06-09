@@ -140,6 +140,11 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
         await FirebaseFirestore.instance
             .collection('registrations')
             .add(registrationData);
+        await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(widget.event.id) // Assuming there's an id field in the Event class
+          .update({'registration': FieldValue.increment(1)});
+        print('Successfully registered');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Event registered successfully')),
         );
@@ -149,7 +154,7 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
             builder: (context) => const EventWebsitePage(),
           ),
         );
-      } catch (e) {
+             } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to register event: $e')),
         );

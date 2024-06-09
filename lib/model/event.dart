@@ -14,6 +14,8 @@ class Event {
   Timestamp timestamp;
   int? registration;
   int? slots;
+  int? shared;
+  int? saved;
 
   Event({
     required this.id,
@@ -29,6 +31,8 @@ class Event {
     required this.timestamp,
     this.registration,
     this.slots,
+    this.shared,
+    this.saved,
   });
 
   factory Event.fromSnapshot(DocumentSnapshot snapshot) {
@@ -58,11 +62,14 @@ class Event {
     Timestamp timestamp = data['timestamp'] ?? Timestamp.now();
 
     // Extract 'registration' field, allow null if missing or invalid
-    int? registration =
-        data['registration'] is int ? data['registration'] as int : null;
+    int? registration = data['registration'] is int ? data['registration'] as int : null;
 
     // Extract 'slots' field, allow null if missing or invalid
     int? slots = data['slots'] is int ? data['slots'] as int : null;
+
+    int? shared = data['shared'] is int ? data['shared'] as int : null;
+    int? saved = data['saved'] is int ? data['saved'] as int : null;
+
 
     return Event(
       id: snapshot.id,
@@ -78,6 +85,8 @@ class Event {
       timestamp: timestamp,
       registration: registration,
       slots: slots,
+      shared: shared,
+      saved: saved,
     );
   }
 
@@ -96,6 +105,8 @@ class Event {
       'timestamp': timestamp,
       'registration': registration,
       'slots': slots,
+      'shared':shared,
+      'saved':saved
     };
   }
 
@@ -114,6 +125,8 @@ class Event {
       'timestamp': timestamp,
       'registration': registration,
       'slots': slots,
+      'shared':shared,
+      'saved':saved
     };
   }
 }

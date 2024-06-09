@@ -1,7 +1,12 @@
+import 'package:eventhub/model/user.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/model/event.dart';
+import 'package:intl/intl.dart'; // Import DateFormat for date formatting
 
 class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+  final User passUser;
+  const ReportPage({super.key, required this.passUser});
 
   @override
   _ReportPageState createState() => _ReportPageState();
@@ -9,11 +14,41 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   bool showOverview = true;
+  List<Event> _myevent = [];
 
   @override
+  void initState() {
+    super.initState();
+    _fetchEvents();
+  }
+
+  Future<void> _fetchEvents() async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('eventData')
+          .where('organiser', isEqualTo: widget.passUser.name)
+          .get();
+
+       final events = querySnapshot.docs.map((doc) {
+      // Access registration data directly from 'doc'
+      print('Registration data: ${doc.data()['registration']}');
+      return Event.fromSnapshot(doc);
+    }).toList();
+
+      setState(() {
+        _myevent = events;
+      });
+      print('Successfully fetching event!');
+      // Inside _fetchEvents method
+
+    } catch (e) {
+      print('Error fetching event: $e');
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+      backgroundColor: Color.fromARGB(255, 16, 3, 33),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
         elevation: 0,
@@ -29,29 +64,50 @@ class _ReportPageState extends State<ReportPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FilterButton(
-                  label: 'Overview',
-                  selected: showOverview,
-                  onPressed: () {
-                    setState(() {
-                      showOverview = true;
-                    });
-                  },
-                ),
-                FilterButton(
-                  label: 'Events',
-                  selected: !showOverview,
-                  onPressed: () {
-                    setState(() {
-                      showOverview = false;
-                    });
-                  },
-                ),
-              ],
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Center(
+              child: ToggleButtons(
+                isSelected: [showOverview, !showOverview],
+                onPressed: (index) {
+                  setState(() {
+                    showOverview = index == 0;
+                  });
+                },
+                color: Colors.white,
+                selectedColor: const Color.fromARGB(255, 100, 8, 222),
+                fillColor: Colors.white,
+                borderColor: Colors.white,
+                selectedBorderColor: const Color.fromARGB(255, 100, 8, 222),
+                borderRadius: BorderRadius.circular(8.0),
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      width: 140, // Increase width as needed
+                      height: 50, // Increase height as needed
+                      child: Center(
+                        child: Text(
+                          'Overview',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      width: 140, // Increase width as needed
+                      height: 50, // Increase height as needed
+                      child: Center(
+                        child: Text(
+                          'Events',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -96,91 +152,104 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-  Widget buildEventList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: 10, // Replace with actual number of events
-      itemBuilder: (context, index) {
-        return Card(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          child: ListTile(
-            title: Text('Event ${index + 1}',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 100, 8, 222),
-                )),
-            subtitle: Text('Date: 2024-06-0${index + 1}'),
-            onTap: () {
-              // Display event details, such as registration number, shared number, and saved number
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Event ${index + 1} Details'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Registrations: ${index * 10}'),
-                        Text('Shared: ${index * 5}'),
-                        Text('Saved: ${index * 3}'),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Close'),
+Widget buildEventList() {
+  return ListView.builder(
+    padding: const EdgeInsets.all(16.0),
+    itemCount: _myevent.length,
+    itemBuilder: (context, index) {
+      final event = _myevent[index];
+      return Card(
+        color: Colors.white,
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 5,
+        child: ListTile(
+          leading: Icon(
+            Icons.event,
+            color: Color.fromARGB(255, 100, 8, 222),
+          ),
+          title: Text(
+            event.event,
+            style: TextStyle(
+              color: Color.fromARGB(255, 100, 8, 222),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
+            style: const TextStyle(color: Color.fromARGB(179, 72, 60, 70)),
+          ),
+          trailing: Icon(Icons.arrow_forward_ios,
+              color: Color.fromARGB(255, 100, 8, 222)),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  title: Text(
+                    event.event,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 67, 12, 139)
+                      ),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.person,
+                              color: Color.fromARGB(255, 100, 8, 222)),
+                          SizedBox(width: 8),
+                          Text('Registrations: ${event.registration ?? 0}'),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.share,
+                              color: Color.fromARGB(255, 100, 8, 222)),
+                          SizedBox(width: 8),
+                          Text('Shared: ${index * 5}'),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.bookmark,
+                              color: Color.fromARGB(255, 100, 8, 222)),
+                          SizedBox(width: 8),
+                          Text('Saved: ${event.saved ?? 0}'),
+                        ],
                       ),
                     ],
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'Close',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 100, 8, 222)),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      );
+    },
+  );
 }
 
-class FilterButton extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onPressed;
-
-  const FilterButton({
-    super.key,
-    required this.label,
-    required this.selected,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: selected
-            ? const Color.fromARGB(255, 100, 8, 222)
-            : const Color.fromARGB(255, 255, 255, 255),
-        backgroundColor: selected
-            ? const Color.fromARGB(255, 255, 255, 255)
-            : const Color.fromARGB(255, 100, 8, 222),
-        textStyle: TextStyle(
-          fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-        ),
-        side: BorderSide(
-          color: selected
-              ? const Color.fromARGB(255, 100, 8, 222)
-              : const Color.fromARGB(255, 255, 255, 255),
-          width: 2,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      onPressed: onPressed,
-      child: Text(label),
-    );
-  }
 }

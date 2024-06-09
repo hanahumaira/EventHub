@@ -335,7 +335,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ReportPage(),
+                        builder: (context) => ReportPage(passUser: widget.passUser),
                       ),
                     );
                   },
