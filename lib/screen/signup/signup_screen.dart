@@ -90,14 +90,15 @@ class _SignUpState extends State<SignUp> {
                                 _accountType = value;
                               });
                             },
-                            fillColor: MaterialStateProperty.resolveWith<Color>(
-    (Set<MaterialState> states) {
-      if (states.contains(MaterialState.selected)) {
-        return Colors.white;
-      }
-      return Colors.grey; // Use the default color if not selected
-    },
-  ),
+                            fillColor: WidgetStateProperty.resolveWith<Color>(
+                              (Set<WidgetState> states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return Colors.white;
+                                }
+                                return Colors
+                                    .grey; // Use the default color if not selected
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -114,14 +115,15 @@ class _SignUpState extends State<SignUp> {
                                 _accountType = value;
                               });
                             },
-                            fillColor: MaterialStateProperty.resolveWith<Color>(
-    (Set<MaterialState> states) {
-      if (states.contains(MaterialState.selected)) {
-        return Colors.white;
-      }
-      return Colors.grey; // Use the default color if not selected
-    },
-  ),
+                            fillColor: WidgetStateProperty.resolveWith<Color>(
+                              (Set<WidgetState> states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return Colors.white;
+                                }
+                                return Colors
+                                    .grey; // Use the default color if not selected
+                              },
+                            ),
                           ),
                         ),
                       ),

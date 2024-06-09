@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
+import 'package:eventhub/screen/organiser/report_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
@@ -17,8 +18,13 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String slotsLeftText =
-        event.slots != null ? "${event.slots} slots left" : "Unlimited slots";
+    print("Event slots: ${event.slots}");
+    String slotsLeftText;
+    if (event.slots != null) {
+      slotsLeftText = "${event.slots} slots left";
+    } else {
+      slotsLeftText = "Unlimited slots";
+    }
 
     return Scaffold(
       backgroundColor: Colors.black, // Set background color to black
@@ -121,7 +127,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.person, color: Colors.white), // Icon for slot
+                const Icon(Icons.check_circle,
+                    color: Colors.white), // Icon for slot
                 const SizedBox(width: 8),
                 Text(
                   'Slots Left: $slotsLeftText',
@@ -157,6 +164,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            const Spacer(),
             FooterIconButton(
               icon: Icons.home,
               label: "Home",
@@ -169,6 +177,7 @@ class EventDetailsPage extends StatelessWidget {
                 );
               },
             ),
+            const Spacer(),
             FooterIconButton(
               icon: Icons.event,
               label: "My Event",
@@ -181,6 +190,7 @@ class EventDetailsPage extends StatelessWidget {
                 );
               },
             ),
+            const Spacer(),
             FooterIconButton(
               icon: Icons.add,
               label: "Create Event",
@@ -193,6 +203,20 @@ class EventDetailsPage extends StatelessWidget {
                 );
               },
             ),
+            const Spacer(),
+            FooterIconButton(
+              icon: Icons.analytics,
+              label: "Report",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportPage(passUser: passUser),
+                  ),
+                );
+              },
+            ),
+            const Spacer(),
             FooterIconButton(
               icon: Icons.person,
               label: "Profile",
@@ -205,6 +229,7 @@ class EventDetailsPage extends StatelessWidget {
                 );
               },
             ),
+            const Spacer(),
           ],
         ),
       ),

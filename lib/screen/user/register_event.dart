@@ -137,9 +137,27 @@ class _EventRegistrationFormState extends State<EventRegistrationForm> {
       };
 
       try {
+        // Add registration data to the 'registrations' collection
         await FirebaseFirestore.instance
             .collection('registrations')
             .add(registrationData);
+
+        // Retrieve current registration count for the event
+        final eventDoc = await FirebaseFirestore.instance
+            .collection('eventData')
+            .doc(widget.event.id)
+            .get();
+
+        // Update the total registrations count
+        final currentRegistrations = eventDoc['registrations'] ?? 0;
+        final newRegistrations = currentRegistrations + 1;
+
+        // Update the document in the 'eventData' collection
+        await FirebaseFirestore.instance
+            .collection('eventData')
+            .doc(widget.event.id)
+            .update({'registrations': newRegistrations});
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Event registered successfully')),
         );

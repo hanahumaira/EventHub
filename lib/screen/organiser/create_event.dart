@@ -10,6 +10,7 @@ import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
+import 'package:eventhub/screen/organiser/report_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 
 //dart import
@@ -599,6 +600,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            const Spacer(),
             FooterIconButton(
               icon: Icons.home,
               label: "Home",
@@ -612,6 +614,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 );
               },
             ),
+            const Spacer(),
             FooterIconButton(
               icon: Icons.event,
               label: "My Event",
@@ -620,12 +623,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        OrganiserHomePage(passUser: widget.passUser),
+                    builder: (context) => MyEvent(passUser: widget.passUser),
                   ),
                 );
               },
             ),
+            const Spacer(),
             FooterIconButton(
               icon: Icons.add,
               label: "Create Event",
@@ -639,6 +642,20 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 );
               },
             ),
+            const Spacer(),
+            FooterIconButton(
+              icon: Icons.analytics,
+              label: "Report",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportPage(passUser: widget.passUser),
+                  ),
+                );
+              },
+            ),
+            const Spacer(),
             FooterIconButton(
               icon: Icons.person,
               label: "Profile",
@@ -652,6 +669,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 );
               },
             ),
+            const Spacer(),
           ],
         ),
       ),

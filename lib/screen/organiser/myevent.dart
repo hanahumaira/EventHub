@@ -7,6 +7,7 @@ import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/create_event.dart';
 import 'package:eventhub/screen/organiser/edit_event.dart';
 import 'package:eventhub/screen/organiser/organiser_homepage.dart';
+import 'package:eventhub/screen/organiser/report_event.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -34,11 +35,11 @@ class _MyEventState extends State<MyEvent> {
     super.initState();
     _fetchEvents();
   }
+
   Future<void> _fetchEvents() async {
     try {
-      final querySnapshot =
-          await FirebaseFirestore
-          .instance.collection('eventData')
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('eventData')
           .where('organiser', isEqualTo: widget.passUser.name)
           .get();
       final events =
@@ -53,6 +54,7 @@ class _MyEventState extends State<MyEvent> {
       print('Error fetching event: $e');
     }
   }
+
   void _filterEvents() {
     final now = DateTime.now();
     setState(() {
@@ -105,33 +107,33 @@ class _MyEventState extends State<MyEvent> {
     });
   }
 
-void _confirmDelete(Event event) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Delete Event"),
-        content: Text("Do you want to delete the event: ${event.event}?"),
-        actions: [
-          TextButton(
-            child: const Text("Cancel"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text("Delete"),
-            onPressed: () {
-              _deleteEvent(event); // Call the _deleteEvent method to delete the event
-              Navigator.of(context).pop(); // Close the dialog
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
+  void _confirmDelete(Event event) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Event"),
+          content: Text("Do you want to delete the event: ${event.event}?"),
+          actions: [
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Delete"),
+              onPressed: () {
+                _deleteEvent(
+                    event); // Call the _deleteEvent method to delete the event
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +200,6 @@ void _confirmDelete(Event event) {
                           ),
                         ),
                         const SizedBox(height: 15),
-
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -248,8 +249,7 @@ void _confirmDelete(Event event) {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 20.0),
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
                                 "Events",
                                 style: TextStyle(
@@ -305,6 +305,7 @@ void _confirmDelete(Event event) {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
@@ -318,6 +319,7 @@ void _confirmDelete(Event event) {
                     );
                   },
                 ),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.event,
                   label: "My Event",
@@ -331,6 +333,7 @@ void _confirmDelete(Event event) {
                     );
                   },
                 ),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.add,
                   label: "Create Event",
@@ -344,6 +347,21 @@ void _confirmDelete(Event event) {
                     );
                   },
                 ),
+                const Spacer(),
+                FooterIconButton(
+                  icon: Icons.analytics,
+                  label: "Report",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ReportPage(passUser: widget.passUser),
+                      ),
+                    );
+                  },
+                ),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
@@ -357,6 +375,7 @@ void _confirmDelete(Event event) {
                     );
                   },
                 ),
+                const Spacer(),
               ],
             ),
           ),
@@ -381,32 +400,30 @@ void _confirmDelete(Event event) {
     );
   }
 
-void _deleteEvent(Event event) async {
-  try {
-    // Delete the event from Firestore
-    await FirebaseFirestore.instance
-        .collection('eventData')
-        .doc(event.id)
-        .delete();
+  void _deleteEvent(Event event) async {
+    try {
+      // Delete the event from Firestore
+      await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id)
+          .delete();
 
-    // Remove the event from the local list and refresh
-    setState(() {
-      _myevent.remove(event);
-      _filterEvents(); // Refresh the event list
-    });
+      // Remove the event from the local list and refresh
+      setState(() {
+        _myevent.remove(event);
+        _filterEvents(); // Refresh the event list
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Event deleted successfully")),
-    );
-  } catch (e) {
-    print('Error deleting event: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Failed to delete event")),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Event deleted successfully")),
+      );
+    } catch (e) {
+      print('Error deleting event: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to delete event")),
+      );
+    }
   }
-}
-
-
 
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(
@@ -452,7 +469,7 @@ void _deleteEvent(Event event) async {
               IconButton(
                 icon: const Icon(Icons.edit, color: Colors.green),
                 onPressed: () {
-                _editEvent(event);
+                  _editEvent(event);
                 },
               ),
               IconButton(
@@ -477,30 +494,29 @@ void _deleteEvent(Event event) async {
     }).toList();
   }
 
-void _editEvent(Event event) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => EditEventPage(
-        event: event,
-        passUser: widget.passUser,
-        fee: event.fee ?? 0.0, // Set fee to event.fee if available, otherwise set to 0.0
+  void _editEvent(Event event) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditEventPage(
+          event: event,
+          passUser: widget.passUser,
+          fee: event.fee ??
+              0.0, // Set fee to event.fee if available, otherwise set to 0.0
+        ),
       ),
-    ),
-  ).then((updatedEvent) {
-    if (updatedEvent != null) {
-      setState(() {
-        final index = _myevent.indexWhere((e) => e.id == event.id);
-        if (index != -1) {
-          _myevent[index] = updatedEvent;
-          _filterEvents();
-        }
-      });
-    }
-  });
-}
-
-
+    ).then((updatedEvent) {
+      if (updatedEvent != null) {
+        setState(() {
+          final index = _myevent.indexWhere((e) => e.id == event.id);
+          if (index != -1) {
+            _myevent[index] = updatedEvent;
+            _filterEvents();
+          }
+        });
+      }
+    });
+  }
 }
 
 class FooterIconButton extends StatelessWidget {

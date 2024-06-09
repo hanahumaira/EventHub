@@ -8,7 +8,8 @@ class EditEventPage extends StatefulWidget {
   final User passUser;
   final double? fee;
 
-  const EditEventPage({Key? key, required this.event, required this.passUser, this.fee}) : super(key: key);
+  const EditEventPage(
+      {super.key, required this.event, required this.passUser, this.fee});
 
   @override
   _EditEventPageState createState() => _EditEventPageState();
@@ -35,17 +36,20 @@ class _EditEventPageState extends State<EditEventPage> {
     'Conference',
     'Exhibition',
   ];
-  
+
   @override
   void initState() {
     super.initState();
     _eventController = TextEditingController(text: widget.event.event);
     _locationController = TextEditingController(text: widget.event.location);
-    _dateTimeController = TextEditingController(text: widget.event.dateTime.toString());
+    _dateTimeController =
+        TextEditingController(text: widget.event.dateTime.toString());
     _categoryController = TextEditingController(text: widget.event.category);
     _feeController = TextEditingController(text: widget.fee?.toString() ?? '');
-    _feeLinkController = TextEditingController(text: widget.event.paymentLink ?? '');
-    _detailsController = TextEditingController(text: widget.event.details ?? '');
+    _feeLinkController =
+        TextEditingController(text: widget.event.paymentLink ?? '');
+    _detailsController =
+        TextEditingController(text: widget.event.details ?? '');
     print("Fee Link: ${_feeLinkController.text}");
     print("Event Payment Link: ${widget.event.paymentLink}");
   }
@@ -99,8 +103,8 @@ class _EditEventPageState extends State<EditEventPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-        title: Text('Edit Event', style: TextStyle(color: Colors.white)),
-        iconTheme: IconThemeData(color: Colors.white),
+        title: const Text('Edit Event', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: Colors.black,
       body: Padding(
@@ -111,11 +115,11 @@ class _EditEventPageState extends State<EditEventPage> {
             children: [
               TextFormField(
                 controller: _eventController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Event Name',
                   labelStyle: TextStyle(color: Colors.white),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter event name';
@@ -125,11 +129,11 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               TextFormField(
                 controller: _locationController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Location',
                   labelStyle: TextStyle(color: Colors.white),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter location';
@@ -139,11 +143,11 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               TextFormField(
                 controller: _dateTimeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Date and Time',
                   labelStyle: TextStyle(color: Colors.white),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter date and time';
@@ -153,15 +157,16 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               DropdownButtonFormField<String>(
                 value: _categoryController.text,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Category',
                   labelStyle: TextStyle(color: Colors.white),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 items: categories.map((String category) {
                   return DropdownMenuItem<String>(
                     value: category,
-                    child: Text(category, style: TextStyle(color: Colors.white)),
+                    child: Text(category,
+                        style: const TextStyle(color: Colors.white)),
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -179,12 +184,13 @@ class _EditEventPageState extends State<EditEventPage> {
               if (widget.fee != null && widget.fee != 0.0) ...[
                 TextFormField(
                   controller: _feeController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
                     labelText: 'Event Fee',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the fee of the ticket';
@@ -198,11 +204,11 @@ class _EditEventPageState extends State<EditEventPage> {
               ],
               TextFormField(
                 controller: _detailsController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Event Details',
                   labelStyle: TextStyle(color: Colors.white),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter event details';
@@ -215,24 +221,21 @@ class _EditEventPageState extends State<EditEventPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
-                        onPressed:_updateEvent,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 100, 8, 222),
-                        ),
-                        child: const Text(
-                          'Update Event',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                  
-                      
+                    onPressed: _updateEvent,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                    ),
+                    child: const Text(
+                      'Update Event',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
             ],

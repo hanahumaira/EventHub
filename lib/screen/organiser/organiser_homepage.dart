@@ -285,7 +285,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.home,
                   label: "Home",
@@ -299,7 +299,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
-                Spacer(),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.event,
                   label: "My Event",
@@ -313,7 +313,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
-                Spacer(),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.add,
                   label: "Create Event",
@@ -327,7 +327,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
-                Spacer(),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.analytics,
                   label: "Report",
@@ -335,12 +335,13 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ReportPage(),
+                        builder: (context) =>
+                            ReportPage(passUser: widget.passUser),
                       ),
                     );
                   },
                 ),
-                Spacer(),
+                const Spacer(),
                 FooterIconButton(
                   icon: Icons.person,
                   label: "Profile",
@@ -354,6 +355,7 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
                     );
                   },
                 ),
+                const Spacer(),
               ],
             ),
           ),
