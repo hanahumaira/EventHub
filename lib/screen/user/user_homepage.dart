@@ -10,6 +10,8 @@ import 'package:eventhub/screen/user/myevent_saved.dart';
 import 'package:eventhub/screen/user/myevent_reg.dart';
 import 'package:eventhub/screen/user/register_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share_plus/share_plus.dart';
+
 
 class UserHomePage extends StatefulWidget {
   final User passUser;
@@ -489,6 +491,17 @@ Future<void> _saveEventToDatabase() async {
     } catch (e) {
       print('Failed to shared: $e');
     }
+  }
+
+   void shareEvent(Event event) {
+    final String eventDetails = '''
+Event Name: ${event.event}
+Location: ${event.location}
+Fee: ${event.fee}
+Organizer: ${event.organiser}
+Details: ${event.details}
+    ''';
+    Share.share(eventDetails, subject: 'Check out this event!');
   }
 
   void _showSaveSuccessSnackbar(BuildContext context) {
