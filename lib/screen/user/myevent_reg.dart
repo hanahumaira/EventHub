@@ -1,27 +1,111 @@
-import 'package:eventhub/screen/user/myevent_edit.dart';
-import 'package:flutter/material.dart';
+//firebase related import
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+//page or model related import
 import 'package:eventhub/model/event.dart';
+import 'package:eventhub/model/user.dart';
+import 'package:eventhub/screen/user/user_widget.dart';
+import 'package:eventhub/screen/user/myevent_edit.dart';
+import 'package:eventhub/screen/login_page.dart';
 
-class MyEventReg extends StatelessWidget {
-  final List<Event> dummyEvents;
+//dart import
+import 'package:flutter/material.dart';
 
-  const MyEventReg({super.key, required this.dummyEvents});
+class MyEventReg extends StatefulWidget {
+  final User passUser;
+  final String appBarTitle;
+
+  const MyEventReg(
+      {super.key, required this.passUser, required this.appBarTitle});
+
+  @override
+  State<MyEventReg> createState() => _MyEventRegState();
+}
+
+class _MyEventRegState extends State<MyEventReg> {
+  List<Event> _myRegEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchEvents();
+  }
+
+  Future<void> _fetchEvents() async {
+    try {
+      print('Fetching registrations for user: ${widget.passUser.name}');
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('registrations')
+          .where('full_name', isEqualTo: widget.passUser.name)
+          .get();
+
+      final eventIds =
+          querySnapshot.docs.map((doc) => doc['event_id']).toList();
+      print('Event IDs retrieved: $eventIds');
+
+      if (eventIds.isNotEmpty) {
+        final eventsQuery = await FirebaseFirestore.instance
+            .collection('eventData')
+            .where(FieldPath.documentId, whereIn: eventIds)
+            .get();
+
+        print('Events query docs length: ${eventsQuery.docs.length}');
+        eventsQuery.docs.forEach((doc) {
+          print('Event document data: ${doc.data()}');
+        });
+
+        final events = eventsQuery.docs.map((doc) {
+          final event = Event.fromSnapshot(doc);
+          print('Event created: ${event.event}');
+          return event;
+        }).toList();
+
+        setState(() {
+          _myRegEvents = events;
+        });
+        print('_myRegEvents: $_myRegEvents');
+      } else {
+        print('No registered events!');
+      }
+      print('Successfully fetched registered events!');
+    } catch (e) {
+      print('Error fetching registered events: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registered Events'),
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-      ),
-      body: ListView.builder(
-        itemCount: dummyEvents.length,
-        itemBuilder: (context, index) {
-          final event = dummyEvents[index];
-          return EventCard(event: event);
-        },
-      ),
       backgroundColor: Colors.black,
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
+      ),
+      body: _myRegEvents.isEmpty
+          ? const Center(
+              child: Text(
+                'No events registered.',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            )
+          : ListView.builder(
+              itemCount: _myRegEvents.length,
+              itemBuilder: (context, index) {
+                final event = _myRegEvents[index];
+                return EventCard(event: event);
+              },
+            ),
+      bottomNavigationBar: CustomFooter(passUser: widget.passUser),
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Login(),
+      ),
     );
   }
 }
@@ -42,7 +126,7 @@ class EventCard extends StatelessWidget {
           ListTile(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-            leading: Image.asset(
+            leading: Image.network(
               event.imageURL ?? 'lib/images/mainpage.png',
               fit: BoxFit.cover,
               width: 80,
@@ -51,10 +135,6 @@ class EventCard extends StatelessWidget {
               event.event,
               style: const TextStyle(color: Colors.white),
             ),
-            // subtitle: Text(
-            //   '${event.date}',
-            //   style: const TextStyle(color: Colors.white70),
-            // ),
             onTap: () {
               Navigator.push(
                 context,
@@ -152,7 +232,7 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(event.imageURL ?? 'lib/images/mainpage.png'),
+            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,

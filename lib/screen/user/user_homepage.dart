@@ -1,24 +1,29 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:eventhub/screen/profile/profile_screen.dart';
-import 'package:flutter/material.dart';
+//firebase import
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+//page or model import
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/screen/login_page.dart';
-import 'package:intl/intl.dart';
-import 'package:eventhub/screen/user/myevent_saved.dart';
-import 'package:eventhub/screen/user/myevent_reg.dart';
 import 'package:eventhub/screen/user/register_event.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/screen/user/user_widget.dart';
+
+//others import
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'dart:io'; // Import the 'dart:io' package
+import 'dart:io';
 
 class UserHomePage extends StatefulWidget {
   final User passUser;
+  final String appBarTitle;
 
-  const UserHomePage({super.key, required this.passUser});
+  const UserHomePage(
+      {super.key, required this.passUser, required this.appBarTitle});
 
   @override
   State<UserHomePage> createState() => _UserHomeState();
@@ -107,33 +112,11 @@ class _UserHomeState extends State<UserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Set the background color to black
-      appBar: AppBar(
-        backgroundColor:
-            Color.fromARGB(255, 100, 8, 222), // Set the AppBar color to purple
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications),
-            color: Colors.white,
-          ),
-          IconButton(
-            onPressed: () {
-              _logoutAndNavigateToLogin(context);
-            },
-            icon: const Icon(Icons.logout),
-            color: Colors.white,
-          ),
-        ],
-        title: Text(
-          "Participant",
-          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
+      backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: Column(
         children: [
@@ -274,66 +257,7 @@ class _UserHomeState extends State<UserHomePage> {
               ),
             ),
           ),
-          //navbar
-          Container(
-            color: const Color.fromARGB(
-                255, 100, 8, 222), // Set the background color to purple
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FooterIconButton(
-                  icon: Icons.home,
-                  label: "Home",
-                  onPressed: () {
-                    //          Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const UserHomePage(passUser: loggedInUser),
-                    //   ),
-                    // );
-                  },
-                ),
-                FooterIconButton(
-                  icon: Icons.bookmark,
-                  label: "Saved",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MyEventSaved(passUser: widget.passUser),
-                      ),
-                    );
-                  },
-                ),
-                FooterIconButton(
-                  icon: Icons.how_to_reg,
-                  label: "Registered",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyEventReg(dummyEvents: _events),
-                      ),
-                    );
-                  },
-                ),
-                FooterIconButton(
-                  icon: Icons.account_circle,
-                  label: "Profile",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreen(
-                            passUser: widget.passUser, appBarTitle: 'Profile'),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+          CustomFooter(passUser: widget.passUser),
         ],
       ),
     );

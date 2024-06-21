@@ -336,30 +336,3 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
     }).toList();
   }
 }
-
-class FooterIconButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
-
-  const FooterIconButton({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      icon: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white),
-          Text(label, style: const TextStyle(color: Colors.white)),
-        ],
-      ),
-    );
-  }
-}

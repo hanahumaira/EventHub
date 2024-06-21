@@ -36,7 +36,8 @@ class _LoginState extends State<Login> {
     });
 
     try {
-      firebase_auth.UserCredential userCredential = await firebase_auth.FirebaseAuth.instance.signInWithEmailAndPassword(
+      firebase_auth.UserCredential userCredential =
+          await firebase_auth.FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
@@ -76,14 +77,18 @@ class _LoginState extends State<Login> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => OrganiserHomePage(passUser: passUser,  appBarTitle: 'Home'),
+                builder: (context) =>
+                    OrganiserHomePage(passUser: passUser, appBarTitle: 'Home'),
               ),
             );
           } else if (accountType == 'Participant') {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => UserHomePage(passUser: passUser),
+                builder: (context) => UserHomePage(
+                  passUser: passUser,
+                  appBarTitle: 'Home',
+                ),
               ),
             );
           } else {
@@ -130,7 +135,8 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 70),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 70),
                   child: Column(
                     children: [
                       Image.asset(
@@ -150,7 +156,8 @@ class _LoginState extends State<Login> {
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
@@ -201,7 +208,9 @@ class _LoginState extends State<Login> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: Colors.blueGrey,
                             ),
                             onPressed: () {
@@ -227,8 +236,10 @@ class _LoginState extends State<Login> {
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 9),
+                          backgroundColor:
+                              const Color.fromARGB(255, 100, 8, 222),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 9),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -241,7 +252,8 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const ForgotPasswordPage()),
+                                  builder: (context) =>
+                                      const ForgotPasswordPage()),
                             );
                           },
                           child: const Text('Forgot Password?'),

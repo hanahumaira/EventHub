@@ -1,12 +1,21 @@
-import 'package:flutter/material.dart';
+//firebase import
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+//page or model import
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/model/event.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/screen/user/user_widget.dart';
+import 'package:eventhub/screen/login_page.dart';
+
+//others import
+import 'package:flutter/material.dart';
 
 class MyEventSaved extends StatefulWidget {
   final User passUser;
+  final String appBarTitle;
 
-  const MyEventSaved({super.key, required this.passUser});
+  const MyEventSaved(
+      {super.key, required this.passUser, required this.appBarTitle});
 
   @override
   _MyEventSavedState createState() => _MyEventSavedState();
@@ -62,9 +71,11 @@ class _MyEventSavedState extends State<MyEventSaved> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved Events'),
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+      backgroundColor: Colors.black,
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: _savedEvents != null
           ? ListView.builder(
@@ -75,7 +86,15 @@ class _MyEventSavedState extends State<MyEventSaved> {
               },
             )
           : const Center(child: CircularProgressIndicator()),
-      backgroundColor: Colors.black,
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Login(),
+      ),
     );
   }
 }

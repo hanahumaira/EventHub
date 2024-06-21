@@ -25,7 +25,10 @@ void main() async {
         GetPage(name: '/', page: () => Login()),
         GetPage(
             name: '/userHomepage',
-            page: () => UserHomePage(passUser: Get.arguments)),
+            page: () => UserHomePage(
+                  passUser: Get.arguments,
+                  appBarTitle: 'Home',
+                )),
       ],
     ),
   );
