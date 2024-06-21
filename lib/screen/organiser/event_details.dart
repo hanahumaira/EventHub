@@ -41,7 +41,36 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
+            SizedBox(
+  height: 200,
+  child: event.imageURL != null && event.imageURL!.isNotEmpty
+      ? ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: event.imageURL!.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Image.network(
+                event.imageURL![index],
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  print('Failed to load image: ${event.imageURL![index]}');
+                  print('Error: $error');
+                  print('StackTrace: $stackTrace');
+                  return Image.asset(
+                    'lib/images/mainpage.png',
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            );
+          },
+        )
+      : Image.asset(
+          'lib/images/mainpage.png',
+          fit: BoxFit.cover,
+        ),
+),
             const SizedBox(height: 16),
             Text(
               event.event,

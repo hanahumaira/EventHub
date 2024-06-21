@@ -96,7 +96,9 @@ class EventCard extends StatelessWidget {
         leading: SizedBox(
           width: 80,
           child: Image.network(
-            event.imageURL ?? 'lib/images/mainpage.png',
+             (event.imageURL != null && event.imageURL!.isNotEmpty)
+      ? event.imageURL![0]
+      : 'lib/images/mainpage.png',
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Image.asset(
@@ -144,7 +146,9 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
+            Image.network(  (event.imageURL != null && event.imageURL!.isNotEmpty)
+      ? event.imageURL![0]
+      : 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,

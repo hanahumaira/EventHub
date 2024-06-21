@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
   String id;
-  String? imageURL;
+  final List<String>? imageURL;
   String event;
   DateTime dateTime;
   String location;
@@ -73,7 +73,11 @@ class Event {
 
     return Event(
       id: snapshot.id,
-      imageURL: data['imageURL'] ?? 'lib/images/mainpage.png',
+      imageURL: data['imageURLs'] != null
+          ? (data['imageURLs'] is String
+              ? [data['imageURLs']] // Convert single string to list of strings
+              : List<String>.from(data['imageURLs']))
+          : null,
       event: data['event'] ?? '',
       dateTime: dateTime,
       location: data['location'] ?? '',

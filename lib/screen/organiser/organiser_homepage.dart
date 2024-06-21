@@ -300,15 +300,20 @@ class _OrganiserHomeState extends State<OrganiserHomePage> {
           leading: SizedBox(
             width: 80,
             child: Image.network(
-              event.imageURL ?? 'lib/images/mainpage.png',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset(
-                  'lib/images/mainpage.png',
-                  fit: BoxFit.cover,
-                );
-              },
-            ),
+            event.imageURL != null && event.imageURL!.isNotEmpty ? 
+event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
+  errorBuilder: (context, error, stackTrace) {
+    print('Failed to load image: ${event.imageURL}');
+    print('Error: $error');
+    print('StackTrace: $stackTrace');
+    return Image.asset(
+      'lib/images/mainpage.png',
+      fit: BoxFit.cover,
+    );
+  },
+
+),
+
           ),
           title: Text(
             event.event,

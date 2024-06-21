@@ -366,7 +366,9 @@ class _UserHomeState extends State<UserHomePage> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.network(
-            event.imageURL ?? 'lib/images/mainpage.png',
+             (event.imageURL != null && event.imageURL!.isNotEmpty)
+      ? event.imageURL![0]
+      : 'lib/images/logo.png',
             fit: BoxFit.cover,
             width: 80,
           ),
@@ -494,19 +496,19 @@ class EventDetailsPage extends StatelessWidget {
 
     try {
       // Download the image
-      final response = await http.get(Uri.parse(event.imageURL!));
-      if (response.statusCode == 200) {
-        final Directory tempDir = await getTemporaryDirectory();
-        final String tempPath = tempDir.path;
-        final File file = File('$tempPath/temp_image.png');
-        await file.writeAsBytes(response.bodyBytes);
+      for (String url in event.imageURL!) {
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    final Directory tempDir = await getTemporaryDirectory();
+    final String tempPath = tempDir.path;
+    final File file = File('$tempPath/${Uri.parse(url).pathSegments.last}');
+    await file.writeAsBytes(response.bodyBytes);
+    // Handle each downloaded file as needed
+  } else {
+    print('Failed to download image: ${response.statusCode}');
+  }
+}
 
-        // Share the event details and image
-        await Share.shareFiles([file.path],
-            text: eventDetails, subject: 'Check out this event!');
-      } else {
-        print('Failed to download image: ${response.statusCode}');
-      }
 
       // Update the database to increment the share count
       await FirebaseFirestore.instance
@@ -559,7 +561,36 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(event.imageURL ?? 'lib/images/mainpage.png'),
+            SizedBox(
+  height: 200,
+  child: event.imageURL != null && event.imageURL!.isNotEmpty
+      ? ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: event.imageURL!.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Image.network(
+                event.imageURL![index],
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  print('Failed to load image: ${event.imageURL![index]}');
+                  print('Error: $error');
+                  print('StackTrace: $stackTrace');
+                  return Image.asset(
+                    'lib/images/mainpage.png',
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            );
+          },
+        )
+      : Image.asset(
+          'lib/images/mainpage.png',
+          fit: BoxFit.cover,
+        ),
+),
             const SizedBox(height: 16),
             Text(
               event.event,
