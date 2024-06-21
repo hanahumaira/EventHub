@@ -20,39 +20,65 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Future<void> passwordReset() async {
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
+  try {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            content: Text(
-              'Password reset link sent! Please check your email to reset your password.',
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: const Text(
+            'Password reset link sent! Please check your email to reset your password.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Navigate back to the login page
+              },
+              child: const Text('OK'),
             ),
-          );
-        },
-      );
-    } on FirebaseAuthException catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(e.message.toString()),
-          );
-        },
-      );
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            content: Text('An unexpected error occurred. Please try again later.'),
-          );
-        },
-      );
-    }
+          ],
+        );
+      },
+    );
+  } on FirebaseAuthException catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(e.message.toString()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: const Text('An unexpected error occurred. Please try again later.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
