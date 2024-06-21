@@ -166,60 +166,70 @@ class EventCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onShare;
 
-  const EventCard({Key? key, required this.event, required this.onDelete, required this.onShare});
+  const EventCard({
+    Key? key,
+    required this.event,
+    required this.onDelete,
+    required this.onShare,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.grey[900],
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        leading: SizedBox(
-          width: 80,
-          child: Image.network(
-            event.imageURL ?? 'lib/images/mainpage.png',
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                'lib/images/mainpage.png',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            leading: SizedBox(
+              width: 80,
+              child: Image.network(
+                event.imageURL ?? 'lib/images/mainpage.png',
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'lib/images/mainpage.png',
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
+            title: Text(
+              event.event,
+              style: const TextStyle(color: Colors.white),
+            ),
+            subtitle: Text(
+              '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
+              style: const TextStyle(color: Colors.white70),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventDetailsPage(event: event),
+                ),
               );
             },
           ),
-        ),
-        title: Text(
-          event.event,
-          style: const TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
-          '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
-          style: const TextStyle(color: Colors.white70),
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EventDetailsPage(event: event),
-            ),
-          );
-        },
-
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.share, color: Colors.white),
-              onPressed: () {
-                onShare();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _showDeleteConfirmationDialog(context),
-            ),
-          ],
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.share, color: Colors.white),
+                onPressed: () {
+                  onShare();
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () => _showDeleteConfirmationDialog(context),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+        ],
       ),
     );
   }
