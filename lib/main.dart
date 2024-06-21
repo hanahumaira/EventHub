@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-
 // import 'package:eventhub/model/user.dart';
 // import 'package:eventhub/screen/admin/admin_homepage.dart';
 // import 'package:eventhub/screen/profile/edit_profile_screen.dart';
@@ -25,7 +24,10 @@ void main() async {
         GetPage(name: '/', page: () => Login()),
         GetPage(
             name: '/userHomepage',
-            page: () => UserHomePage(passUser: Get.arguments)),
+            page: () => UserHomePage(
+                  passUser: Get.arguments,
+                  appBarTitle: 'Home',
+                )),
       ],
     ),
   );

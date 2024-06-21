@@ -41,7 +41,7 @@ class Event {
     // Check if 'fee' is a String and convert to double if necessary
     double fee;
     if (data['fee'] is String) {
-      fee = double.tryParse(data['fee']) ?? 0.0;
+      fee = double.tryParse(data['fee']) ?? 0.00;
     } else if (data['fee'] is num) {
       fee = (data['fee'] as num).toDouble();
     } else {
@@ -62,14 +62,14 @@ class Event {
     Timestamp timestamp = data['timestamp'] ?? Timestamp.now();
 
     // Extract 'registration' field, allow null if missing or invalid
-    int? registration = data['registration'] is int ? data['registration'] as int : null;
+    int? registration =
+        data['registration'] is int ? data['registration'] as int : null;
 
     // Extract 'slots' field, allow null if missing or invalid
     int? slots = data['slots'] is int ? data['slots'] as int : null;
 
     int? shared = data['shared'] is int ? data['shared'] as int : null;
     int? saved = data['saved'] is int ? data['saved'] as int : null;
-
 
     return Event(
       id: snapshot.id,
@@ -82,7 +82,7 @@ class Event {
       dateTime: dateTime,
       location: data['location'] ?? '',
       fee: fee,
-      paymentLink: data['paymentLink'],
+      paymentLink: data['paymentLink'] ?? '',
       category: data['category'] ?? '',
       details: data['details'] ?? '',
       organiser: data['organiser'] ?? '',
@@ -109,8 +109,8 @@ class Event {
       'timestamp': timestamp,
       'registration': registration,
       'slots': slots,
-      'shared':shared,
-      'saved':saved
+      'shared': shared,
+      'saved': saved
     };
   }
 
@@ -129,8 +129,8 @@ class Event {
       'timestamp': timestamp,
       'registration': registration,
       'slots': slots,
-      'shared':shared,
-      'saved':saved
+      'shared': shared,
+      'saved': saved
     };
   }
 }

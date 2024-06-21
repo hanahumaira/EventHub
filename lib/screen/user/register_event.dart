@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:eventhub/model/event.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:eventhub/screen/user/user_homepage.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/model/user.dart';
 
@@ -360,8 +361,13 @@ class RegistrationConfirmationPage extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                // Navigate back to user homepage
-                Get.back();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        UserHomePage(passUser: passUser, appBarTitle: 'Home'),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 140, 40, 222),
