@@ -10,7 +10,6 @@ import 'package:eventhub/screen/login_page.dart';
 //others import
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class EditEventPage extends StatefulWidget {
   final Event event;

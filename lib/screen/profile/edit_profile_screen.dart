@@ -1,17 +1,25 @@
-import 'dart:io';
+//firebase import
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:eventhub/screen/profile/profile_screen.dart';
+//screen or model import
 import 'package:eventhub/model/user.dart';
+import 'package:eventhub/screen/profile/profile_screen.dart';
+import 'package:eventhub/screen/organiser/organiser_widget.dart';
+import 'package:eventhub/screen/login_page.dart';
+
+//others import
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User passUser;
+  final String appBarTitle;
 
-  const EditProfileScreen({super.key, required this.passUser});
+  const EditProfileScreen(
+      {super.key, required this.passUser, this.appBarTitle = 'Edit Profile'});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -162,20 +170,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(LineAwesomeIcons.angle_left),
-          color: Colors.white,
-        ),
-        title: Text(
-          "Edit Profile",
-          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-              color: Colors.white, fontSize: 24), // Set title color to white
-        ),
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -446,6 +444,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const Login()),
+      (Route<dynamic> route) => false,
     );
   }
 }

@@ -11,9 +11,13 @@ import 'package:intl/intl.dart';
 class EventDetailsPage extends StatelessWidget {
   final Event event;
   final User passUser;
+  final String appBarTitle;
 
   const EventDetailsPage(
-      {super.key, required this.event, required this.passUser});
+      {super.key,
+      required this.event,
+      required this.passUser,
+      this.appBarTitle = 'Event Details'});
 
   @override
   Widget build(BuildContext context) {
@@ -26,32 +30,11 @@ class EventDetailsPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black, // Set background color to black
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications),
-            color: Colors.white,
-          ),
-          IconButton(
-            onPressed: () {
-              _logoutAndNavigateToLogin(context);
-            },
-            icon: const Icon(Icons.logout),
-            color: Colors.white,
-          ),
-        ],
-        title: const Text(
-          "Event Details",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white, // Set app bar text color to white
-          ),
-        ),
+      backgroundColor: Colors.black,
+      appBar: CustomAppBar(
+        title: appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -74,7 +57,7 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat.yMMMMd().format(event.dateTime),
+                  DateFormat('d MMMM yyyy').format(event.dateTime),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 const SizedBox(width: 16), // Add spacing
@@ -106,7 +89,7 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
-                  event.fee!.toStringAsFixed(2),
+                  'RM ${event.fee!.toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -118,7 +101,7 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
                 Text(
-                  event.organiser,
+                  'Organised by ${event.organiser}',
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -130,7 +113,7 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.white), // Icon for slot
                 const SizedBox(width: 8),
                 Text(
-                  'Slots Left: $slotsLeftText',
+                  '$slotsLeftText',
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
@@ -142,17 +125,25 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
                 Text(
-                  event.category,
+                  'Category: ${event.category}',
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ],
             ),
             const SizedBox(height: 8.0),
-            Text(
-              'Details: ${event.details}',
-              style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white), // Set text color to white
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.description, color: Colors.white),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Details: ${event.details}',
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                    maxLines: null, // Allow unlimited lines
+                  ),
+                ),
+              ],
             ),
           ],
         ),
