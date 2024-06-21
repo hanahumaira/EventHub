@@ -91,7 +91,7 @@ class CustomFooter extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      MyEventSaved(passUser: passUser, appBarTitle: 'My Event'),
+                      MyEventSaved(passUser: passUser, appBarTitle: 'Saved Events'),
                 ),
               );
             },
@@ -107,7 +107,7 @@ class CustomFooter extends StatelessWidget {
                   builder: (context) => MyEventReg(
                       // dummyEvents: _events,
                       passUser: passUser,
-                      appBarTitle: 'Registered Event'),
+                      appBarTitle: 'Registered Events'),
                 ),
               );
             },
