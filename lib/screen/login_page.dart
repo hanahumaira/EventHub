@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => OrganiserHomePage(passUser: passUser),
+                builder: (context) => OrganiserHomePage(passUser: passUser,  appBarTitle: 'Home'),
               ),
             );
           } else if (accountType == 'Participant') {
