@@ -1,13 +1,12 @@
+//page or model related import
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
+import 'package:eventhub/screen/organiser/organiser_widget.dart';
+import 'package:eventhub/screen/login_page.dart';
+
+//others import
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:eventhub/screen/organiser/myevent.dart';
-import 'package:eventhub/screen/organiser/create_event.dart';
-import 'package:eventhub/screen/organiser/report_event.dart';
-import 'package:eventhub/screen/profile/profile_screen.dart';
-import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final Event event;
@@ -159,80 +158,7 @@ class EventDetailsPage extends StatelessWidget {
         ),
       ),
       //bottom navigation
-      bottomNavigationBar: Container(
-        color: const Color.fromARGB(255, 100, 8, 222),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.home,
-              label: "Home",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrganiserHomePage(passUser: passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.event,
-              label: "My Event",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyEvent(passUser: passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.add,
-              label: "Create Event",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateEventPage(passUser: passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.analytics,
-              label: "Report",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReportPage(passUser: passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.person,
-              label: "Profile",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileScreen(passUser: passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
+      bottomNavigationBar: CustomFooter(passUser: passUser),
     );
   }
 

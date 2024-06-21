@@ -379,8 +379,8 @@ class _AdminHomeState extends State<AdminHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(passUser: widget.passUser),
+                        builder: (context) => ProfileScreen(
+                            passUser: widget.passUser, appBarTitle: 'Profile'),
                       ),
                     );
                   },
@@ -464,7 +464,8 @@ class FooterIconButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const FooterIconButton({super.key, 
+  const FooterIconButton({
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
@@ -523,7 +524,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.date_range, color: Colors.white), // Icon for date
+                const Icon(Icons.date_range,
+                    color: Colors.white), // Icon for date
                 const SizedBox(width: 8),
                 Text(
                   DateFormat.yMMMMd().format(event.dateTime),
@@ -546,7 +548,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.attach_money, color: Colors.white), // Icon for fee
+                const Icon(Icons.attach_money,
+                    color: Colors.white), // Icon for fee
                 const SizedBox(width: 8),
                 Text(
                   event.fee!.toStringAsFixed(2),
@@ -557,7 +560,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.person, color: Colors.white), // Icon for organizer
+                const Icon(Icons.person,
+                    color: Colors.white), // Icon for organizer
                 const SizedBox(width: 8),
                 Text(
                   event.organiser,
@@ -568,7 +572,8 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const Icon(Icons.archive, color: Colors.white), // Icon for category
+                const Icon(Icons.archive,
+                    color: Colors.white), // Icon for category
                 const SizedBox(width: 8),
                 Text(
                   event.category,
@@ -598,8 +603,7 @@ class EventDetailsPage extends StatelessWidget {
                     children: [
                       Icon(Icons.edit, color: Colors.white),
                       SizedBox(width: 8),
-                      Text('Edit Event',
-                          style: TextStyle(color: Colors.white)),
+                      Text('Edit Event', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),

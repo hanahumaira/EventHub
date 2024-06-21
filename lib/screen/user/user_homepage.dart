@@ -13,8 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
- import 'dart:io'; // Import the 'dart:io' package
-
+import 'dart:io'; // Import the 'dart:io' package
 
 class UserHomePage extends StatefulWidget {
   final User passUser;
@@ -326,8 +325,8 @@ class _UserHomeState extends State<UserHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(passUser: widget.passUser),
+                        builder: (context) => ProfileScreen(
+                            passUser: widget.passUser, appBarTitle: 'Profile'),
                       ),
                     );
                   },
@@ -451,7 +450,7 @@ class EventDetailsPage extends StatelessWidget {
       {super.key, required this.event, required this.passUser});
 
   // Method to add event details and username to Firestore collection
-Future<void> _saveEventToDatabase() async {
+  Future<void> _saveEventToDatabase() async {
     try {
       await FirebaseFirestore.instance
           .collection('mysave_event')
@@ -472,7 +471,7 @@ Future<void> _saveEventToDatabase() async {
           .collection('eventData')
           .doc(event.id) // Assuming there's an id field in the Event class
           .update({'saved': FieldValue.increment(1)});
-      
+
       await FirebaseFirestore.instance
           .collection('eventData')
           .doc(event.id) // Assuming there's an id field in the Event class
@@ -483,9 +482,9 @@ Future<void> _saveEventToDatabase() async {
     }
   }
 
- Future<void> shareEvent(Event event) async {
-  // Define the event details to be shared
-  final String eventDetails = '''
+  Future<void> shareEvent(Event event) async {
+    // Define the event details to be shared
+    final String eventDetails = '''
       Event Name: ${event.event}
       Location: ${event.location}
       Fee: ${event.fee}
@@ -493,8 +492,8 @@ Future<void> _saveEventToDatabase() async {
       Details: ${event.details}
       ''';
 
-  try {
-    // Download the image
+    try {
+      // Download the image
       final response = await http.get(Uri.parse(event.imageURL!));
       if (response.statusCode == 200) {
         final Directory tempDir = await getTemporaryDirectory();
@@ -503,22 +502,23 @@ Future<void> _saveEventToDatabase() async {
         await file.writeAsBytes(response.bodyBytes);
 
         // Share the event details and image
-        await Share.shareFiles([file.path], text: eventDetails, subject: 'Check out this event!');
+        await Share.shareFiles([file.path],
+            text: eventDetails, subject: 'Check out this event!');
       } else {
         print('Failed to download image: ${response.statusCode}');
       }
 
-    // Update the database to increment the share count
-    await FirebaseFirestore.instance
-        .collection('eventData')
-        .doc(event.id) // Assuming there's an id field in the Event class
-        .update({'shared': FieldValue.increment(1)});
-    
-    print('Successfully shared');
-  } catch (e) {
-    print('Failed to share: $e');
+      // Update the database to increment the share count
+      await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id) // Assuming there's an id field in the Event class
+          .update({'shared': FieldValue.increment(1)});
+
+      print('Successfully shared');
+    } catch (e) {
+      print('Failed to share: $e');
+    }
   }
-}
 
   void _showSaveSuccessSnackbar(BuildContext context) {
     final snackBar = SnackBar(
@@ -535,13 +535,13 @@ Future<void> _saveEventToDatabase() async {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-        Text(event.event),
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-              shareEvent(event);
-            },
-          ),
+            Text(event.event),
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {
+                shareEvent(event);
+              },
+            ),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
@@ -549,10 +549,10 @@ Future<void> _saveEventToDatabase() async {
           color: Colors.white, // Set the text color to white
           fontSize: 20.0, // You can adjust the font size if needed
           fontWeight:
-          FontWeight.bold, // You can adjust the font weight if needed
+              FontWeight.bold, // You can adjust the font weight if needed
         ),
         iconTheme:
-        IconThemeData(color: Colors.white), // Set icon color to white
+            IconThemeData(color: Colors.white), // Set icon color to white
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),

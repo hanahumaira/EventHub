@@ -1,19 +1,22 @@
+//firebase related import
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+//page or model import
+import 'package:eventhub/screen/login_page.dart';
+import 'package:eventhub/screen/organiser/organiser_widget.dart';
+import 'package:eventhub/model/user.dart';
+import 'package:eventhub/model/event.dart';
+
+//others import
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventhub/screen/login_page.dart';
-import 'package:eventhub/screen/organiser/myevent.dart';
-import 'package:eventhub/screen/organiser/create_event.dart';
-import 'package:eventhub/screen/profile/profile_screen.dart';
-import 'package:eventhub/model/user.dart';
-import 'package:eventhub/model/event.dart';
-import 'package:eventhub/screen/organiser/organiser_homepage.dart';
-
 class ReportPage extends StatefulWidget {
   final User passUser;
+  final String appBarTitle;
 
-  const ReportPage({super.key, required this.passUser});
+  const ReportPage(
+      {super.key, required this.passUser, required this.appBarTitle});
 
   @override
   _ReportPageState createState() => _ReportPageState();
@@ -68,7 +71,7 @@ class _ReportPageState extends State<ReportPage> {
         pastEventsCount = pastEvents.length;
         futureEventsCount = futureEvents.length;
         totalRegistrations = registrations;
-        totalShared = shared; // Update totalShared
+        totalShared = shared;
         totalSaved = saved;
         _myevent = allEvents;
       });
@@ -103,34 +106,14 @@ class _ReportPageState extends State<ReportPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications),
-            color: Colors.white,
-          ),
-          IconButton(
-            onPressed: () {
-              _logoutAndNavigateToLogin(context);
-            },
-            icon: const Icon(Icons.logout),
-            color: Colors.white,
-          ),
-        ],
-        title: const Text(
-          "Report",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: Column(
         children: [
+          const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Center(
@@ -152,11 +135,14 @@ class _ReportPageState extends State<ReportPage> {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: SizedBox(
                       width: 140, // Increase width as needed
-                      height: 50, // Increase height as needed
+                      height: 40, // Increase height as needed
                       child: Center(
                         child: Text(
                           'Overview',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -165,11 +151,14 @@ class _ReportPageState extends State<ReportPage> {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: SizedBox(
                       width: 140, // Increase width as needed
-                      height: 50, // Increase height as needed
+                      height: 40, // Increase height as needed
                       child: Center(
                         child: Text(
                           'Events',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -183,83 +172,7 @@ class _ReportPageState extends State<ReportPage> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        color: const Color.fromARGB(255, 100, 8, 222),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.home,
-              label: "Home",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        OrganiserHomePage(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.event,
-              label: "My Event",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyEvent(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.add,
-              label: "Create Event",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        CreateEventPage(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.analytics,
-              label: "Report",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReportPage(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.person,
-              label: "Profile",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileScreen(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
+      bottomNavigationBar: CustomFooter(passUser: widget.passUser),
     );
   }
 
@@ -498,7 +411,7 @@ class _ReportPageState extends State<ReportPage> {
                             Icon(Icons.share,
                                 color: Color.fromARGB(255, 100, 8, 222)),
                             SizedBox(width: 8),
-                            Text('Shared: ${event.shared ?? 0}'),
+                            Text('Shared: ${index * 5}'),
                           ],
                         ),
                         SizedBox(height: 8),

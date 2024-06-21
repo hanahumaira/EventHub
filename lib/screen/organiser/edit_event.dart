@@ -1,15 +1,29 @@
-import 'package:flutter/material.dart';
+//firebase related import
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+//model related impot
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
+import 'package:eventhub/screen/organiser/organiser_widget.dart';
+import 'package:eventhub/screen/login_page.dart';
+
+//others import
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class EditEventPage extends StatefulWidget {
   final Event event;
   final User passUser;
   final double? fee;
+  final String appBarTitle;
 
   const EditEventPage(
-      {super.key, required this.event, required this.passUser, this.fee});
+      {super.key,
+      required this.event,
+      required this.passUser,
+      this.fee,
+      this.appBarTitle = 'Edit Event'});
 
   @override
   _EditEventPageState createState() => _EditEventPageState();
@@ -24,6 +38,10 @@ class _EditEventPageState extends State<EditEventPage> {
   late TextEditingController _feeController;
   late TextEditingController _feeLinkController;
   late TextEditingController _detailsController;
+  late TextEditingController _slotsController;
+  late TextEditingController _organiserController;
+  DateTime? _selectedDateTime;
+  int? _selectedSlots;
 
   List<String> categories = [
     'Education',
@@ -48,8 +66,10 @@ class _EditEventPageState extends State<EditEventPage> {
     _feeController = TextEditingController(text: widget.fee?.toString() ?? '');
     _feeLinkController =
         TextEditingController(text: widget.event.paymentLink ?? '');
-    _detailsController =
-        TextEditingController(text: widget.event.details ?? '');
+    _detailsController = TextEditingController(text: widget.event.details);
+    _slotsController =
+        TextEditingController(text: widget.event.slots?.toString() ?? '0');
+    _organiserController = TextEditingController(text: widget.event.organiser);
     print("Fee Link: ${_feeLinkController.text}");
     print("Event Payment Link: ${widget.event.paymentLink}");
   }
@@ -64,6 +84,11 @@ class _EditEventPageState extends State<EditEventPage> {
     _feeLinkController.dispose();
     _detailsController.dispose();
     super.dispose();
+  }
+
+  void _fillOrganiserInformation() {
+    _organiserController.text =
+        widget.passUser.name; // Assuming user's name is stored in passUser.name
   }
 
   Future<void> _updateEvent() async {
@@ -101,25 +126,30 @@ class _EditEventPageState extends State<EditEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-        title: const Text('Edit Event', style: TextStyle(color: Colors.white)),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
             children: [
               TextFormField(
                 controller: _eventController,
-                decoration: const InputDecoration(
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+                decoration: InputDecoration(
                   labelText: 'Event Name',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247)),
+                  prefixIcon: const Icon(Icons.event, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter event name';
@@ -127,13 +157,74 @@ class _EditEventPageState extends State<EditEventPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 30),
+              TextFormField(
+                onTap: () async {
+                  DateTime? pickedDateTime = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDateTime ?? DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                  );
+
+                  if (pickedDateTime != null) {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(
+                          _selectedDateTime ?? DateTime.now()),
+                    );
+
+                    if (pickedTime != null) {
+                      setState(() {
+                        _selectedDateTime = DateTime(
+                          pickedDateTime.year,
+                          pickedDateTime.month,
+                          pickedDateTime.day,
+                          pickedTime.hour,
+                          pickedTime.minute,
+                        );
+
+                        _dateTimeController.text =
+                            DateFormat('yyyy-MM-dd HH:mm')
+                                .format(_selectedDateTime!);
+                      });
+                    }
+                  }
+                },
+                controller: _dateTimeController,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Date and Time',
+                  labelStyle: const TextStyle(
+                    color: Color.fromARGB(157, 247, 247, 247),
+                  ),
+                  prefixIcon:
+                      const Icon(Icons.calendar_today, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                readOnly: true,
+                validator: (value) {
+                  if (_selectedDateTime == null) {
+                    return 'Please select the date and time';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
               TextFormField(
                 controller: _locationController,
-                decoration: const InputDecoration(
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+                decoration: InputDecoration(
                   labelText: 'Location',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247)),
+                  prefixIcon: const Icon(Icons.location_on, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter location';
@@ -141,27 +232,86 @@ class _EditEventPageState extends State<EditEventPage> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _dateTimeController,
-                decoration: const InputDecoration(
-                  labelText: 'Date and Time',
-                  labelStyle: TextStyle(color: Colors.white),
+              if (widget.fee != null && widget.fee != 0.0) ...[
+                const SizedBox(height: 30),
+                TextFormField(
+                  controller: _feeController,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Event Fee',
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon:
+                        const Icon(Icons.attach_money, color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the fee of the ticket';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid fee amount';
+                    }
+                    return null;
+                  },
                 ),
-                style: const TextStyle(color: Colors.white),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter date and time';
-                  }
-                  return null;
+              ],
+              const SizedBox(height: 30),
+              TextFormField(
+                controller: _organiserController,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Organiser',
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247)),
+                  prefixIcon: const Icon(Icons.person, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                readOnly: true, // Set the text field to read-only
+                onTap:
+                    _fillOrganiserInformation, // Disable tapping on the text field
+              ),
+              const SizedBox(height: 30),
+              TextFormField(
+                controller: _slotsController,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Slots',
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247)),
+                  prefixIcon:
+                      const Icon(Icons.check_circle, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                onChanged: (value) {
+                  // Parse the input string to int and update the selectedSlots
+                  setState(() {
+                    _selectedSlots = int.tryParse(value);
+                  });
                 },
               ),
+              const SizedBox(height: 30),
               DropdownButtonFormField<String>(
                 value: _categoryController.text,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Category',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247)),
+                  prefixIcon: const Icon(Icons.category, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
                 items: categories.map((String category) {
                   return DropdownMenuItem<String>(
                     value: category,
@@ -180,35 +330,21 @@ class _EditEventPageState extends State<EditEventPage> {
                   }
                   return null;
                 },
+                dropdownColor: Color.fromARGB(255, 100, 8, 222),
               ),
-              if (widget.fee != null && widget.fee != 0.0) ...[
-                TextFormField(
-                  controller: _feeController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    labelText: 'Event Fee',
-                    labelStyle: TextStyle(color: Colors.white),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the fee of the ticket';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Please enter a valid fee amount';
-                    }
-                    return null;
-                  },
-                ),
-              ],
+              const SizedBox(height: 30),
               TextFormField(
                 controller: _detailsController,
-                decoration: const InputDecoration(
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+                decoration: InputDecoration(
                   labelText: 'Event Details',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247)),
+                  prefixIcon: const Icon(Icons.description, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter event details';
@@ -216,32 +352,59 @@ class _EditEventPageState extends State<EditEventPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 70),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: _updateEvent,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+              const SizedBox(height: 50),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _updateEvent,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text(
-                      'Update Event',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                ],
+                  child: const Text(
+                    'Update Event',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
               ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 50),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _logoutAndNavigateToLogin(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const Login()),
+      (Route<dynamic> route) => false,
     );
   }
 }

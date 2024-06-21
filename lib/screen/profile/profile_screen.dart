@@ -1,35 +1,27 @@
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/profile/edit_profile_screen.dart';
+import 'package:eventhub/screen/organiser/organiser_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-// import 'package:eventhub/screen/organiser/organiser_homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatelessWidget {
   final User passUser;
+  final String appBarTitle;
 
-  const ProfileScreen({super.key, required this.passUser});
+  const ProfileScreen(
+      {super.key, required this.passUser, required this.appBarTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
-          },
-          icon: const Icon(LineAwesomeIcons.angle_left),
-          color: Colors.white,
-        ),
-        title: const Text(
-          "Profile",
-          style: TextStyle(color: Colors.white, fontSize: 24),
-        ),
+      appBar: CustomAppBar(
+        title: appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: SingleChildScrollView(
         child: Container(

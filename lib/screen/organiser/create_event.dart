@@ -5,22 +5,22 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-//page related impot
+//page or model related impot
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:eventhub/screen/organiser/myevent.dart';
-import 'package:eventhub/screen/organiser/organiser_homepage.dart';
-import 'package:eventhub/screen/organiser/report_event.dart';
-import 'package:eventhub/screen/profile/profile_screen.dart';
+import 'package:eventhub/screen/organiser/organiser_widget.dart';
 
-//dart import
+//others import
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateEventPage extends StatefulWidget {
   final User passUser;
-  const CreateEventPage({super.key, required this.passUser});
+  final String appBarTitle;
+  const CreateEventPage(
+      {super.key, required this.passUser, required this.appBarTitle});
 
   @override
   _CreateEventPageState createState() => _CreateEventPageState();
@@ -142,7 +142,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => MyEvent(passUser: widget.passUser)),
+            builder: (context) => MyEvent(
+                passUser: widget.passUser, appBarTitle: 'Create Event')),
       );
     } catch (e) {
       print('Error creating event: $e');
@@ -157,33 +158,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Set background color to black
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications),
-            color: Colors.white,
-          ),
-          IconButton(
-            onPressed: () {
-              _logoutAndNavigateToLogin(context);
-            },
-            icon: const Icon(Icons.logout),
-            color: Colors.white,
-          ),
-        ],
-        //Create event form
-        title: const Text(
-          "Create Event",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white, // Set app bar text color to white
-          ),
-        ),
+      backgroundColor: Colors.black,
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
       ),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(10),
@@ -193,6 +172,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Upload photo
+                const SizedBox(height: 20),
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -235,23 +215,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     )
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Event Name
                 TextFormField(
                   controller: _eventNameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Event Name',
                     hintText: 'Enter the name of the event.',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon: const Icon(Icons.event, color: Colors.grey),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   style: const TextStyle(color: Colors.white),
@@ -298,21 +274,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     }
                   },
                   controller: _dateTimeController,
-                  decoration: const InputDecoration(
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                  decoration: InputDecoration(
                     labelText: 'Event Date and Time',
                     hintText: 'Select the date and time of the event.',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(
+                      color: Color.fromARGB(157, 247, 247, 247),
+                    ),
+                    prefixIcon:
+                        const Icon(Icons.calendar_today, color: Colors.grey),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  style: const TextStyle(color: Colors.white),
                   readOnly: true,
                   validator: (value) {
                     if (_selectedDateTime == null) {
@@ -326,18 +300,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 // Location
                 TextFormField(
                   controller: _locationController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Event Location',
                     hintText: 'Location Address',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon:
+                        const Icon(Icons.location_on, color: Colors.grey),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   style: const TextStyle(color: Colors.white),
@@ -355,8 +326,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   padding: const EdgeInsets.all(10),
                   margin: const EdgeInsets.symmetric(vertical: 5),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.grey),
                   ),
                   child: SwitchListTile(
                     title: const Text(
@@ -380,18 +351,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     controller: _feeController,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Event Fee',
                       hintText: 'RM XX.XX',
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
+                      prefixIcon:
+                          const Icon(Icons.attach_money, color: Colors.grey),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     style: const TextStyle(color: Colors.white),
@@ -410,18 +378,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   //paymentLink
                   TextFormField(
                     controller: _feeLinkController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Fee Link',
                       hintText: 'https://www.utm.my/',
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(157, 247, 247, 247)),
+                      prefixIcon: const Icon(Icons.link, color: Colors.grey),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     style: const TextStyle(color: Colors.white),
@@ -438,22 +402,39 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   const SizedBox(height: 20),
                 ],
 
+                //Organiser
+                TextFormField(
+                  controller: _organiserController,
+                  decoration: InputDecoration(
+                    labelText: 'Organiser',
+                    hintText: 'Enter the organizer name',
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon: const Icon(Icons.person, color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                  readOnly: true, // Set the text field to read-only
+                  onTap:
+                      _fillOrganiserInformation, // Disable tapping on the text field
+                ),
+                const SizedBox(height: 20),
+
                 TextFormField(
                   controller: _slotsController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Registration Slots (Optional)',
                     hintText:
                         'Enter the number of slots available for registration.',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon:
+                        const Icon(Icons.check_circle, color: Colors.grey),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   style: const TextStyle(color: Colors.white),
@@ -479,18 +460,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       _selectedCategory = value;
                     });
                   },
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Category',
                     hintText: 'Select the category of the event.',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon: const Icon(Icons.category, color: Colors.grey),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   style: const TextStyle(color: Colors.white),
@@ -507,18 +484,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 // Details
                 TextFormField(
                   controller: _detailsController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Event Details',
                     hintText: 'Write the event details information.',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                    prefixIcon:
+                        const Icon(Icons.description, color: Colors.grey),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   style: const TextStyle(color: Colors.white),
@@ -528,30 +502,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     }
                     return null;
                   },
-                ),
-
-                const SizedBox(height: 20),
-                //Organiser
-                TextFormField(
-                  controller: _organiserController,
-                  decoration: const InputDecoration(
-                    labelText: 'Organiser',
-                    hintText: 'Enter the organizer name',
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                  readOnly: true, // Set the text field to read-only
-                  onTap:
-                      _fillOrganiserInformation, // Disable tapping on the text field
                 ),
                 const SizedBox(height: 20),
 
@@ -594,85 +544,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ],
             ),
           )),
-      //bottom navigation
-      bottomNavigationBar: Container(
-        color: const Color.fromARGB(255, 100, 8, 222),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.home,
-              label: "Home",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        OrganiserHomePage(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.event,
-              label: "My Event",
-              onPressed: () {
-                // var widget;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyEvent(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.add,
-              label: "Create Event",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        CreateEventPage(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.analytics,
-              label: "Report",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReportPage(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-            FooterIconButton(
-              icon: Icons.person,
-              label: "Profile",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileScreen(passUser: widget.passUser),
-                  ),
-                );
-              },
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
+      bottomNavigationBar: CustomFooter(passUser: widget.passUser),
     );
   }
 

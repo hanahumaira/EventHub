@@ -173,18 +173,20 @@ class _LoginState extends State<Login> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => OrganiserHomePage(
-                                          passUser: User(
-                                            name: userSnapshot['name'],
-                                            email: userSnapshot['email'],
-                                            password: userSnapshot['password'],
-                                            phoneNum: userSnapshot['phoneNum'],
-                                            address: userSnapshot['address'],
-                                            website: userSnapshot['website'],
-                                            sector: userSnapshot['sector'],
-                                            accountType:
-                                                userSnapshot['accountType'],
-                                          ),
-                                        ),
+                                            passUser: User(
+                                              name: userSnapshot['name'],
+                                              email: userSnapshot['email'],
+                                              password:
+                                                  userSnapshot['password'],
+                                              phoneNum:
+                                                  userSnapshot['phoneNum'],
+                                              address: userSnapshot['address'],
+                                              website: userSnapshot['website'],
+                                              sector: userSnapshot['sector'],
+                                              accountType:
+                                                  userSnapshot['accountType'],
+                                            ),
+                                            appBarTitle: 'Home'),
                                       ),
                                     );
 

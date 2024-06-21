@@ -111,7 +111,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await _fetchUpdatedUserData();
 
         // Navigate back to the ProfileScreen after updating profile
-        Get.to(() => ProfileScreen(passUser: widget.passUser));
+        Get.to(() =>
+            ProfileScreen(passUser: widget.passUser, appBarTitle: 'Profile'));
       } catch (error) {
         print('Error updating user profile: $error');
       }
