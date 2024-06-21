@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventhub/screen/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
   final FirebaseFirestore firestore;
@@ -23,6 +26,7 @@ class _SignUpState extends State<SignUp> {
 
   String? _accountType;
   bool _isPasswordVisible = false;
+  final _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -34,6 +38,53 @@ class _SignUpState extends State<SignUp> {
     _address.dispose();
     _website.dispose();
     _sector.dispose();
+  }
+
+
+  void _signUp() async {
+    final formState = _formKey.currentState;
+    if (formState!.validate()) {
+      formState.save();
+      try {
+        UserCredential user = await _auth.createUserWithEmailAndPassword(
+          email: _email.text,
+          password: _password.text,
+        );
+
+        // After the user is created, we can add the additional details to Firestore
+        if (_accountType == 'Participant') {
+          await widget.firestore.collection('userData').doc(user.user!.uid).set({
+            'name': _name.text,
+            'email': _email.text,
+            'phoneNum': _phoneNum.text,
+            'accountType': _accountType,
+            'password': _password.text,
+          });
+        } else {
+          await widget.firestore.collection('userData').doc(user.user!.uid).set({
+            'name': _name.text,
+            'email': _email.text,
+            'phoneNum': _phoneNum.text,
+            'accountType': _accountType,
+            'password': _password.text,
+            'address': _address.text,
+            'website': _website.text,
+            'sector': _sector.text,
+          });
+        }
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+          builder: (context) => Login(),
+          ),
+          );
+        // Navigate to home page, etc.
+      } catch (e) {
+        print(e);
+        // Handle errors here
+      }
+    }
   }
 
   @override
@@ -481,58 +532,7 @@ fillColor: MaterialStateProperty.resolveWith<Color>(
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_accountType == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please select an account type'),
-                              ),
-                            );
-                            return;
-                          }
-                          Map<String, dynamic> userData = {
-                            'name': _name.text,
-                            'email': _email.text,
-                            'password': _password.text,
-                            'phoneNum': _phoneNum.text,
-                            'address': _address.text,
-                            'website': _website.text,
-                            'sector': _sector.text,
-                            'accountType': _accountType,
-                          };
-
-                          try {
-                            widget.firestore
-                                .collection('userData')
-                                .doc(_email.text)
-                                .set(userData);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Successfully Registered'),
-                                duration: Duration(seconds: 3),
-                              ),
-                            );
-
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Login(),
-                              ),
-                            );
-                          } catch (e) {
-                            print('Error adding user data to Firestore');
-                          }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text('Please fill in all required fields'),
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: _signUp,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: const Color.fromARGB(255, 100, 8, 222),

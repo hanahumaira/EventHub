@@ -1,10 +1,6 @@
-//import dart
 import 'package:flutter/material.dart';
-
-//import firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-//import screen & model
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/admin/admin_homepage.dart';
 import 'package:eventhub/screen/forgot_password.dart';
@@ -21,13 +17,105 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  final bool _isChecked = false; // Variable to hold checkbox state
   bool _isPasswordVisible = false;
-  String? _passwordError;
-  String? _emailError;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signIn() async {
+    setState(() {
+      _errorMessage = null; // Reset error message before attempting to sign in
+    });
+
+    try {
+      firebase_auth.UserCredential userCredential = await firebase_auth.FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      firebase_auth.User? user = userCredential.user;
+      if (user != null) {
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('userData')
+            .doc(user.uid)
+            .get();
+
+        if (userSnapshot.exists) {
+          // Extracting user details from Firestore document
+          final data = userSnapshot.data() as Map<String, dynamic>;
+
+          // Navigate to the appropriate home page based on user type
+          String accountType = data['accountType'];
+          User passUser = User(
+            name: data['name'],
+            email: data['email'],
+            password: data['password'],
+            phoneNum: data['phoneNum'],
+            accountType: accountType,
+            address: data.containsKey('address') ? data['address'] : '',
+            website: data.containsKey('website') ? data['website'] : '',
+            sector: data.containsKey('sector') ? data['sector'] : '',
+          );
+
+          if (accountType == 'ADMIN') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminHomePage(passUser: passUser),
+              ),
+            );
+          } else if (accountType == 'Organizer') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrganiserHomePage(passUser: passUser),
+              ),
+            );
+          } else if (accountType == 'Participant') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserHomePage(passUser: passUser),
+              ),
+            );
+          } else {
+            setState(() {
+              _errorMessage = 'Invalid account type.';
+            });
+          }
+        } else {
+          setState(() {
+            _errorMessage = 'User data not found in Firestore.';
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        if (e is firebase_auth.FirebaseAuthException) {
+          switch (e.code) {
+            case 'user-not-found':
+              _errorMessage = 'No user found for that email.';
+              break;
+            case 'wrong-password':
+              _errorMessage = 'Incorrect password.';
+              break;
+            default:
+              _errorMessage = 'Failed to sign in: ${e.message}';
+          }
+        } else {
+          _errorMessage = 'Failed to sign in: $e';
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +129,8 @@ class _LoginState extends State<Login> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                //logo and welcome
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 70),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 70),
                   child: Column(
                     children: [
                       Image.asset(
@@ -52,7 +138,6 @@ class _LoginState extends State<Login> {
                         height: 150,
                       ),
                       const SizedBox(height: 30),
-                      // Add some spacing between the image and text
                       const Text(
                         'Welcome to EventHub!',
                         style: TextStyle(
@@ -63,14 +148,9 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-
-                // Email, password, and submit button container
                 Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal:
-                          15), // Add margin for spacing from the screen edges
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30, vertical: 20), // Adjust padding
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
@@ -79,13 +159,19 @@ class _LoginState extends State<Login> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Email
+                      if (_errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            _errorMessage!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
                       TextFormField(
-                        controller: _email,
+                        controller: _emailController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // Round edge border
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           labelText: "Email",
                           prefixIcon: const Icon(
@@ -93,15 +179,17 @@ class _LoginState extends State<Login> {
                             color: Colors.black,
                           ),
                         ),
-                        validator: _validateEmail,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          return null;
+                        },
                       ),
-                      const SizedBox(
-                          height:
-                              10), // Add some vertical spacing between the email and password fields
-                      // Password
+                      const SizedBox(height: 10),
                       TextFormField(
-                        controller: _password,
-                        obscureText: !_isPasswordVisible, //Toggle visibility
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -113,9 +201,7 @@ class _LoginState extends State<Login> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                               color: Colors.blueGrey,
                             ),
                             onPressed: () {
@@ -125,145 +211,43 @@ class _LoginState extends State<Login> {
                             },
                           ),
                         ),
-                        validator: _validatePassword,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
                       ),
-                      const SizedBox(
-                          height:
-                              30), // Add some vertical spacing between the password field and the submit button
-
-                      // Submit button
+                      const SizedBox(height: 30),
                       ElevatedButton(
-                        onPressed: () async {
+                        onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            String? validationResult = await _validateUser();
-                            if (validationResult == null) {
-                              try {
-                                DocumentSnapshot userSnapshot =
-                                    await FirebaseFirestore.instance
-                                        .collection('userData')
-                                        .doc(_email.text)
-                                        .get();
-
-                                if (userSnapshot.exists) {
-                                  //ADMIN
-                                  if (userSnapshot['accountType'] == 'ADMIN' &&
-                                      userSnapshot['password'] ==
-                                          _password.text) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AdminHomePage(
-                                          passUser: User(
-                                            name: userSnapshot['name'],
-                                            email: userSnapshot['email'],
-                                            password: userSnapshot['password'],
-                                            phoneNum: userSnapshot['phoneNum'],
-                                            accountType:
-                                                userSnapshot['accountType'],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } //ORGANIZER
-                                  else if (userSnapshot['accountType'] ==
-                                          'Organizer' &&
-                                      userSnapshot['password'] ==
-                                          _password.text) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => OrganiserHomePage(
-                                            passUser: User(
-                                              name: userSnapshot['name'],
-                                              email: userSnapshot['email'],
-                                              password:
-                                                  userSnapshot['password'],
-                                              phoneNum:
-                                                  userSnapshot['phoneNum'],
-                                              address: userSnapshot['address'],
-                                              website: userSnapshot['website'],
-                                              sector: userSnapshot['sector'],
-                                              accountType:
-                                                  userSnapshot['accountType'],
-                                            ),
-                                            appBarTitle: 'Home'),
-                                      ),
-                                    );
-
-                                    //PARTICIPANT
-                                  } else if (userSnapshot['accountType'] ==
-                                          'Participant' &&
-                                      userSnapshot['password'] ==
-                                          _password.text) {
-                                    User passUser = User(
-                                      name: userSnapshot['name'],
-                                      email: userSnapshot['email'],
-                                      password: userSnapshot['password'],
-                                      phoneNum: userSnapshot['phoneNum'],
-                                      accountType: userSnapshot['accountType'],
-                                    );
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            UserHomePage(passUser: passUser),
-                                      ),
-                                    );
-                                  } else {
-                                    setState(() {
-                                      _passwordError = 'Incorrect password';
-                                      _emailError = null;
-                                    });
-                                  }
-                                } else {
-                                  setState(() {
-                                    _emailError = 'User not found';
-                                    _passwordError = null;
-                                  });
-                                }
-                              } catch (error) {
-                                print('Error fetching user data: $error');
-                              }
-                            } else {
-                              // Display validation error message
-                              setState(() {
-                                _passwordError = validationResult;
-                                _emailError = null;
-                              });
-                            }
+                            _signIn();
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor:
-                              const Color.fromARGB(255, 100, 8, 222),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 9),
+                          backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 9),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: const Text('LOGIN'),
                       ),
-
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            // Navigate to forgot password page
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ForgotPasswordPage()), //to go to sign up page
+                                  builder: (context) => const ForgotPasswordPage()),
                             );
                           },
                           child: const Text('Forgot Password?'),
                         ),
                       ),
                       const SizedBox(height: 10),
-
-                      // Don't have an account? Create one
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -303,43 +287,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  //To check if the email is empty
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email';
-    }
-    return null;
-  }
-
-  //To check if the password is empty
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your password';
-    }
-    return null;
-  }
-
-  //To validate if user is valid or not found or incorrect password
-  Future<String?> _validateUser() async {
-    try {
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection('userData')
-          .doc(_email.text)
-          .get();
-
-      if (userSnapshot.exists) {
-        if (userSnapshot['password'] == _password.text) {
-          return null; // User is valid
-        } else {
-          return 'Incorrect password';
-        }
-      } else {
-        return 'User not found';
-      }
-    } catch (error) {
-      return 'Error fetching user data: $error';
-    }
   }
 }
