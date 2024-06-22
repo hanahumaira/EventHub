@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 
+//Test test
+
 class ReportPage extends StatefulWidget {
   final User passUser;
   final String appBarTitle;
@@ -104,80 +106,80 @@ class _ReportPageState extends State<ReportPage> {
       print('Error fetching event: $e');
     }
   }
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.black,
-    appBar: CustomAppBar(
-      title: widget.appBarTitle,
-      onNotificationPressed: () {},
-      onLogoutPressed: () => _logoutAndNavigateToLogin(context),
-    ),
-    body: Column(
-      children: [
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Center(
-            child: ToggleButtons(
-              isSelected: [showOverview, !showOverview],
-              onPressed: (index) {
-                setState(() {
-                  showOverview = index == 0;
-                });
-              },
-              color: Colors.white,
-              selectedColor: const Color.fromARGB(255, 100, 8, 222),
-              fillColor: Colors.white,
-              borderColor: Colors.white,
-              selectedBorderColor: const Color.fromARGB(255, 100, 8, 222),
-              borderRadius: BorderRadius.circular(8.0),
-              children: const [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SizedBox(
-                    width: 140, // Increase width as needed
-                    height: 40, // Increase height as needed
-                    child: Center(
-                      child: Text(
-                        'Overview',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: CustomAppBar(
+        title: widget.appBarTitle,
+        onNotificationPressed: () {},
+        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Center(
+              child: ToggleButtons(
+                isSelected: [showOverview, !showOverview],
+                onPressed: (index) {
+                  setState(() {
+                    showOverview = index == 0;
+                  });
+                },
+                color: Colors.white,
+                selectedColor: const Color.fromARGB(255, 100, 8, 222),
+                fillColor: Colors.white,
+                borderColor: Colors.white,
+                selectedBorderColor: const Color.fromARGB(255, 100, 8, 222),
+                borderRadius: BorderRadius.circular(8.0),
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      width: 140, // Increase width as needed
+                      height: 40, // Increase height as needed
+                      child: Center(
+                        child: Text(
+                          'Overview',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SizedBox(
-                    width: 140, // Increase width as needed
-                    height: 40, // Increase height as needed
-                    child: Center(
-                      child: Text(
-                        'Events',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      width: 140, // Increase width as needed
+                      height: 40, // Increase height as needed
+                      child: Center(
+                        child: Text(
+                          'Events',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: showOverview ? buildOverview() : buildEventList(),
-        ),
-      ],
-    ),
-    bottomNavigationBar: CustomFooter(passUser: widget.passUser),
-  );
-}
-
+          Expanded(
+            child: showOverview ? buildOverview() : buildEventList(),
+          ),
+        ],
+      ),
+      bottomNavigationBar: CustomFooter(passUser: widget.passUser),
+    );
+  }
 
   Widget buildOverview() {
     return Padding(
@@ -351,98 +353,98 @@ Widget build(BuildContext context) {
     );
   }
 
-Widget buildEventList() {
-  return ListView.builder(
-    padding: const EdgeInsets.all(16.0),
-    itemCount: _myevent.length,
-    itemBuilder: (context, index) {
-      final event = _myevent[index];
-      return Card(
-        color: Colors.white,
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: 5,
-        child: ListTile(
-          leading: Icon(
-            Icons.event,
-            color: Color.fromARGB(255, 100, 8, 222),
+  Widget buildEventList() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: _myevent.length,
+      itemBuilder: (context, index) {
+        final event = _myevent[index];
+        return Card(
+          color: Colors.white,
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          title: Text(
-            event.event,
-            style: TextStyle(
+          elevation: 5,
+          child: ListTile(
+            leading: Icon(
+              Icons.event,
               color: Color.fromARGB(255, 100, 8, 222),
-              fontWeight: FontWeight.bold,
             ),
-          ),
-          subtitle: Text(
-            '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
-            style: const TextStyle(color: Color.fromARGB(179, 72, 60, 70)),
-          ),
-          trailing: Icon(Icons.arrow_forward_ios,
-              color: Color.fromARGB(255, 100, 8, 222)),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            event.event,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 67, 12, 139)),
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
+            title: Text(
+              event.event,
+              style: TextStyle(
+                color: Color.fromARGB(255, 100, 8, 222),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              '${DateFormat.yMMMMd().format(event.dateTime)} at ${event.location}',
+              style: const TextStyle(color: Color.fromARGB(179, 72, 60, 70)),
+            ),
+            trailing: Icon(Icons.arrow_forward_ios,
+                color: Color.fromARGB(255, 100, 8, 222)),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: Column(
+                        children: [
+                          Container(
                             padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _BarChart(
-                                  registrations: event.registration ?? 0,
-                                  shared: event.shared ?? 0,
-                                  saved: event.saved ?? 0,
-                                ),
-                              ],
+                            child: Text(
+                              event.event,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 67, 12, 139)),
                             ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            'Close',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 100, 8, 222)),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _BarChart(
+                                    registrations: event.registration ?? 0,
+                                    shared: event.shared ?? 0,
+                                    saved: event.saved ?? 0,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Close',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 100, 8, 222)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      );
-    },
-  );
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 }
 
-}
 class _BarChart extends StatelessWidget {
   final int registrations;
   final int shared;
@@ -455,118 +457,117 @@ class _BarChart extends StatelessWidget {
     required this.saved,
   }) : super(key: key);
 
-@override
-Widget build(BuildContext context) {
-  return Container(
-    height: 200,
-    child: BarChart(
-      BarChartData(
-        alignment: BarChartAlignment.spaceAround,
-        maxY: 10,
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-            tooltipBgColor: Colors.blueGrey,
-            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              String title;
-              switch (rodIndex) {
-                case 0:
-                  title = 'Registrations';
-                  break;
-                case 1:
-                  title = 'Shared';
-                  break;
-                case 2:
-                  title = 'Saved';
-                  break;
-                default:
-                  title = '';
-              }
-              return BarTooltipItem(
-                title,
-                TextStyle(color: Colors.yellow),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: '\n${rod.y.round()}',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: 10,
+          barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: Colors.blueGrey,
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                String title;
+                switch (rodIndex) {
+                  case 0:
+                    title = 'Registrations';
+                    break;
+                  case 1:
+                    title = 'Shared';
+                    break;
+                  case 2:
+                    title = 'Saved';
+                    break;
+                  default:
+                    title = '';
+                }
+                return BarTooltipItem(
+                  title,
+                  TextStyle(color: Colors.yellow),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '\n${rod.y.round()}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-        titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (value, _) => const TextStyle(                
-              color: Color.fromARGB(255, 56, 50, 50),
-                            // color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-            margin: 10,
-            getTitles: (double value) {
-              switch (value.toInt()) {
-                case 0:
-                  return 'Registrations';
-                case 1:
-                  return 'Shared';
-                case 2:
-                  return 'Saved';
-                default:
-                  return '';
-              }
-            },
-          ),
-          leftTitles: SideTitles(showTitles: false),
-        ),
-        borderData: FlBorderData(
-          show: false,
-        ),
-        barGroups: [
-          BarChartGroupData(
-            x: 0,
-            barRods: [
-              BarChartRodData(
-                y: registrations.toDouble(),
-                width: 16,
-                colors: [Colors.blue],
+          titlesData: FlTitlesData(
+            show: true,
+            bottomTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (value, _) => const TextStyle(
+                color: Color.fromARGB(255, 56, 50, 50),
+                // color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-            // showingTooltipIndicators: [0],
+              margin: 10,
+              getTitles: (double value) {
+                switch (value.toInt()) {
+                  case 0:
+                    return 'Registrations';
+                  case 1:
+                    return 'Shared';
+                  case 2:
+                    return 'Saved';
+                  default:
+                    return '';
+                }
+              },
+            ),
+            leftTitles: SideTitles(showTitles: false),
           ),
-          BarChartGroupData(
-            x: 1,
-            barRods: [
-              BarChartRodData(
-                y: shared.toDouble(),
-                width: 16,
-                colors: [Colors.green],
-              ),
-            ],
-            // showingTooltipIndicators: [0],
+          borderData: FlBorderData(
+            show: false,
           ),
-          BarChartGroupData(
-            x: 2,
-            barRods: [
-              BarChartRodData(
-                y: saved.toDouble(),
-                width: 16,
-                colors: [Colors.orange],
-              ),
-            ],
-            // showingTooltipIndicators: [0],
-          ),
-        ],
+          barGroups: [
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  y: registrations.toDouble(),
+                  width: 16,
+                  colors: [Colors.blue],
+                ),
+              ],
+              // showingTooltipIndicators: [0],
+            ),
+            BarChartGroupData(
+              x: 1,
+              barRods: [
+                BarChartRodData(
+                  y: shared.toDouble(),
+                  width: 16,
+                  colors: [Colors.green],
+                ),
+              ],
+              // showingTooltipIndicators: [0],
+            ),
+            BarChartGroupData(
+              x: 2,
+              barRods: [
+                BarChartRodData(
+                  y: saved.toDouble(),
+                  width: 16,
+                  colors: [Colors.orange],
+                ),
+              ],
+              // showingTooltipIndicators: [0],
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
 
 class FooterIconButton extends StatelessWidget {
@@ -603,4 +604,3 @@ void _logoutAndNavigateToLogin(BuildContext context) {
     (Route<dynamic> route) => false,
   );
 }
-
