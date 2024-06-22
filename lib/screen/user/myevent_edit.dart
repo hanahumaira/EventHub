@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventhub/model/user.dart'; // Import the User class from model/user.dart
+import 'package:eventhub/model/event.dart'; // Import the Event class from model/event.dart
 
 class EditEventRegPage extends StatefulWidget {
-  const EditEventRegPage({super.key});
+  final Event event;
+  final String event_id; // Add event_id parameter here
+  final User user;
+
+  const EditEventRegPage({
+    Key? key,
+    required this.event,
+    required this.event_id,
+    required this.user,
+  }) : super(key: key);
 
   @override
   _EditEventRegPageState createState() => _EditEventRegPageState();
@@ -9,176 +21,165 @@ class EditEventRegPage extends StatefulWidget {
 
 class _EditEventRegPageState extends State<EditEventRegPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _icController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  String? _selectedGender;
+  TextEditingController? _ageController;
+  TextEditingController? _emailController;
+  TextEditingController? _eventNameController;
+  TextEditingController? _fullNameController;
+  TextEditingController? _genderController;
+  TextEditingController? _icController;
+  TextEditingController? _phoneNumberController;
+
+  @override
+  void initState() {
+    super.initState();
+    _ageController = TextEditingController();
+    _emailController = TextEditingController();
+    _eventNameController = TextEditingController();
+    _fullNameController = TextEditingController();
+    _genderController = TextEditingController();
+    _icController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+
+    _fetchEvents(); // Call _fetchEvents here
+  }
+
+  @override
+  void dispose() {
+    _ageController?.dispose();
+    _emailController?.dispose();
+    _eventNameController?.dispose();
+    _fullNameController?.dispose();
+    _genderController?.dispose();
+    _icController?.dispose();
+    _phoneNumberController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchEvents() async {
+    try {
+      print('Fetching registration details for event ID: ${widget.event_id}');
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('registrations')
+          .where('event_id', isEqualTo: widget.event_id)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final registrationData = querySnapshot.docs.first.data();
+        setState(() {
+          _ageController?.text = registrationData['age'] ?? '';
+          _emailController?.text = registrationData['email'] ?? '';
+          _eventNameController?.text = registrationData['event_name'] ?? '';
+          _fullNameController?.text = registrationData['full_name'] ?? '';
+          _genderController?.text = registrationData['gender'] ?? '';
+          _icController?.text = registrationData['ic'] ?? '';
+          _phoneNumberController?.text = registrationData['phone_number'] ?? '';
+        });
+        print('Registration details fetched successfully');
+      } else {
+        print('No registration found for event ID: ${widget.event_id}');
+      }
+    } catch (e) {
+      print('Error fetching registration details: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit'),
+        title: Text('Edit Registration'),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                controller: _eventNameController,
+                decoration: InputDecoration(labelText: 'Event Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your Name';
+                    return 'Please enter your name';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextFormField(
-                controller: _icController,
-                decoration: InputDecoration(
-                  labelText: 'IC',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                controller: _fullNameController,
+                decoration: InputDecoration(labelText: 'Full Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your IC';
-                  } else if (value.length != 12) {
-                    return 'IC must be exactly 12 digits';
+                    return 'Please enter your full name';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-              _buildGenderField(),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _ageController,
-                decoration: InputDecoration(
-                  labelText: 'Age',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(labelText: 'Age'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your Age';
-                  } else if (!RegExp(r'^\d+$').hasMatch(value)) {
-                    return 'Please enter a valid Age';
+                    return 'Please enter your age';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _genderController,
+                decoration: InputDecoration(labelText: 'Gender'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your gender';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your Email';
-                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Please enter a valid Email';
+                    return 'Please enter your email';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _phoneNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Phone Number',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(labelText: 'Phone Number'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your Phone Number';
-                  } else if (!RegExp(r'^\d{10,15}$').hasMatch(value)) {
-                    return 'Please enter a valid Phone Number';
+                    return 'Please enter your phone number';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Cancel editing
                       Navigator.pop(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[600],
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    child: Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Save edited event
                       if (_formKey.currentState!.validate()) {
-                        // Save form data
                         _saveFormData();
                         Navigator.pop(context);
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 140, 40, 222),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    ),
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    child: Text('Save'),
                   ),
                 ],
               ),
@@ -186,64 +187,49 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
           ),
         ),
       ),
-      backgroundColor: Colors.black,
-    );
-  }
-
-  Widget _buildGenderField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Gender',
-          style: TextStyle(color: Colors.white70),
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: ListTile(
-                title: const Text('Male', style: TextStyle(color: Colors.white)),
-                leading: Radio<String>(
-                  value: 'Male',
-                  groupValue: _selectedGender,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  },
-                  activeColor: Colors.white,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListTile(
-                title: const Text('Female', style: TextStyle(color: Colors.white)),
-                leading: Radio<String>(
-                  value: 'Female',
-                  groupValue: _selectedGender,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  },
-                  activeColor: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
   void _saveFormData() {
-    // Perform saving of form data
-    String name = _nameController.text;
-    String ic = _icController.text;
-    String age = _ageController.text;
-    String email = _emailController.text;
-    String phoneNumber = _phoneNumberController.text;
-    String gender = _selectedGender ?? ''; // Ensure gender is not null
-    // Use the saved data as needed
+    final updatedRegistration = {
+      'age': _ageController?.text,
+      'email': _emailController?.text,
+      'phone_number': _phoneNumberController?.text,
+      'gender': _genderController?.text ??
+          '', // Ensure to handle null case for optional fields
+      'ic': _icController?.text ??
+          '', // Ensure to handle null case for optional fields
+      // Add other fields as needed
+    };
+
+    // Update registration data in Firestore
+    FirebaseFirestore.instance
+        .collection('registrations')
+        .where('event_id', isEqualTo: widget.event_id)
+        .where('full_name', isEqualTo: widget.user.name)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        final docId = querySnapshot.docs.first.id;
+        FirebaseFirestore.instance
+            .collection('registrations')
+            .doc(docId)
+            .update(updatedRegistration)
+            .then((_) {
+          print('Registration updated successfully');
+        }).catchError((error) {
+          print('Failed to update registration: $error');
+        });
+      } else {
+        print(
+            'No registration found for event ID: ${widget.event_id} and full name: ${widget.user.name}');
+      }
+    }).catchError((error) {
+      print('Error fetching registration: $error');
+    });
   }
 }
+
+
+// betulkan UI
+// tambah IC number

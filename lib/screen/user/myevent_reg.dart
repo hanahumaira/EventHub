@@ -1,25 +1,20 @@
-//firebase related import
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-//page or model related import
 import 'package:eventhub/model/event.dart';
 import 'package:eventhub/model/user.dart';
-import 'package:eventhub/screen/user/user_widget.dart';
 import 'package:eventhub/screen/user/myevent_edit.dart';
+import 'package:eventhub/screen/user/user_widget.dart';
 import 'package:eventhub/screen/login_page.dart';
-
-//dart import
-import 'package:flutter/material.dart';
 
 class MyEventReg extends StatefulWidget {
   final User passUser;
   final String appBarTitle;
 
-  const MyEventReg(
-      {super.key, required this.passUser, required this.appBarTitle});
+  MyEventReg({Key? key, required this.passUser, required this.appBarTitle})
+      : super(key: key);
 
   @override
-  State<MyEventReg> createState() => _MyEventRegState();
+  _MyEventRegState createState() => _MyEventRegState();
 }
 
 class _MyEventRegState extends State<MyEventReg> {
@@ -36,7 +31,7 @@ class _MyEventRegState extends State<MyEventReg> {
       print('Fetching registrations for user: ${widget.passUser.name}');
       final querySnapshot = await FirebaseFirestore.instance
           .collection('registrations')
-          .where('full_name', isEqualTo: widget.passUser.name)
+          .where('email', isEqualTo: widget.passUser.email)
           .get();
 
       final eventIds =
@@ -73,17 +68,97 @@ class _MyEventRegState extends State<MyEventReg> {
     }
   }
 
+  Future<void> _deleteRegistration(Event event) async {
+    void _performDelete(Event event) async {
+      try {
+        // Query to find the registration document
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('registrations')
+            .where('email', isEqualTo: widget.passUser.email)
+            .where('event_id', isEqualTo: event.id)
+            .get();
+
+        // Check if there is exactly one matching document
+        if (querySnapshot.size == 1) {
+          final registrationDoc = querySnapshot.docs.first;
+
+          // Delete the registration document
+          await registrationDoc.reference.delete();
+
+          // Update local state to reflect the deletion
+          setState(() {
+            _myRegEvents.remove(event);
+          });
+
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Registration deleted successfully')),
+          );
+        } else {
+          // Handle case where no registration document was found or more than one was found
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                    'Error: Registration not found or multiple registrations found')),
+          );
+        }
+      } catch (e) {
+        // Show error message if deletion fails
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting registration: $e')),
+        );
+      }
+    }
+
+    // Function to show the confirmation dialog
+    Future<void> _showConfirmationDialog(BuildContext context) async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Confirm Delete"),
+            content: Text("Are you sure you want to delete this registration?"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                },
+              ),
+              TextButton(
+                child: Text("Delete"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  _performDelete(event); // Proceed with delete action
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // Function to perform the deletion after confirmation
+
+    // Show confirmation dialog before deletion
+    _showConfirmationDialog(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: CustomAppBar(
-        title: widget.appBarTitle,
-        onNotificationPressed: () {},
-        onLogoutPressed: () => _logoutAndNavigateToLogin(context),
+      appBar: AppBar(
+        title: Text(widget.appBarTitle),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => _logoutAndNavigateToLogin(context),
+          ),
+        ],
       ),
       body: _myRegEvents.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 'No events registered.',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -93,7 +168,11 @@ class _MyEventRegState extends State<MyEventReg> {
               itemCount: _myRegEvents.length,
               itemBuilder: (context, index) {
                 final event = _myRegEvents[index];
-                return EventCard(event: event);
+                return EventCard(
+                  event: event,
+                  passUser: widget.passUser,
+                  onDelete: () => _deleteRegistration(event),
+                );
               },
             ),
       bottomNavigationBar: CustomFooter(passUser: widget.passUser),
@@ -104,7 +183,7 @@ class _MyEventRegState extends State<MyEventReg> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const Login(),
+        builder: (context) => Login(),
       ),
     );
   }
@@ -112,8 +191,15 @@ class _MyEventRegState extends State<MyEventReg> {
 
 class EventCard extends StatelessWidget {
   final Event event;
+  final User passUser;
+  final VoidCallback onDelete;
 
-  const EventCard({super.key, required this.event});
+  EventCard({
+    Key? key,
+    required this.event,
+    required this.passUser,
+    required this.onDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -127,9 +213,9 @@ class EventCard extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             leading: Image.network(
-               (event.imageURL != null && event.imageURL!.isNotEmpty)
-      ? event.imageURL![0]
-      : 'lib/images/mainpage.png',
+              (event.imageURL != null && event.imageURL!.isNotEmpty)
+                  ? event.imageURL![0]
+                  : 'lib/images/mainpage.png',
               fit: BoxFit.cover,
               width: 80,
             ),
@@ -150,14 +236,7 @@ class EventCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EditEventRegPage(),
-                    ),
-                  );
-                },
+                onPressed: () => _editEvent(context, event),
                 icon: const Icon(
                   Icons.edit,
                   color: Color.fromARGB(255, 241, 210, 247),
@@ -180,8 +259,17 @@ class EventCard extends StatelessWidget {
     );
   }
 
-  void _editEvent(BuildContext context) {
-    // Navigate to edit event page
+  void _editEvent(BuildContext context, Event event) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditEventRegPage(
+          user: passUser,
+          event: event,
+          event_id: event.id,
+        ),
+      ),
+    );
   }
 
   void _showDeleteConfirmationDialog(BuildContext context) {
@@ -200,8 +288,8 @@ class EventCard extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                // Perform delete operation here
-                _deleteEvent(context);
+                Navigator.pop(context); // Close the dialog
+                onDelete();
               },
               child: const Text("Delete"),
             ),
@@ -210,17 +298,12 @@ class EventCard extends StatelessWidget {
       },
     );
   }
-
-  void _deleteEvent(BuildContext context) {
-    // Perform delete operation here, e.g., remove the event from the list
-    // Update the UI accordingly
-  }
 }
 
 class EventDetailsPage extends StatelessWidget {
   final Event event;
 
-  const EventDetailsPage({super.key, required this.event});
+  EventDetailsPage({Key? key, required this.event}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -234,9 +317,9 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset( (event.imageURL != null && event.imageURL!.isNotEmpty)
-      ? event.imageURL![0]
-      : 'lib/images/mainpage.png'),
+            Image.asset((event.imageURL != null && event.imageURL!.isNotEmpty)
+                ? event.imageURL![0]
+                : 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(
               event.event,
