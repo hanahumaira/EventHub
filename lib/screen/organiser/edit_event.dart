@@ -100,7 +100,7 @@ class _EditEventPageState extends State<EditEventPage> {
           dateTime: DateTime.parse(_dateTimeController.text),
           category: _categoryController.text,
           organiser: widget.passUser.name,
-          imageURL: widget.event.imageURL,
+          imageURLs: widget.event.imageURLs,
           fee: widget.fee,
           paymentLink: _feeLinkController.text,
           details: _detailsController.text,

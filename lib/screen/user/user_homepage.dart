@@ -290,8 +290,8 @@ class _UserHomeState extends State<UserHomePage> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.network(
-             (event.imageURL != null && event.imageURL!.isNotEmpty)
-      ? event.imageURL![0]
+             (event.imageURLs != null && event.imageURLs!.isNotEmpty)
+      ? event.imageURLs![0]
       : 'lib/images/logo.png',
             fit: BoxFit.cover,
             width: 80,
@@ -389,7 +389,7 @@ class EventDetailsPage extends StatelessWidget {
         'eventOrganiser': event.organiser,
         'eventCategory': event.category,
         'eventDetails': event.details,
-        'eventImage': event.imageURL,
+        'eventImage': event.imageURLs,
       });
 
       // Increment the count of saved events in the event document
@@ -419,20 +419,22 @@ class EventDetailsPage extends StatelessWidget {
       ''';
 
     try {
-      // Download the image
-      for (String url in event.imageURL!) {
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    final Directory tempDir = await getTemporaryDirectory();
-    final String tempPath = tempDir.path;
-    final File file = File('$tempPath/${Uri.parse(url).pathSegments.last}');
-    await file.writeAsBytes(response.bodyBytes);
-    // Handle each downloaded file as needed
-  } else {
-    print('Failed to download image: ${response.statusCode}');
-  }
-}
-
+//      if (event.imageURLs != null && event.imageURLs!.isNotEmpty) {
+//       // Download the images
+//       for (String url in event.imageURLs!) {
+//         final response = await http.get(Uri.parse(url));
+//         if (response.statusCode == 200) {
+//           final Directory tempDir = await getTemporaryDirectory();
+//           final String tempPath = tempDir.path;
+//           final File file = File('$tempPath/${Uri.parse(url).pathSegments.last}');
+//           await file.writeAsBytes(response.bodyBytes);
+//           // Handle each downloaded file as needed
+//         } else {
+//           print('Failed to download image: ${response.statusCode}');
+//         }
+//       }
+// }
+      Share.share(eventDetails, subject: 'Check out this event!');
 
       // Update the database to increment the share count
       await FirebaseFirestore.instance
@@ -487,18 +489,18 @@ class EventDetailsPage extends StatelessWidget {
           children: [
             SizedBox(
   height: 200,
-  child: event.imageURL != null && event.imageURL!.isNotEmpty
+  child: event.imageURLs != null && event.imageURLs!.isNotEmpty
       ? ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: event.imageURL!.length,
+          itemCount: event.imageURLs!.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Image.network(
-                event.imageURL![index],
+                event.imageURLs![index],
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  print('Failed to load image: ${event.imageURL![index]}');
+                  print('Failed to load image: ${event.imageURLs![index]}');
                   print('Error: $error');
                   print('StackTrace: $stackTrace');
                   return Image.asset(

@@ -127,8 +127,8 @@ class EventCard extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             leading: Image.network(
-               (event.imageURL != null && event.imageURL!.isNotEmpty)
-      ? event.imageURL![0]
+               (event.imageURLs != null && event.imageURLs!.isNotEmpty)
+      ? event.imageURLs![0]
       : 'lib/images/mainpage.png',
               fit: BoxFit.cover,
               width: 80,
@@ -234,8 +234,8 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset( (event.imageURL != null && event.imageURL!.isNotEmpty)
-      ? event.imageURL![0]
+            Image.asset( (event.imageURLs != null && event.imageURLs!.isNotEmpty)
+      ? event.imageURLs![0]
       : 'lib/images/mainpage.png'),
             const SizedBox(height: 16),
             Text(

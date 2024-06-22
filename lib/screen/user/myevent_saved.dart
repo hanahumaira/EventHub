@@ -53,7 +53,7 @@ class _MyEventSavedState extends State<MyEventSaved> {
             category: eventData['eventCategory'] ?? '',
             details: eventData['eventDetails'] ?? '',
             timestamp: eventData['timestamp'] ?? Timestamp.now(),
-            imageURL: eventData['eventImage'] ?? 'lib/images/mainpage.png',
+            imageURLs: eventData['eventImage'] ?? 'lib/images/mainpage.png',
           );
           setState(() {
             _savedEvents = [event];
@@ -186,10 +186,10 @@ class EventCard extends StatelessWidget {
             leading: SizedBox(
               width: 80,
               child: Image.network(
-                event.imageURL != null && event.imageURL!.isNotEmpty ? 
-event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
+                event.imageURLs != null && event.imageURLs!.isNotEmpty ? 
+event.imageURLs![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
   errorBuilder: (context, error, stackTrace) {
-    print('Failed to load image: ${event.imageURL}');
+    print('Failed to load image: ${event.imageURLs}');
     print('Error: $error');
     print('StackTrace: $stackTrace');
     return Image.asset(
@@ -310,10 +310,10 @@ class EventDetailsPage extends StatelessWidget {
     child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-    Image.network( event.imageURL != null && event.imageURL!.isNotEmpty ? 
-event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
+    Image.network( event.imageURLs != null && event.imageURLs!.isNotEmpty ? 
+event.imageURLs![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
   errorBuilder: (context, error, stackTrace) {
-    print('Failed to load image: ${event.imageURL}');
+    print('Failed to load image: ${event.imageURLs}');
     print('Error: $error');
     print('StackTrace: $stackTrace');
     return Image.asset(

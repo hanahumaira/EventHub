@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
   String id;
-  final List<String>? imageURL;
+  final List<String>? imageURLs;
   String event;
   DateTime dateTime;
   String location;
@@ -19,7 +19,7 @@ class Event {
 
   Event({
     required this.id,
-    this.imageURL,
+    this.imageURLs,
     required this.event,
     required this.dateTime,
     required this.location,
@@ -73,10 +73,10 @@ class Event {
 
     return Event(
       id: snapshot.id,
-      imageURL: data['imageURLs'] != null
-          ? (data['imageURLs'] is String
-              ? [data['imageURLs']] // Convert single string to list of strings
-              : List<String>.from(data['imageURLs']))
+      imageURLs: data['imageURL'] != null
+          ? (data['imageURL'] is String
+              ? [data['imageURL']] // Convert single string to list of strings
+              : List<String>.from(data['imageURL']))
           : null,
       event: data['event'] ?? '',
       dateTime: dateTime,
@@ -97,7 +97,7 @@ class Event {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'imageURL': imageURL,
+      'imageURLs': imageURLs,
       'event': event,
       'dateTime': dateTime,
       'location': location,
@@ -117,7 +117,7 @@ class Event {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'imageURL': imageURL,
+      'imageURLs': imageURLs,
       'event': event,
       'dateTime': dateTime,
       'location': location,

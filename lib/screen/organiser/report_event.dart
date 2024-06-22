@@ -462,7 +462,7 @@ Widget build(BuildContext context) {
     child: BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
-        maxY: 10,
+        maxY: 24,
         barTouchData: BarTouchData(
           touchTooltipData: BarTouchTooltipData(
             tooltipBgColor: Colors.blueGrey,
