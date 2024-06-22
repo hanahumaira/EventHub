@@ -90,8 +90,8 @@ class CustomFooter extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      MyEventSaved(passUser: passUser, appBarTitle: 'Saved Events'),
+                  builder: (context) => MyEventSaved(
+                      passUser: passUser, appBarTitle: 'Saved Events'),
                 ),
               );
             },
