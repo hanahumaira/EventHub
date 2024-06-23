@@ -69,8 +69,10 @@ class _MyEventRegState extends State<MyEventReg> {
   }
 
   Future<void> _deleteRegistration(Event event) async {
-    void _performDelete(Event event) async {
-      try {
+    try {
+      // Function to show the confirmation dialog
+      bool confirmDelete = await _showConfirmationDialog(context);
+      if (confirmDelete) {
         // Query to find the registration document
         final querySnapshot = await FirebaseFirestore.instance
             .collection('registrations')
@@ -102,46 +104,40 @@ class _MyEventRegState extends State<MyEventReg> {
                     'Error: Registration not found or multiple registrations found')),
           );
         }
-      } catch (e) {
-        // Show error message if deletion fails
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error deleting registration: $e')),
-        );
       }
-    }
-
-    // Function to show the confirmation dialog
-    Future<void> _showConfirmationDialog(BuildContext context) async {
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Confirm Delete"),
-            content: Text("Are you sure you want to delete this registration?"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
-                },
-              ),
-              TextButton(
-                child: Text("Delete"),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
-                  _performDelete(event); // Proceed with delete action
-                },
-              ),
-            ],
-          );
-        },
+    } catch (e) {
+      // Show error message if deletion fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting registration: $e')),
       );
     }
+  }
 
-    // Function to perform the deletion after confirmation
-
-    // Show confirmation dialog before deletion
-    _showConfirmationDialog(context);
+  Future<dynamic> _showConfirmationDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Delete"),
+          content:
+              const Text("Are you sure you want to delete this registration?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, false); // Return false when canceled
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, true); // Return true when confirmed
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -149,7 +145,23 @@ class _MyEventRegState extends State<MyEventReg> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(widget.appBarTitle),
+        title: Text(
+          widget.appBarTitle,
+          style: TextStyle(
+            color: Colors.white, // White font color
+            fontWeight: FontWeight.bold, // Bold font weight
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Colors.white, // White color for back arrow
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
@@ -244,7 +256,7 @@ class EventCard extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  _showDeleteConfirmationDialog(context);
+                  onDelete();
                 },
                 icon: const Icon(
                   Icons.delete,
@@ -269,33 +281,6 @@ class EventCard extends StatelessWidget {
           event_id: event.id,
         ),
       ),
-    );
-  }
-
-  void _showDeleteConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Confirm Delete"),
-          content: const Text("Are you sure you want to delete this event?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-                onDelete();
-              },
-              child: const Text("Delete"),
-            ),
-          ],
-        );
-      },
     );
   }
 }
