@@ -1,43 +1,31 @@
-//firebase import
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-//screen or model import
 import 'package:eventhub/model/user.dart';
 import 'package:eventhub/screen/profile/profile_screen.dart';
 import 'package:eventhub/screen/organiser/organiser_widget.dart';
 import 'package:eventhub/screen/login_page.dart';
-
-//others import
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class EditProfileScreen extends StatefulWidget {
   final User passUser;
   final String appBarTitle;
 
-  const EditProfileScreen(
-      {super.key, required this.passUser, this.appBarTitle = 'Edit Profile'});
+  const EditProfileScreen({super.key, required this.passUser, this.appBarTitle = 'Edit Profile'});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
-
-bool _isValidEmail(String email) {
-  // Simple email validation using a regular expression
-  return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-}
-
 bool _isValidPhoneNumber(String input) {
-  // Define a regex pattern for phone number formats
   final RegExp phoneRegex = RegExp(
     r'^(?:\+?1[-.●]?)?(?:\(\d{3}\)|\d{3})[-.●]?\d{3}[-.●]?\d{4}$',
   );
-
   return phoneRegex.hasMatch(input);
 }
+
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _image;
@@ -49,7 +37,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController addressController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
   TextEditingController sectorController = TextEditingController();
-
   bool _isPasswordVisible = false;
 
   @override
@@ -58,25 +45,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _initializeControllers();
   }
 
+
   void _initializeControllers() {
     nameController.text = widget.passUser.name;
     emailController.text = widget.passUser.email;
     phoneNumController.text = widget.passUser.phoneNum;
     passwordController.text = widget.passUser.password;
-    addressController.text = widget.passUser.address!;
-    websiteController.text = widget.passUser.website!;
-    sectorController.text = widget.passUser.sector!;
+    addressController.text = widget.passUser.address ?? '';
+    websiteController.text = widget.passUser.website ?? '';
+    sectorController.text = widget.passUser.sector ?? '';
   }
 
   Future<void> _fetchUpdatedUserData() async {
     try {
-      // Fetch the updated user data from Firestore
+      String userId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
       DocumentSnapshot updatedUserData = await FirebaseFirestore.instance
           .collection('userData')
-          .doc(widget.passUser.email)
+          .doc(userId)
           .get();
 
-      // Update the passUser object with the new data
       setState(() {
         widget.passUser.name = updatedUserData['name'];
         widget.passUser.email = updatedUserData['email'];
@@ -85,89 +72,93 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         widget.passUser.address = updatedUserData['address'];
         widget.passUser.website = updatedUserData['website'];
         widget.passUser.sector = updatedUserData['sector'];
+        widget.passUser.accountType = updatedUserData['accountType'];
       });
 
-      // Refresh the controllers with the updated data
       _initializeControllers();
     } catch (error) {
       print('Error fetching updated user data: $error');
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Future<void> updateUserProfile() async {
-      try {
-        // Get the current user ID
-        String userId = widget.passUser.email;
-
-        // Update user data in Firestore
-        await FirebaseFirestore.instance
-            .collection('userData')
-            .doc(userId)
-            .update({
-          'name': nameController.text,
-          'email': emailController.text,
-          'phoneNum': phoneNumController.text,
-          'password': passwordController.text,
-          'address': addressController.text,
-          'website': websiteController.text,
-          'sector': sectorController.text
-        });
-
-        // Fetch the updated user data
-        await _fetchUpdatedUserData();
-
-        // Navigate back to the ProfileScreen after updating profile
-        Get.to(() =>
-            ProfileScreen(passUser: widget.passUser, appBarTitle: 'Profile'));
-      } catch (error) {
-        print('Error updating user profile: $error');
+  Future<void> updateUserProfile() async {
+    try {
+      String userId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+      if (userId.isEmpty) {
+        throw Exception("User not authenticated");
       }
-    }
 
-    Future<void> pickImage(ImageSource source) async {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: source);
+      final userData = {
+        'name': nameController.text,
+        'email': emailController.text,
+        'phoneNum': phoneNumController.text,
+        'password': passwordController.text,
+        'address': addressController.text,
+        'website': websiteController.text,
+        'sector': sectorController.text,
+        'accountType': widget.passUser.accountType,
+      };
 
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      }
-    }
+      await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(userId)
+          .update(userData);
 
-    void showImagePicker(BuildContext context) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: const Text('Choose from gallery'),
-                  onTap: () {
-                    pickImage(ImageSource.gallery);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera),
-                  title: const Text('Take a photo'),
-                  onTap: () {
-                    pickImage(ImageSource.camera);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+      await _fetchUpdatedUserData();
+
+      Get.to(() => ProfileScreen(passUser: widget.passUser, appBarTitle: 'Profile'));
+    } catch (error) {
+      print('Error updating user profile: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating user profile: $error')),
       );
     }
+  }
 
+  Future<void> pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  void showImagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from gallery'),
+                onTap: () {
+                  pickImage(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Take a photo'),
+                onTap: () {
+                  pickImage(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: CustomAppBar(
@@ -245,26 +236,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 30),
-                  TextFormField(
-                    controller: emailController,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: const TextStyle(
+                    TextFormField(
+                      controller: emailController,
+                      readOnly: true,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: const TextStyle(
                           color: Color.fromARGB(157, 247, 247, 247)),
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
+                      enabled: true, // Disable editing
+                      //initialValue: widget.passUser.email, // Set initial value
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 30),
                   TextFormField(
                     controller: phoneNumController,
                     style: const TextStyle(fontSize: 18, color: Colors.white),
@@ -288,148 +276,104 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 30),
-                  TextFormField(
-                    controller: addressController,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Address',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
-                      prefixIcon: const Icon(
-                        Icons.location_on,
-                        color: Colors.grey,
+                  //!
+                  if (widget.passUser.accountType == 'Organizer') ...[
+                    TextFormField(
+                      controller: addressController,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Address',
+                        labelStyle: const TextStyle(
+                            color: Color.fromARGB(157, 247, 247, 247)),
+                        prefixIcon: const Icon(Icons.home),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your address';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: websiteController,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Website',
+                        labelStyle: const TextStyle(
+                            color: Color.fromARGB(157, 247, 247, 247)),
+                        prefixIcon: const Icon(Icons.web),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your address';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    controller: websiteController,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Website',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
-                      prefixIcon: const Icon(
-                        Icons.web,
-                        color: Colors.grey,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: sectorController,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Sector',
+                        labelStyle: const TextStyle(
+                            color: Color.fromARGB(157, 247, 247, 247)),
+                        prefixIcon: const Icon(Icons.business),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your company website';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    controller: sectorController,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Sector',
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
-                      prefixIcon: const Icon(
-                        Icons.category,
-                        color: Colors.grey,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your company sector';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
+                    const SizedBox(height: 30),
+                  ],
+                    TextFormField(
                     controller: passwordController,
+                    readOnly: true,
                     obscureText: !_isPasswordVisible,
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: const TextStyle(
-                          color: Color.fromARGB(157, 247, 247, 247)),
-                      prefixIcon: const Icon(Icons.fingerprint),
+                        color: Color.fromARGB(157, 247, 247, 247)),
+                      prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.blueGrey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
+                      icon: Icon(
+                        _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                       ),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                      return 'Please enter your password';
                       }
                       return null;
                     },
-                  ),
+                    ),
                   const SizedBox(height: 30),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        String enteredEmail = emailController.text.trim();
-                        String enteredPassword = passwordController.text;
-
-                        // Validate email format
-                        if (!_isValidEmail(enteredEmail)) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Invalid Email Format'),
-                            ),
-                          );
-                          return; // Exit the function if email is invalid
+                        if (_formKey.currentState!.validate()) {
+                          updateUserProfile();
                         }
-
-                        // Validate password criteria (e.g., minimum length)
-                        if (enteredPassword.length < 6) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Password must be at least 6 characters'),
-                            ),
-                          );
-                          return; // Exit the function if password is invalid
-                        }
-
-                        updateUserProfile();
-
-                        // Get.to(() => ProfileScreen(passUser: widget.passUser));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-                        side: BorderSide.none,
+                        backgroundColor:const  Color.fromARGB(255, 100, 8, 222),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: const Text(
                         'Save',
@@ -437,7 +381,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
@@ -448,10 +392,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _logoutAndNavigateToLogin(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const Login()),
-      (Route<dynamic> route) => false,
-    );
+    auth.FirebaseAuth.instance.signOut().then((_) {
+      Get.offAll(() => const Login());
+    });
   }
 }

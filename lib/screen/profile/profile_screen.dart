@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class ProfileScreen extends StatelessWidget {
   final User passUser;
@@ -159,25 +160,42 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _deleteAccount(BuildContext context) async {
-    try {
+
+
+Future<void> _deleteAccount(BuildContext context) async {
+  try {
+    // Get the current user
+    final user = auth.FirebaseAuth.instance.currentUser;
+
+    // Check if the user is authenticated
+    if (user != null) {
       // Delete the user document from Firestore
       await FirebaseFirestore.instance
           .collection('userData')
-          .doc(passUser.email)
+          .doc(user.uid)
           .delete();
+
+      // Delete the user authentication entry from Firebase Authentication
+      await user.delete();
+
+      // Sign out the user
+      await auth.FirebaseAuth.instance.signOut();
 
       // Navigate back to the login page
       Get.offAll(() => const Login());
-    } catch (error) {
-      print('Error deleting account: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error deleting account: $error'),
-        ),
-      );
+    } else {
+      throw Exception("No authenticated user found");
     }
+  } catch (error) {
+    print('Error deleting account: $error');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error deleting account: $error'),
+      ),
+    );
   }
+}
+
 
   void _logoutAndNavigateToLogin(BuildContext context) {
     Navigator.pushAndRemoveUntil(

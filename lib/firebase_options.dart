@@ -46,7 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '408678428729',
     projectId: 'eventhub-map4',
     authDomain: 'eventhub-map4.firebaseapp.com',
-    databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
+    //databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'eventhub-map4.appspot.com',
     measurementId: 'G-5WKKJYJ6PB',
   );
