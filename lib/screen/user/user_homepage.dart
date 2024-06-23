@@ -290,9 +290,9 @@ class _UserHomeState extends State<UserHomePage> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           leading: Image.network(
-             (event.imageURL != null && event.imageURL!.isNotEmpty)
-      ? event.imageURL![0]
-      : 'lib/images/logo.png',
+            (event.imageURL != null && event.imageURL!.isNotEmpty)
+                ? event.imageURL![0]
+                : 'lib/images/logo.png',
             fit: BoxFit.cover,
             width: 80,
           ),
@@ -375,34 +375,47 @@ class EventDetailsPage extends StatelessWidget {
   const EventDetailsPage(
       {super.key, required this.event, required this.passUser});
 
-  // Method to add event details and username to Firestore collection
   Future<void> _saveEventToDatabase() async {
     try {
-      await FirebaseFirestore.instance
+      // Fetch the current list of saved event IDs for the user
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('mysave_event')
           .doc(passUser.name)
-          .set({
-        'eventName': event.event,
-        'eventDateTime': event.dateTime,
-        'eventLocation': event.location,
-        'eventFee': event.fee,
-        'eventOrganiser': event.organiser,
-        'eventCategory': event.category,
-        'eventDetails': event.details,
-        'eventImage': event.imageURL,
-      });
+          .get();
 
-      // Increment the count of saved events in the event document
-      await FirebaseFirestore.instance
-          .collection('eventData')
-          .doc(event.id) // Assuming there's an id field in the Event class
-          .update({'saved': FieldValue.increment(1)});
+      List<dynamic> savedEvents = [];
+      if (userDoc.exists) {
+        savedEvents = userDoc.get('mysaved') ?? [];
+      }
 
-      await FirebaseFirestore.instance
-          .collection('eventData')
-          .doc(event.id) // Assuming there's an id field in the Event class
-          .update({'shared': FieldValue.increment(1)});
-      print('Successfully saved');
+      // Debug: Print the current saved events list
+      print('Current saved events: $savedEvents');
+
+      // Add the new event ID to the list if it doesn't already exist
+      if (!savedEvents.contains(event.id)) {
+        savedEvents.add(event.id);
+
+        // Debug: Print the updated saved events list
+        print('Updated saved events: $savedEvents');
+
+        // Update the user's document with the new list of saved events
+        await FirebaseFirestore.instance
+            .collection('mysave_event')
+            .doc(passUser.name)
+            .set({
+          'mysaved': savedEvents,
+        });
+
+        // Increment the count of saved events in the event document
+        await FirebaseFirestore.instance
+            .collection('eventData')
+            .doc(event.id)
+            .update({'saved': FieldValue.increment(1)});
+
+        print('Successfully saved');
+      } else {
+        print('Event already saved');
+      }
     } catch (e) {
       print('Failed to save: $e');
     }
@@ -421,18 +434,18 @@ class EventDetailsPage extends StatelessWidget {
     try {
       // Download the image
       for (String url in event.imageURL!) {
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    final Directory tempDir = await getTemporaryDirectory();
-    final String tempPath = tempDir.path;
-    final File file = File('$tempPath/${Uri.parse(url).pathSegments.last}');
-    await file.writeAsBytes(response.bodyBytes);
-    // Handle each downloaded file as needed
-  } else {
-    print('Failed to download image: ${response.statusCode}');
-  }
-}
-
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          final Directory tempDir = await getTemporaryDirectory();
+          final String tempPath = tempDir.path;
+          final File file =
+              File('$tempPath/${Uri.parse(url).pathSegments.last}');
+          await file.writeAsBytes(response.bodyBytes);
+          // Handle each downloaded file as needed
+        } else {
+          print('Failed to download image: ${response.statusCode}');
+        }
+      }
 
       // Update the database to increment the share count
       await FirebaseFirestore.instance
@@ -486,35 +499,36 @@ class EventDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-  height: 200,
-  child: event.imageURL != null && event.imageURL!.isNotEmpty
-      ? ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: event.imageURL!.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Image.network(
-                event.imageURL![index],
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  print('Failed to load image: ${event.imageURL![index]}');
-                  print('Error: $error');
-                  print('StackTrace: $stackTrace');
-                  return Image.asset(
-                    'lib/images/mainpage.png',
-                    fit: BoxFit.cover,
-                  );
-                },
-              ),
-            );
-          },
-        )
-      : Image.asset(
-          'lib/images/mainpage.png',
-          fit: BoxFit.cover,
-        ),
-),
+              height: 200,
+              child: event.imageURL != null && event.imageURL!.isNotEmpty
+                  ? ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: event.imageURL!.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Image.network(
+                            event.imageURL![index],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              print(
+                                  'Failed to load image: ${event.imageURL![index]}');
+                              print('Error: $error');
+                              print('StackTrace: $stackTrace');
+                              return Image.asset(
+                                'lib/images/mainpage.png',
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    )
+                  : Image.asset(
+                      'lib/images/mainpage.png',
+                      fit: BoxFit.cover,
+                    ),
+            ),
             const SizedBox(height: 16),
             Text(
               event.event,

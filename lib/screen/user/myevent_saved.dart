@@ -16,7 +16,9 @@ class MyEventSaved extends StatefulWidget {
   final User passUser;
   final String appBarTitle;
 
-  const MyEventSaved({Key? key, required this.passUser, required this.appBarTitle}) : super(key: key);
+  const MyEventSaved(
+      {Key? key, required this.passUser, required this.appBarTitle})
+      : super(key: key);
 
   @override
   _MyEventSavedState createState() => _MyEventSavedState();
@@ -40,34 +42,84 @@ class _MyEventSavedState extends State<MyEventSaved> {
           .get();
 
       if (documentSnapshot.exists) {
-        final eventData = documentSnapshot.data();
-        print('Event data retrieved: $eventData');
-        if (eventData != null) {
-          final event = Event(
-            id: eventData['id'] ?? 'N/A',
-            event: eventData['eventName'] ?? '',
-            dateTime: (eventData['eventDateTime'] as Timestamp).toDate(),
-            location: eventData['eventLocation'] ?? '',
-            fee: eventData['eventFee']?.toDouble() ?? 0.0,
-            organiser: eventData['eventOrganiser'] ?? '',
-            category: eventData['eventCategory'] ?? '',
-            details: eventData['eventDetails'] ?? '',
-            timestamp: eventData['timestamp'] ?? Timestamp.now(),
-            imageURL: eventData['eventImage'] ?? 'lib/images/mainpage.png',
-          );
+        final savedEventsList =
+            documentSnapshot.data()?['mysaved'] as List<dynamic>? ?? [];
+
+        print('Saved event IDs: $savedEventsList');
+
+        if (savedEventsList.isNotEmpty) {
+          List<Event> fetchedEvents = [];
+
+          for (var eventId in savedEventsList) {
+            final eventDoc = await FirebaseFirestore.instance
+                .collection('eventData')
+                .doc(eventId)
+                .get();
+
+            if (eventDoc.exists) {
+              final eventData = eventDoc.data();
+              if (eventData != null) {
+                // Handle dateTime field which could be either Timestamp or String
+                DateTime eventDateTime;
+                if (eventData['dateTime'] is Timestamp) {
+                  eventDateTime = (eventData['dateTime'] as Timestamp).toDate();
+                } else if (eventData['dateTime'] is String) {
+                  eventDateTime =
+                      DateTime.parse(eventData['dateTime'] as String);
+                } else {
+                  throw Exception("Unsupported type for dateTime field");
+                }
+
+                // Handle fee field which could be either "Free" or a numerical value
+                double eventFee;
+                if (eventData['fee'] == "Free") {
+                  eventFee = 0.0; // Assuming 'Free' means 0.0
+                } else if (eventData['fee'] is num) {
+                  eventFee = (eventData['fee'] as num).toDouble();
+                } else if (eventData['fee'] is String) {
+                  eventFee = double.parse(eventData['fee'] as String);
+                } else {
+                  throw Exception("Unsupported type for fee field");
+                }
+
+                // Ensure imageURL is handled as a List<dynamic> and convert it to List<String>
+                List<String> eventImages;
+                if (eventData['imageURLs'] is List) {
+                  eventImages = List<String>.from(eventData['imageURLs']);
+                } else {
+                  eventImages = ['lib/images/mainpage.png']; // Default image
+                }
+
+                final event = Event(
+                  id: eventDoc.id,
+                  event: eventData['event'] ?? '',
+                  dateTime: eventDateTime,
+                  location: eventData['location'] ?? '',
+                  fee: eventFee,
+                  organiser: eventData['organiser'] ?? '',
+                  category: eventData['category'] ?? '',
+                  details: eventData['details'] ?? '',
+                  timestamp: eventData['timestamp'] ?? Timestamp.now(),
+                  imageURL: eventImages,
+                );
+                fetchedEvents.add(event);
+              }
+            }
+          }
+
           setState(() {
-            _savedEvents = [event];
+            _savedEvents = fetchedEvents;
             _isLoading = false;
           });
           print('Successfully fetched saved events: $_savedEvents');
         } else {
-          print('Event data is null');
+          print('No saved events found for user: ${widget.passUser.name}');
           setState(() {
             _isLoading = false;
           });
         }
       } else {
-        print('No event found for user: ${widget.passUser.name}');
+        print('No document found for user: ${widget.passUser.name}');
         setState(() {
           _isLoading = false;
         });
@@ -80,19 +132,38 @@ class _MyEventSavedState extends State<MyEventSaved> {
     }
   }
 
-  Future<void> _deleteEvent(Event event) async {
+  Future<void> _unsaveEvent(Event event) async {
     try {
-      await FirebaseFirestore.instance
+      // Get the document for the current user
+      final documentSnapshot = await FirebaseFirestore.instance
           .collection('mysave_event')
           .doc(widget.passUser.name)
-          .delete();
+          .get();
 
-      setState(() {
-        _savedEvents = null;
-      });
-      print('Event successfully deleted');
+      if (documentSnapshot.exists) {
+        final savedEventsList =
+            documentSnapshot.data()?['mysaved'] as List<dynamic>? ?? [];
+
+        // Remove the event ID from the saved events list
+        savedEventsList.remove(event.id);
+
+        // Update the document with the new list
+        await FirebaseFirestore.instance
+            .collection('mysave_event')
+            .doc(widget.passUser.name)
+            .update({'mysaved': savedEventsList});
+
+        // Update the state to remove the event from the local list
+        setState(() {
+          _savedEvents?.remove(event);
+        });
+
+        print('Event successfully unsaved');
+      } else {
+        print('No document found for user: ${widget.passUser.name}');
+      }
     } catch (e) {
-      print('Error deleting event: $e');
+      print('Error unsaving event: $e');
     }
   }
 
@@ -107,28 +178,28 @@ class _MyEventSavedState extends State<MyEventSaved> {
       ),
       body: _isLoading
           ? const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      )
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
           : _savedEvents != null
-          ? ListView.builder(
-        itemCount: _savedEvents!.length,
-        itemBuilder: (context, index) {
-          final event = _savedEvents![index];
-          return EventCard(
-            event: event,
-            onDelete: () => _deleteEvent(event),
-            onShare: () => _shareEvent(context, event),
-          );
-        },
-      )
-          : const Center(
-        child: Text(
-          'No saved events.',
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-      ),
+              ? ListView.builder(
+                  itemCount: _savedEvents!.length,
+                  itemBuilder: (context, index) {
+                    final event = _savedEvents![index];
+                    return EventCard(
+                      event: event,
+                      onDelete: () => _unsaveEvent(event),
+                      onShare: () => _shareEvent(context, event),
+                    );
+                  },
+                )
+              : const Center(
+                  child: Text(
+                    'No saved events.',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
       bottomNavigationBar: CustomFooter(passUser: widget.passUser),
     );
   }
@@ -182,22 +253,24 @@ class EventCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             leading: SizedBox(
               width: 80,
               child: Image.network(
-                event.imageURL != null && event.imageURL!.isNotEmpty ? 
-event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
-  errorBuilder: (context, error, stackTrace) {
-    print('Failed to load image: ${event.imageURL}');
-    print('Error: $error');
-    print('StackTrace: $stackTrace');
-    return Image.asset(
-      'lib/images/mainpage.png',
-      fit: BoxFit.cover,
-    );
-  },
-
+                event.imageURL != null && event.imageURL!.isNotEmpty
+                    ? event.imageURL![0]
+                    : 'lib/images/mainpage.png',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  print('Failed to load image: ${event.imageURL}');
+                  print('Error: $error');
+                  print('StackTrace: $stackTrace');
+                  return Image.asset(
+                    'lib/images/mainpage.png',
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
             ),
             title: Text(
@@ -227,7 +300,7 @@ event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.bookmark, color: Colors.red),
                 onPressed: () => _showDeleteConfirmationDialog(context),
               ),
               const SizedBox(width: 16),
@@ -243,8 +316,8 @@ event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Remove Event"),
-          content: const Text("Are you sure you want to remove this event?"),
+          title: const Text("Unsave Event"),
+          content: const Text("Are you sure you want to unsave this event?"),
           actions: [
             TextButton(
               onPressed: () {
@@ -258,7 +331,7 @@ event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
                 // Call the delete function from the parent widget
                 onDelete();
               },
-              child: const Text("Remove"),
+              child: const Text("Unsave"),
             ),
           ],
         );
@@ -293,114 +366,116 @@ class EventDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(event.event),
-          backgroundColor: const Color.fromARGB(255, 100, 8, 222),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {
-                _shareEvent(context);
+      appBar: AppBar(
+        title: Text(event.event),
+        backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              _shareEvent(context);
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.network(
+              event.imageURL != null && event.imageURL!.isNotEmpty
+                  ? event.imageURL![0]
+                  : 'lib/images/mainpage.png',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                print('Failed to load image: ${event.imageURL}');
+                print('Error: $error');
+                print('StackTrace: $stackTrace');
+                return Image.asset(
+                  'lib/images/mainpage.png',
+                  fit: BoxFit.cover,
+                );
               },
+            ),
+            const SizedBox(height: 16),
+            Text(
+              event.event,
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white), // Set text color to white
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Icon(Icons.date_range, color: Colors.white), // Icon for date
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat.yMMMMd().format(event.dateTime),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                const SizedBox(width: 16), // Add spacing
+                Icon(Icons.access_time, color: Colors.white), // Icon for time
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat.Hm().format(event.dateTime),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Icon(Icons.location_on, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  event.location,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Icon(Icons.attach_money, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  event.fee!.toStringAsFixed(2),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Icon(Icons.person, color: Colors.white), // Icon for organizer
+                const SizedBox(width: 8),
+                Text(
+                  event.organiser,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Icon(Icons.archive, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  event.category,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              'Details: ${event.details}',
+              style: TextStyle(fontSize: 16.0, color: Colors.white),
             ),
           ],
         ),
-        body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Image.network( event.imageURL != null && event.imageURL!.isNotEmpty ? 
-event.imageURL![0] : 'lib/images/mainpage.png',  fit: BoxFit.cover,
-  errorBuilder: (context, error, stackTrace) {
-    print('Failed to load image: ${event.imageURL}');
-    print('Error: $error');
-    print('StackTrace: $stackTrace');
-    return Image.asset(
-      'lib/images/mainpage.png',
-      fit: BoxFit.cover,
-    );
-  },
-),
-    const SizedBox(height: 16),
-    Text(
-    event.event,
-    style: TextStyle(
-    fontSize: 24.0,
-    fontWeight: FontWeight.bold,
-    color: Colors.white), // Set text color to white
-    ),
-    const SizedBox(height: 8.0),
-    Row(
-    children: [
-    Icon(Icons.date_range, color: Colors.white), // Icon for date
-    const SizedBox(width: 8),
-    Text(
-    DateFormat.yMMMMd().format(event.dateTime),
-    style: const TextStyle(fontSize: 18, color: Colors.white),
-    ),
-    const SizedBox(width: 16), // Add spacing
-    Icon(Icons.access_time, color: Colors.white), // Icon for time
-    const SizedBox(width: 8),
-    Text(
-    DateFormat.Hm().format(event.dateTime),
-    style: const TextStyle(fontSize: 18, color: Colors.white),
-    ),
-    ],
-    ),
-    const SizedBox(height: 8.0),
-    Row(
-    children: [
-    Icon(Icons.location_on, color: Colors.white),
-    const SizedBox(width: 8),
-    Text
-      (
-      event.location,
-      style: const TextStyle(fontSize: 18, color: Colors.white),
-    ),
-    ],
-    ),
-      const SizedBox(height: 8.0),
-      Row(
-        children: [
-          Icon(Icons.attach_money, color: Colors.white),
-          const SizedBox(width: 8),
-          Text(
-            event.fee!.toStringAsFixed(2),
-            style: const TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
       ),
-      const SizedBox(height: 8.0),
-      Row(
-        children: [
-          Icon(Icons.person, color: Colors.white), // Icon for organizer
-          const SizedBox(width: 8),
-          Text(
-            event.organiser,
-            style: const TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
-      ),
-      const SizedBox(height: 8.0),
-      Row(
-        children: [
-          Icon(Icons.archive, color: Colors.white),
-          const SizedBox(width: 8),
-          Text(
-            event.category,
-            style: const TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
-      ),
-      const SizedBox(height: 8.0),
-      Text(
-        'Details: ${event.details}',
-        style: TextStyle(fontSize: 16.0, color: Colors.white),
-      ),
-    ],
-    ),
-        ),
       backgroundColor: Colors.black,
     );
   }

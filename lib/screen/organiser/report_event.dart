@@ -10,8 +10,8 @@ import 'package:fl_chart/fl_chart.dart';
 
 //others import
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 //Test test
 
@@ -33,6 +33,7 @@ class _ReportPageState extends State<ReportPage> {
   int totalRegistrations = 0;
   int totalShared = 0;
   int totalSaved = 0;
+  List<FlSpot> spots = [];
 
   List<Event> _myevent = [];
 
@@ -43,7 +44,56 @@ class _ReportPageState extends State<ReportPage> {
     fetchEventData();
   }
 
+  // Future<void> fetchEventData() async {
+  //   DateTime now = DateTime.now().toUtc();
+  //   try {
+  //     final querySnapshot = await FirebaseFirestore.instance
+  //         .collection('eventData')
+  //         .where('organiser', isEqualTo: widget.passUser.name)
+  //         .get();
+
+  //     List<Event> allEvents =
+  //         querySnapshot.docs.map((doc) => Event.fromSnapshot(doc)).toList();
+
+  //     List<Event> pastEvents = [];
+  //     List<Event> futureEvents = [];
+  //     int registrations = 0;
+  //     int shared = 0;
+  //     int saved = 0;
+
+  //     for (Event event in allEvents) {
+  //       if (event.dateTime.isBefore(now)) {
+  //         pastEvents.add(event);
+  //       } else {
+  //         futureEvents.add(event);
+  //       }
+  //       registrations += event.registration ?? 0;
+  //       shared += event.shared ?? 0;
+  //       saved += event.saved ?? 0;
+  //     }
+
+  //     setState(() {
+  //       pastEventsCount = pastEvents.length;
+  //       futureEventsCount = futureEvents.length;
+  //       totalRegistrations = registrations;
+  //       totalShared = shared;
+  //       totalSaved = saved;
+  //       _myevent = allEvents;
+  //     });
+  //   } catch (e) {
+  //     print('Error fetching and filtering events: $e');
+  //   }
+  // }
+
   Future<void> fetchEventData() async {
+    setState(() {
+      pastEventsCount = 0;
+      futureEventsCount = 0;
+      totalShared = 0;
+      totalSaved = 0;
+      _myevent = [];
+    });
+
     DateTime now = DateTime.now().toUtc();
     try {
       final querySnapshot = await FirebaseFirestore.instance
@@ -56,9 +106,6 @@ class _ReportPageState extends State<ReportPage> {
 
       List<Event> pastEvents = [];
       List<Event> futureEvents = [];
-      int registrations = 0;
-      int shared = 0;
-      int saved = 0;
 
       for (Event event in allEvents) {
         if (event.dateTime.isBefore(now)) {
@@ -66,21 +113,67 @@ class _ReportPageState extends State<ReportPage> {
         } else {
           futureEvents.add(event);
         }
-        registrations += event.registration ?? 0;
-        shared += event.shared ?? 0;
-        saved += event.saved ?? 0;
+        totalShared += event.shared ?? 0;
+
+        final registrationSnapshot = await FirebaseFirestore.instance
+            .collection('registrations')
+            .where('event_id', isEqualTo: event.id)
+            .get();
+
+        totalRegistrations += registrationSnapshot.size;
+
+        final savedSnapshot = await FirebaseFirestore.instance
+            .collection('mysave_event')
+            .where('event_id', isEqualTo: event.id)
+            .get();
+
+        totalSaved += savedSnapshot.size;
       }
+
+      // Group registrations by day
+      Map<DateTime, int> registrationsPerDay = {};
+      await _fetchRegistrationsPerDay(registrationsPerDay);
+
+      // Process registrations data for line chart
+      List<FlSpot> spots = [];
+      registrationsPerDay.forEach((date, count) {
+        spots.add(
+            FlSpot(date.millisecondsSinceEpoch.toDouble(), count.toDouble()));
+      });
 
       setState(() {
         pastEventsCount = pastEvents.length;
         futureEventsCount = futureEvents.length;
-        totalRegistrations = registrations;
-        totalShared = shared;
-        totalSaved = saved;
         _myevent = allEvents;
       });
+
+      // Display line chart or other UI elements with `spots` data
     } catch (e) {
       print('Error fetching and filtering events: $e');
+    }
+  }
+
+  Future<void> _fetchRegistrationsPerDay(
+      Map<DateTime, int> registrationsPerDay) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('registrations')
+          .where('organiser', isEqualTo: widget.passUser.name)
+          .get();
+
+      querySnapshot.docs.forEach((doc) {
+        Timestamp timestamp = doc['timestamp'] as Timestamp;
+        DateTime date = timestamp.toDate();
+        // Extract date without time (only year, month, day)
+        DateTime day = DateTime(date.year, date.month, date.day);
+        if (registrationsPerDay.containsKey(day)) {
+          registrationsPerDay[day] = registrationsPerDay[day]! + 1;
+        } else {
+          registrationsPerDay[day] = 1;
+        }
+      });
+    } catch (e) {
+      print('Error fetching registrations: $e');
     }
   }
 
@@ -182,98 +275,71 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget buildOverview() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
+    double pastEventsPercentage = pastEventsCount / (_myevent.length) * 100;
+    double futureEventsPercentage = futureEventsCount / (_myevent.length) * 100;
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Card(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Events',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 100, 8, 222),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Past Events',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 100, 8, 222),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '$pastEventsCount',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 100, 8, 222),
-                          ),
-                        ),
+                        _buildLegendItem(
+                            color: Colors.grey, text: 'Past Events'),
+                        const SizedBox(width: 16),
+                        _buildLegendItem(
+                            color: Colors.green, text: 'Future Events'),
                       ],
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Card(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Future Events',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 100, 8, 222),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '$futureEventsCount',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 100, 8, 222),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Card(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Total Registrations',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 100, 8, 222),
-                      ),
-                    ),
                     const SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        '$totalRegistrations',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 100, 8, 222),
+                    SizedBox(
+                      height: 200,
+                      child: PieChart(
+                        PieChartData(
+                          sections: [
+                            PieChartSectionData(
+                              color: Colors.grey,
+                              value: pastEventsPercentage,
+                              title:
+                                  '${pastEventsPercentage.toStringAsFixed(2)}% (${pastEventsCount})',
+                              radius: 80,
+                              titleStyle: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            PieChartSectionData(
+                              color: Colors.green,
+                              value: futureEventsPercentage,
+                              title:
+                                  '${futureEventsPercentage.toStringAsFixed(2)}% ($futureEventsCount)',
+                              radius: 80,
+                              titleStyle: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -281,10 +347,8 @@ class _ReportPageState extends State<ReportPage> {
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Card(
+            const SizedBox(height: 16),
+            Card(
               color: const Color.fromARGB(255, 255, 255, 255),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -292,7 +356,7 @@ class _ReportPageState extends State<ReportPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Total Shared',
+                      'Event Statistics',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -300,55 +364,22 @@ class _ReportPageState extends State<ReportPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        '$totalShared',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 100, 8, 222),
-                        ),
+                    SizedBox(
+                      height: 200,
+                      child: TotalMetricsBarChart(
+                        totalRegistrations: totalRegistrations,
+                        totalShared: totalShared,
+                        totalSaved: totalSaved,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Card(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Total Saved',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 100, 8, 222),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        '$totalSaved',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 100, 8, 222),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            // Add the new bar chart here
+          ],
+        ),
       ),
     );
   }
@@ -441,6 +472,39 @@ class _ReportPageState extends State<ReportPage> {
           ),
         );
       },
+    );
+  }
+}
+
+class RegistrationsLineChart extends StatelessWidget {
+  final List<FlSpot> spots;
+
+  RegistrationsLineChart({required this.spots});
+
+  @override
+  Widget build(BuildContext context) {
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(show: false),
+        borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: Colors.black),
+        ),
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            colors: [Colors.blue],
+            dotData: FlDotData(show: false),
+            belowBarData: BarAreaData(show: false),
+          ),
+        ],
+        minY: 0,
+        maxY: spots.isNotEmpty
+            ? spots.map((spot) => spot.y).reduce(max).toDouble() * 1.2
+            : 10,
+      ),
     );
   }
 }
@@ -592,6 +656,150 @@ class FooterIconButton extends StatelessWidget {
           Icon(icon, color: Colors.white),
           Text(label, style: const TextStyle(color: Colors.white)),
         ],
+      ),
+    );
+  }
+}
+
+Widget _buildLegendItem({required Color color, required String text}) {
+  return Row(
+    children: [
+      Container(
+        width: 16,
+        height: 16,
+        color: color,
+      ),
+      const SizedBox(width: 4),
+      Text(
+        text,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: const Color.fromARGB(255, 100, 8, 222),
+        ),
+      ),
+    ],
+  );
+}
+
+class TotalMetricsBarChart extends StatelessWidget {
+  final int totalRegistrations;
+  final int totalShared;
+  final int totalSaved;
+
+  const TotalMetricsBarChart({
+    Key? key,
+    required this.totalRegistrations,
+    required this.totalShared,
+    required this.totalSaved,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY:
+              max(totalRegistrations, max(totalShared, totalSaved)).toDouble() *
+                  1.2,
+          barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: Colors.blueGrey,
+              getTooltipItem: (group, x, rod, rodIndex) {
+                String title;
+                switch (x) {
+                  case 0:
+                    title = 'Registrations';
+                    break;
+                  case 1:
+                    title = 'Shared';
+                    break;
+                  case 2:
+                    title = 'Saved';
+                    break;
+                  default:
+                    title = '';
+                }
+                return BarTooltipItem(
+                  title,
+                  TextStyle(color: Colors.yellow),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '\n${rod.y.round()}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            bottomTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (value, _) => const TextStyle(
+                color: Color.fromARGB(255, 56, 50, 50),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+              margin: 10,
+              getTitles: (double value) {
+                switch (value.toInt()) {
+                  case 0:
+                    return 'Registrations';
+                  case 1:
+                    return 'Shared';
+                  case 2:
+                    return 'Saved';
+                  default:
+                    return '';
+                }
+              },
+            ),
+            leftTitles: SideTitles(showTitles: false),
+          ),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          barGroups: [
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  y: totalRegistrations.toDouble(),
+                  width: 16,
+                  colors: [Colors.blue],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 1,
+              barRods: [
+                BarChartRodData(
+                  y: totalShared.toDouble(),
+                  width: 16,
+                  colors: [Colors.green],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 2,
+              barRods: [
+                BarChartRodData(
+                  y: totalSaved.toDouble(),
+                  width: 16,
+                  colors: [Colors.orange],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
