@@ -106,6 +106,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                   }
                   return null;
                 },
+                enabled: false, // Make the field uneditable
               ),
               SizedBox(height: 16),
               TextFormField(
@@ -118,6 +119,7 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                   return null;
                 },
               ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _icController,
                 decoration: InputDecoration(labelText: 'IC Number'),
