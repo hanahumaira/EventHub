@@ -44,47 +44,6 @@ class _ReportPageState extends State<ReportPage> {
     fetchEventData();
   }
 
-  // Future<void> fetchEventData() async {
-  //   DateTime now = DateTime.now().toUtc();
-  //   try {
-  //     final querySnapshot = await FirebaseFirestore.instance
-  //         .collection('eventData')
-  //         .where('organiser', isEqualTo: widget.passUser.name)
-  //         .get();
-
-  //     List<Event> allEvents =
-  //         querySnapshot.docs.map((doc) => Event.fromSnapshot(doc)).toList();
-
-  //     List<Event> pastEvents = [];
-  //     List<Event> futureEvents = [];
-  //     int registrations = 0;
-  //     int shared = 0;
-  //     int saved = 0;
-
-  //     for (Event event in allEvents) {
-  //       if (event.dateTime.isBefore(now)) {
-  //         pastEvents.add(event);
-  //       } else {
-  //         futureEvents.add(event);
-  //       }
-  //       registrations += event.registration ?? 0;
-  //       shared += event.shared ?? 0;
-  //       saved += event.saved ?? 0;
-  //     }
-
-  //     setState(() {
-  //       pastEventsCount = pastEvents.length;
-  //       futureEventsCount = futureEvents.length;
-  //       totalRegistrations = registrations;
-  //       totalShared = shared;
-  //       totalSaved = saved;
-  //       _myevent = allEvents;
-  //     });
-  //   } catch (e) {
-  //     print('Error fetching and filtering events: $e');
-  //   }
-  // }
-
   Future<void> fetchEventData() async {
     setState(() {
       pastEventsCount = 0;
@@ -115,65 +74,25 @@ class _ReportPageState extends State<ReportPage> {
         }
         totalShared += event.shared ?? 0;
 
+        //registration
         final registrationSnapshot = await FirebaseFirestore.instance
             .collection('registrations')
             .where('event_id', isEqualTo: event.id)
             .get();
 
         totalRegistrations += registrationSnapshot.size;
+        totalSaved += (event.saved ?? 0);
 
-        final savedSnapshot = await FirebaseFirestore.instance
-            .collection('mysave_event')
-            .where('event_id', isEqualTo: event.id)
-            .get();
-
-        totalSaved += savedSnapshot.size;
+        print('Total saved: ${totalSaved}');
       }
-
-      // Group registrations by day
-      Map<DateTime, int> registrationsPerDay = {};
-      await _fetchRegistrationsPerDay(registrationsPerDay);
-
-      // Process registrations data for line chart
-      List<FlSpot> spots = [];
-      registrationsPerDay.forEach((date, count) {
-        spots.add(
-            FlSpot(date.millisecondsSinceEpoch.toDouble(), count.toDouble()));
-      });
 
       setState(() {
         pastEventsCount = pastEvents.length;
         futureEventsCount = futureEvents.length;
         _myevent = allEvents;
       });
-
-      // Display line chart or other UI elements with `spots` data
     } catch (e) {
       print('Error fetching and filtering events: $e');
-    }
-  }
-
-  Future<void> _fetchRegistrationsPerDay(
-      Map<DateTime, int> registrationsPerDay) async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('registrations')
-          .where('organiser', isEqualTo: widget.passUser.name)
-          .get();
-
-      querySnapshot.docs.forEach((doc) {
-        Timestamp timestamp = doc['timestamp'] as Timestamp;
-        DateTime date = timestamp.toDate();
-        // Extract date without time (only year, month, day)
-        DateTime day = DateTime(date.year, date.month, date.day);
-        if (registrationsPerDay.containsKey(day)) {
-          registrationsPerDay[day] = registrationsPerDay[day]! + 1;
-        } else {
-          registrationsPerDay[day] = 1;
-        }
-      });
-    } catch (e) {
-      print('Error fetching registrations: $e');
     }
   }
 

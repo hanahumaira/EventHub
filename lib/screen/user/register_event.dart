@@ -20,8 +20,15 @@ class RegisterEventPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register for ${event.event}'),
+        title: Text(
+          'Register for ${event.event}',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white), // Set text color to white
+        ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        iconTheme: IconThemeData(
+            color: Colors.white), // Changed back button color to white
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -346,8 +353,13 @@ class RegistrationConfirmationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registration Confirmation'),
+        title: Text(
+          'Registration Confirmation',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        iconTheme:
+            IconThemeData(color: Colors.white), // Back button arrow color
       ),
       body: Center(
         child: Column(
