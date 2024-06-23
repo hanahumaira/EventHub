@@ -453,7 +453,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     labelText: 'Event Details',
                     hintText: 'Enter the details of the event.',
                     labelStyle: const TextStyle(color: Color.fromARGB(157, 247, 247, 247)),
-                    prefixIcon: const Icon(Icons.details, color: Colors.grey),
+                    prefixIcon: const Icon(Icons.description, color: Colors.grey),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

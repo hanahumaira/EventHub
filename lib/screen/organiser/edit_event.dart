@@ -267,7 +267,7 @@ class _EditEventPageState extends State<EditEventPage> {
                   labelText: 'Organiser',
                   labelStyle: const TextStyle(
                       color: Color.fromARGB(157, 247, 247, 247)),
-                  prefixIcon: const Icon(Icons.person, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.people, color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -329,11 +329,12 @@ class _EditEventPageState extends State<EditEventPage> {
                   }
                   return null;
                 },
-                dropdownColor: Color.fromARGB(255, 100, 8, 222),
+                dropdownColor: Colors.grey[800],
               ),
               const SizedBox(height: 30),
               TextFormField(
                 controller: _detailsController,
+                maxLines: 4,
                 style: const TextStyle(fontSize: 18, color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Event Details',
