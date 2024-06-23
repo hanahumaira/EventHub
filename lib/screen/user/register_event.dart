@@ -353,8 +353,13 @@ class RegistrationConfirmationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registration Confirmation'),
+        title: Text(
+          'Registration Confirmation',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         backgroundColor: const Color.fromARGB(255, 100, 8, 222),
+        iconTheme:
+            IconThemeData(color: Colors.white), // Back button arrow color
       ),
       body: Center(
         child: Column(
