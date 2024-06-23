@@ -118,6 +118,16 @@ class _EditEventRegPageState extends State<EditEventRegPage> {
                   return null;
                 },
               ),
+              TextFormField(
+                controller: _icController,
+                decoration: InputDecoration(labelText: 'IC Number'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your IC number';
+                  }
+                  return null;
+                },
+              ),
               SizedBox(height: 16),
               TextFormField(
                 controller: _ageController,
