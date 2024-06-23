@@ -152,6 +152,10 @@ class _MyEventSavedState extends State<MyEventSaved> {
             .collection('mysave_event')
             .doc(widget.passUser.name)
             .update({'mysaved': savedEventsList});
+         await FirebaseFirestore.instance
+          .collection('eventData')
+          .doc(event.id) // Assuming there's an id field in the Event class
+          .update({'saved': FieldValue.increment(-1)});
 
         // Update the state to remove the event from the local list
         setState(() {

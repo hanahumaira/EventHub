@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
     appId: '1:408678428729:ios:aafcf92922c59be868dde8',
     messagingSenderId: '408678428729',
     projectId: 'eventhub-map4',
-    databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
+    // databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'eventhub-map4.appspot.com',
     iosBundleId: 'com.example.eventhub',
   );
@@ -75,7 +75,7 @@ class DefaultFirebaseOptions {
     appId: '1:408678428729:ios:aafcf92922c59be868dde8',
     messagingSenderId: '408678428729',
     projectId: 'eventhub-map4',
-    databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
+    // databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'eventhub-map4.appspot.com',
     iosBundleId: 'com.example.eventhub',
   );
@@ -86,7 +86,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '408678428729',
     projectId: 'eventhub-map4',
     authDomain: 'eventhub-map4.firebaseapp.com',
-    databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
+    // databaseURL: 'https://eventhub-map4-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'eventhub-map4.appspot.com',
     measurementId: 'G-D7SEMV7M7N',
   );

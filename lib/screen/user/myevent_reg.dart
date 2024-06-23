@@ -83,8 +83,12 @@ class _MyEventRegState extends State<MyEventReg> {
           final registrationDoc = querySnapshot.docs.first;
 
           // Delete the registration document
-          await registrationDoc.reference.delete();
-
+          // await registrationDoc.reference.delete();
+          await FirebaseFirestore.instance.runTransaction((transaction) async {
+             transaction.delete(registrationDoc.reference);
+             final eventDocRef = FirebaseFirestore.instance.collection('eventData').doc(event.id);
+             transaction.update(eventDocRef, {'registration': FieldValue.increment(-1)});
+          });
           // Update local state to reflect the deletion
           setState(() {
             _myRegEvents.remove(event);

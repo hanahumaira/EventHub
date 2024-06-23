@@ -433,20 +433,7 @@ class EventDetailsPage extends StatelessWidget {
 
     try {
       // Download the image
-      for (String url in event.imageURL!) {
-        final response = await http.get(Uri.parse(url));
-        if (response.statusCode == 200) {
-          final Directory tempDir = await getTemporaryDirectory();
-          final String tempPath = tempDir.path;
-          final File file =
-              File('$tempPath/${Uri.parse(url).pathSegments.last}');
-          await file.writeAsBytes(response.bodyBytes);
-          // Handle each downloaded file as needed
-        } else {
-          print('Failed to download image: ${response.statusCode}');
-        }
-      }
-
+   
       // Update the database to increment the share count
       await FirebaseFirestore.instance
           .collection('eventData')

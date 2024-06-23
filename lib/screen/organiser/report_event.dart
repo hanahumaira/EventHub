@@ -534,7 +534,7 @@ class _BarChart extends StatelessWidget {
               tooltipBgColor: Colors.blueGrey,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 String title;
-                switch (rodIndex) {
+                switch (groupIndex) {
                   case 0:
                     title = 'Registrations';
                     break;
